@@ -1,6 +1,6 @@
 //Expoting All Required Modules
 const express = require("express");
-const connection = require("./server/config/db");
+const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const multer = require("multer");
@@ -15,7 +15,13 @@ dotenv.config();
 //Creating Express App to Use Routes in Server
 const app = express();
 //MongoDB connection Using Mongoose
-(async () => await connection())();
+mongoose
+  .connect(process.env.DB, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log(`Connected to DB successfull`.toUpperCase()))
+  .catch((err) => console.log(err));
 
 app.use(express.json());
 app.use(express.urlencoded());
