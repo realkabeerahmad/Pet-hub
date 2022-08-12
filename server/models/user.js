@@ -1,5 +1,6 @@
+// Using Mongoose for Mongoo DB
 const mongoose = require("mongoose");
-
+// User Schema
 const UserSchema = mongoose.Schema({
   firstName: String,
   lastName: String,
@@ -9,5 +10,5 @@ const UserSchema = mongoose.Schema({
   Image: { type: String },
   createdAt: { type: Date, default: Date.now },
 });
-
+// Expoting User Model
 module.exports = mongoose.model("users", UserSchema);

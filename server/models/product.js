@@ -1,10 +1,14 @@
-const ShopSchema = new mongoose.Schema({
-  ItemName: String,
-  ItemQuantity: Number,
-  ItemTag: String,
-  ItemDetail: String,
-  ItemPrice: Number,
-  Image: String,
-  Link: String,
+// Using Mongoose for Mongoo DB
+const mongoose = require("mongoose");
+// Product Schema
+const ProductSchema = mongoose.Schema({
+  name: String,
+  lastName: String,
+  email: { type: String, required: true },
+  password: { type: String, required: true },
+  verified: { type: Boolean, default: false },
+  Image: { type: String },
+  createdAt: { type: Date, default: Date.now },
 });
-export default ProductModel = new mongoose.model("Product", ProductSchema);
+// Exporting Product Model
+module.exports = mongoose.model("product", ProductSchema);

@@ -13,12 +13,13 @@ const router = express.Router();
 // Using Nodemailer to send Emails
 const nodemailer = require("nodemailer");
 
+// User OTP verification model
 const userOtpVerification = require("../models/userOtpVerification");
 
 // Register route for Creating a new user
 router.post("/register", (req, res) => {
   // Getting all required data from request body
-  var { firstName, lastName, email, password } = req.body;
+  var { firstName, lastName, email, password, Image } = req.body;
   // Generating Salt using genSaltSync function with 10 rounds
   const salt = bcrypt.genSaltSync(10);
   // Check if email already exist in DB
@@ -34,6 +35,7 @@ router.post("/register", (req, res) => {
         lastName,
         email,
         password,
+        Image,
       });
       // Hashing users password
       bcrypt.hash(user.password, salt, null, async (err, hash) => {
