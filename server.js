@@ -3,10 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
-const multer = require("multer");
 const path = require("path");
-const { v4: uuidv4 } = require("uuid");
-const fs = require("fs");
 const userRoutes = require("./server/controllers/userController");
 
 //Setting Up Envionment Variables
@@ -14,6 +11,7 @@ dotenv.config();
 
 //Creating Express App to Use Routes in Server
 const app = express();
+
 //MongoDB connection Using Mongoose
 mongoose
   .connect(process.env.DB, {
@@ -26,27 +24,6 @@ mongoose
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(cors());
-
-//Setting Muter Storage for saving Images on Server
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "Assets");
-  },
-  filename: function (req, file, cb) {
-    cb(null, uuidv4() + "-" + Date.now() + path.extname(file.originalname));
-  },
-});
-
-const fileFilter = (req, file, cb) => {
-  const allowedFileTypes = ["image/jpeg", "image/jpg", "image/png"];
-  if (allowedFileTypes.includes(file.mimetype)) {
-    cb(null, true);
-  } else {
-    cb(null, false);
-  }
-};
-
-const upload = multer({ storage, fileFilter });
 
 app.use(express.static(path.join(__dirname + "/Assets")));
 
