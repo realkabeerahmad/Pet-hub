@@ -1,6 +1,9 @@
 // bcrypt-nodejs used for Password Encription and Decription
 const bcrypt = require("bcrypt-nodejs");
 
+// to Read Enviorment Variables
+const dotenv = require("dotenv");
+
 // Express JS used to create Routes
 const express = require("express");
 
@@ -10,11 +13,14 @@ const User = require("../models/user");
 // Using Router from Express JS to create exportable routes
 const router = express.Router();
 
-// Using Nodemailer to send Emails
-const nodemailer = require("nodemailer");
-
 // User OTP verification model
 const userOtpVerification = require("../models/userOtpVerification");
+
+//Setting Up Envionment Variables
+dotenv.config();
+
+//Immport Transpoter
+const transporter = require("../config/transporter");
 
 // Register route for Creating a new user
 router.post("/register", (req, res) => {
@@ -49,7 +55,7 @@ router.post("/register", (req, res) => {
           .save()
           .then((result) => {
             SendOtpVerificationEmail(result, res);
-            // res.status(200).send({ message: "Successfully Registered" });
+            //res.status(200).send({ message: "Successfully Registered" });
           })
           .catch(() => {
             res.status(400).send({ message: "Unable to Registered" });
@@ -81,20 +87,11 @@ router.post("/login", (req, res) => {
 
 const SendOtpVerificationEmail = async ({ _id, email }, res) => {
   try {
-    const transporter = nodemailer.createTransport({
-      host: "smtp.zoho.com",
-      port: 465,
-      secure: true,
-      auth: {
-        user: "pethub@zohomail.com",
-        pass: "NSurUy7hmjY0",
-      },
-    });
     // Generated OTP
     const otp = Math.floor(1000 + Math.random() * 9000);
     // Mail Options
     const mailOptions = {
-      from: "pethub@zohomail.com",
+      from: "otp.pethub@zohomail.com",
       to: email,
       subject: "Verify your Email",
       text: "OTP Verification Email",

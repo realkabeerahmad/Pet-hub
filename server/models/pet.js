@@ -12,6 +12,7 @@ const PetSchema = mongoose.Schema({
   image: String,
   passport: String,
   dob: Date,
+  Link: String,
   createdAt: { type: Date, default: Date.now },
 });
 // Exporting Pet Model
