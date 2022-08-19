@@ -18,6 +18,7 @@ const PetWalkTime = require("../models/petWalkTime");
 
 // Pet Meal Time Model Created using MongoDB
 const PetMealTime = require("../models/petMealTime");
+const { date } = require("joi");
 
 // Using Router from Express JS to create exportable routes
 const router = express.Router();
@@ -42,29 +43,59 @@ router.post("/addPet", upload.single("image"), (req, res) => {
         pet
           .save()
           .then(() => {
-            res.status(200).send({ message: "Pet Successfully Registered" });
+            res.status(200).send({
+              status: "SUCCESS",
+              message: "Pet Successfully Registered",
+            });
           })
           .catch((err) => {
-            res.status(400).send({ error: err.message });
+            res.status(400).json({
+              status: "FAILED",
+              error: err.message,
+            });
           });
       } else {
-        res.status(404).send({ error: "User Not Found" });
+        res.status(404).json({
+          status: "FAILED",
+          error: "User Not Found",
+        });
       }
     });
   } catch (err) {
-    res.status(500).send({ error: err.message });
+    res.status(500).json({
+      status: "FAILED",
+      error: err.message,
+    });
   }
 });
 
 router.post("/addPetMealTime", (req, res) => {
   const { petId, time } = req.body;
+  let h = time.slice(0, 2);
+  let m = time.slice(3, 5);
+  let hour = Number(h) * 100;
+  let minute = Math.floor((Number(m) / 6) * 10);
   try {
     Pet.findById({ petId }, (pet, err) => {
       if (pet) {
-        const MealTime = new PetMealTime(petId, time);
+        const MealTime = new PetMealTime(petId, hour, minute);
+        console.log("here");
+        MealTime.save()
+          .then(() => {
+            res
+              .status(200)
+              .send({ status: "SUCCESS", message: "Meal Time Added" });
+          })
+          .catch((err) => {
+            res.status(400).send({ status: "FAILED", error: err.message });
+          });
+      } else {
+        res.status(400).json({ status: "FAILED", error: "Pet Not Found" });
       }
     });
-  } catch (error) {}
+  } catch (err) {
+    res.status(500).json({ status: "FAILED", error: err.message });
+  }
 });
 // Exporting Routes
 module.exports = router;

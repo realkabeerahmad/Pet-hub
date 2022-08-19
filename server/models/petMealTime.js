@@ -3,7 +3,8 @@ const mongoose = require("mongoose");
 // Pet Meal Time Schema
 const PetMealTimeSchema = mongoose.Schema({
   petId: String,
-  time: Date,
+  hour: { type: Number },
+  minute: { type: Number },
   createdAt: { type: Date, default: Date.now },
 });
 // Exporting Pet Meal Time Model
