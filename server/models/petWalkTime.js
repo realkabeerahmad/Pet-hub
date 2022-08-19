@@ -3,7 +3,8 @@ const mongoose = require("mongoose");
 // Pet Walk Time Schema
 const PetWalkTimeSchema = mongoose.Schema({
   petId: String,
-  time: Date,
+  hour: { type: Number },
+  minute: { type: Number },
   createdAt: { type: Date, default: Date.now },
 });
 // Exporting Pet Walk Time Model

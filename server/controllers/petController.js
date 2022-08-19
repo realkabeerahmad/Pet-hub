@@ -69,17 +69,43 @@ router.post("/addPet", upload.single("image"), (req, res) => {
   }
 });
 
+router.get("/showPet", (req, res) => {
+  var { petId } = req.body;
+  try {
+    Pet.findById({ petId }, (err, data) => {
+      if (err) {
+        res.status(400).json({ error: err.message });
+      } else {
+        res.status(200).send(data);
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.get("/showAllPets", (req, res) => {
+  var { userId } = req.body;
+  try {
+    Pet.find({ userId }, (err, data) => {
+      if (err) {
+        res.status(400).json({ error: err.message });
+      } else {
+        res.status(200).send(data);
+      }
+    });
+  } catch (err) {
+    res.status(500).send({ error: err.message });
+  }
+});
 router.post("/addPetMealTime", (req, res) => {
   const { petId, time } = req.body;
-  let h = time.slice(0, 2);
-  let m = time.slice(3, 5);
-  let hour = Number(h) * 100;
-  let minute = Math.floor((Number(m) / 6) * 10);
+  let hour = Number(time.slice(0, 2));
+  let minute = Math.ceil((Number(time.slice(3, 5)) / 6) * 10);
   try {
     Pet.findById({ petId }, (pet, err) => {
       if (pet) {
-        const MealTime = new PetMealTime(petId, hour, minute);
-        console.log("here");
+        const MealTime = new PetMealTime({ petId, hour, minute });
         MealTime.save()
           .then(() => {
             res
@@ -97,5 +123,70 @@ router.post("/addPetMealTime", (req, res) => {
     res.status(500).json({ status: "FAILED", error: err.message });
   }
 });
+
+router.get("/showAllMealTime", (req, res) => {
+  var { petId } = req.body;
+  try {
+    PetMealTime.find({ petId }, (err, data) => {
+      if (err) {
+        res.status(400).json({ error: err.message });
+      } else {
+        data.forEach((element) => {
+          let min = Math.floor((Number(element.minute) / 10) * 6);
+          element.minute = min;
+        });
+        res.status(200).send(data);
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.post("/addPetWalkTime", (req, res) => {
+  const { petId, time } = req.body;
+  let hour = Number(time.slice(0, 2));
+  let minute = Math.ceil((Number(time.slice(3, 5)) / 6) * 10);
+  try {
+    Pet.findById({ petId }, (pet, err) => {
+      if (pet) {
+        const WalkTime = new PetWalkTime({ petId, hour, minute });
+        WalkTime.save()
+          .then(() => {
+            res
+              .status(200)
+              .send({ status: "SUCCESS", message: "Meal Time Added" });
+          })
+          .catch((err) => {
+            res.status(400).send({ status: "FAILED", error: err.message });
+          });
+      } else {
+        res.status(400).json({ status: "FAILED", error: "Pet Not Found" });
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ status: "FAILED", error: err.message });
+  }
+});
+
+router.get("/showAllWalkTimes", (req, res) => {
+  var { petId } = req.body;
+  try {
+    PetWalkTime.find({ petId }, (err, data) => {
+      if (err) {
+        res.status(400).json({ error: err.message });
+      } else {
+        data.forEach((element) => {
+          let min = Math.floor((Number(element.minute) / 10) * 6);
+          element.minute = min;
+        });
+        res.status(200).send(data);
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Exporting Routes
 module.exports = router;
