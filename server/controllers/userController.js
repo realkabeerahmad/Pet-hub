@@ -16,16 +16,19 @@ const router = express.Router();
 // User OTP verification model
 const userOtpVerification = require("../models/userOtpVerification");
 
-//Setting Up Envionment Variables
+// Setting Up Envionment Variables
 dotenv.config();
 
-//Immport Transpoter
+// Import Transpoter
 const transporter = require("../config/transporter");
+
+// Import Multer Storage
+const Upload = require("../config/multer");
 
 // Register route for Creating a new user
 router.post("/register", (req, res) => {
   // Getting all required data from request body
-  var { firstName, lastName, email, password, Image } = req.body;
+  var { firstName, lastName, email, password } = req.body;
   // Generating Salt using genSaltSync function with 10 rounds
   const salt = bcrypt.genSaltSync(10);
   // Check if email already exist in DB
@@ -41,7 +44,7 @@ router.post("/register", (req, res) => {
         lastName,
         email,
         password,
-        Image,
+        Image: "newUser.png",
       });
       // Hashing users password
       bcrypt.hash(user.password, salt, null, async (err, hash) => {
@@ -61,6 +64,18 @@ router.post("/register", (req, res) => {
             res.status(400).send({ message: "Unable to Registered" });
           });
       });
+    }
+  });
+});
+
+// Show User route
+router.get("/showUser", (req, res) => {
+  const { userId } = req.body;
+  User.findById({ userId }, (user, err) => {
+    if (user) {
+      res.status(200).send(user);
+    } else {
+      res.status(400).json({ status: "FAILED", error: err.message });
     }
   });
 });
@@ -85,6 +100,104 @@ router.post("/login", (req, res) => {
   });
 });
 
+// Verify OTP route
+router.post("/verifyOTP", async (req, res) => {
+  try {
+    // Get data from Request body
+    let { userID, otp } = req.body;
+    // Check OTP Details
+    if (!userID || !otp) {
+      throw Error("Empty otp Details are not allowed");
+    } else {
+      // Find OTP
+      const userVerificationRecords = await userOtpVerification.find({
+        userID,
+      });
+      if (userVerificationRecords.length <= 0) {
+        throw new Error(
+          "Account record doesn't exist or has been verified already. Please Signup or Login."
+        );
+      } else {
+        const { expiredAt } = userVerificationRecords[0];
+        const hashedOTP = userVerificationRecords[0].otp;
+        // Check if Expired
+        if (expiredAt < Date.now()) {
+          await userOtpVerification.deleteMany({ userID });
+          throw new Error("Code has Expired. Please request again.");
+        } else {
+          // Check OTP
+          const validotp = bcrypt.compareSync(otp, hashedOTP);
+          if (!validotp) {
+            throw new Error("Invalid OTP please check your Email.");
+          } else {
+            console.log("\nEor\n");
+            // Update User Status
+            await User.updateOne({ userID }, { verified: true });
+            await userOtpVerification.deleteMany({ userID });
+            res.json({
+              status: "VERIFIED",
+              message: "User Email Verified successfully.",
+            });
+          }
+        }
+      }
+    }
+  } catch (error) {
+    res.json({
+      status: "FAILED",
+      message: error.message,
+    });
+  }
+});
+
+// Add User Image
+router.post("/updateProfileImage", Upload.single("image"), (req, res) => {
+  const { userId, Image } = req.body;
+  try {
+    User.updateOne({ _id: userId }, { Image: Image })
+      .then(() => {
+        res
+          .status(200)
+          .json({ status: "SUCCESS", message: "Image Added successfully" });
+      })
+      .catch((err) => {
+        res.status(400).json({
+          status: "Failed",
+          message: "Unable to update Image",
+          error: err.message,
+        });
+      });
+  } catch (err) {
+    res.status(500).json({
+      status: "Failed",
+      error: err.message,
+    });
+  }
+});
+
+// Re-send OTP route
+router.post("/reSendOtpVerificatioCode", async (req, res) => {
+  try {
+    // Get Data from Request Body
+    let { userID, email } = req.body;
+    //Check if Data is Correct
+    if (!userID || !email) {
+      throw Error("Empty user Details are not allowed");
+    } else {
+      // Delete old OTP Generated
+      await userOtpVerification.deleteMany({ userID });
+      // Call Send OTP Function
+      SendOtpVerificationEmail({ userID, email }, res);
+    }
+  } catch (error) {
+    res.json({
+      status: "FAILED",
+      message: error.message,
+    });
+  }
+});
+
+// Send OTP Function
 const SendOtpVerificationEmail = async ({ _id, email }, res) => {
   try {
     // Generated OTP
@@ -140,65 +253,6 @@ const SendOtpVerificationEmail = async ({ _id, email }, res) => {
     });
   }
 };
-router.post("/verifyOTP", async (req, res) => {
-  try {
-    let { userID, otp } = req.body;
-    if (!userID || !otp) {
-      throw Error("Empty otp Details are not allowed");
-    } else {
-      const userVerificationRecords = await userOtpVerification.find({
-        userID,
-      });
-      if (userVerificationRecords.length <= 0) {
-        throw new Error(
-          "Account record doesn't exist or has been verified already. Please Signup or Login."
-        );
-      } else {
-        const { expiredAt } = userVerificationRecords[0];
-        const hashedOTP = userVerificationRecords[0].otp;
-        if (expiredAt < Date.now()) {
-          await userOtpVerification.deleteMany({ userID });
-          throw new Error("Code has Expired. Please request again.");
-        } else {
-          const validotp = bcrypt.compareSync(otp, hashedOTP);
-          if (!validotp) {
-            throw new Error("Invalid OTP please check your Email.");
-          } else {
-            console.log("\nEor\n");
-            await User.updateOne({ userID }, { verified: true });
-            await userOtpVerification.deleteMany({ userID });
-            res.json({
-              status: "VERIFIED",
-              message: "User Email Verified successfully.",
-            });
-          }
-        }
-      }
-    }
-  } catch (error) {
-    res.json({
-      status: "FAILED",
-      message: error.message,
-    });
-  }
-});
 
-router.post("/reSendOtpVerificatioCode", async (req, res) => {
-  try {
-    let { userID, email } = req.body;
-    console.log(req.body);
-    if (!userID || !email) {
-      throw Error("Empty user Details are not allowed");
-    } else {
-      await userOtpVerification.deleteMany({ userID });
-      SendOtpVerificationEmail({ userID, email }, res);
-    }
-  } catch (error) {
-    res.json({
-      status: "FAILED",
-      message: error.message,
-    });
-  }
-});
 // Expoting Routes
 module.exports = router;

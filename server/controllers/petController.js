@@ -23,7 +23,9 @@ const { date } = require("joi");
 // Using Router from Express JS to create exportable routes
 const router = express.Router();
 
+// Add a Pet
 router.post("/addPet", upload.single("image"), (req, res) => {
+  // Getting Data
   const obj = {
     userId: req.body.userId,
     name: req.body.petName,
@@ -37,9 +39,12 @@ router.post("/addPet", upload.single("image"), (req, res) => {
     Link: req.body.petName + uuidv4(),
   };
   try {
+    // Check if user Exist
     User.findById({ _id: `"${obj.userId}"` }, (user, err) => {
       if (user) {
+        // Create an obj to store in DB
         const pet = new Pet(obj);
+        // Save obj in DB
         pet
           .save()
           .then(() => {
@@ -69,6 +74,7 @@ router.post("/addPet", upload.single("image"), (req, res) => {
   }
 });
 
+// Show a Single Pet Details
 router.get("/showPet", (req, res) => {
   var { petId } = req.body;
   try {
@@ -84,6 +90,7 @@ router.get("/showPet", (req, res) => {
   }
 });
 
+// Show All Pets of a User
 router.get("/showAllPets", (req, res) => {
   var { userId } = req.body;
   try {
@@ -98,14 +105,16 @@ router.get("/showAllPets", (req, res) => {
     res.status(500).send({ error: err.message });
   }
 });
+
+// Add a Pet Meal Time
 router.post("/addPetMealTime", (req, res) => {
-  const { petId, time } = req.body;
+  const { petId, name, time } = req.body;
   let hour = Number(time.slice(0, 2));
   let minute = Math.ceil((Number(time.slice(3, 5)) / 6) * 10);
   try {
     Pet.findById({ petId }, (pet, err) => {
       if (pet) {
-        const MealTime = new PetMealTime({ petId, hour, minute });
+        const MealTime = new PetMealTime({ petId, name, hour, minute });
         MealTime.save()
           .then(() => {
             res
@@ -124,6 +133,7 @@ router.post("/addPetMealTime", (req, res) => {
   }
 });
 
+// View a pets All Meal Times
 router.get("/showAllMealTime", (req, res) => {
   var { petId } = req.body;
   try {
@@ -143,14 +153,15 @@ router.get("/showAllMealTime", (req, res) => {
   }
 });
 
+// Add a pet's Walk Time
 router.post("/addPetWalkTime", (req, res) => {
-  const { petId, time } = req.body;
+  const { petId, name, time } = req.body;
   let hour = Number(time.slice(0, 2));
   let minute = Math.ceil((Number(time.slice(3, 5)) / 6) * 10);
   try {
     Pet.findById({ petId }, (pet, err) => {
       if (pet) {
-        const WalkTime = new PetWalkTime({ petId, hour, minute });
+        const WalkTime = new PetWalkTime({ petId, name, hour, minute });
         WalkTime.save()
           .then(() => {
             res
@@ -169,6 +180,7 @@ router.post("/addPetWalkTime", (req, res) => {
   }
 });
 
+// Show All Walk Times of a Pet
 router.get("/showAllWalkTimes", (req, res) => {
   var { petId } = req.body;
   try {
