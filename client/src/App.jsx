@@ -1,6 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
-import Footer from "./components/Footer/Footer";
 import Navigation from "./components/Navigation/Navigation";
 import Community from "./pages/Community/Community";
 import Home from "./pages/Home/Home";
@@ -11,25 +10,33 @@ import Register from "./pages/Register/Register";
 import AddPet from "./pages/AddPet/AddPet";
 import ErrorPage from "./pages/ErrorPage/ErrorPage";
 import Pet from "./pages/Pet/Pet";
+import PetMealTime from "./components/PetMealTime/PetMealTime";
+import DetailsandGallery from "./pages/DetailsandGallery/DetailsandGallery";
 
 function App() {
+  const User = { name: "Kabeer", _id: "Some ID" };
   return (
     <>
       <BrowserRouter>
-        <Navigation></Navigation>
+        <Navigation user={User} />
         <div className="App">
           <Routes>
             <Route exact path="/" element={<Home />}></Route>
             <Route path="/my_pets" element={<MyPets />}></Route>
             <Route path="/my_pets/add_pet" element={<AddPet />} />
             <Route path="/my_pets/pet" element={<Pet />}>
-              <Route path="details_and_gallery" element={<Shop />}></Route>
+              <Route index element={<DetailsandGallery />}></Route>
+              <Route
+                path="details_and_gallery"
+                element={<DetailsandGallery />}
+              ></Route>
               <Route
                 path="vaccination_and_medical_details"
                 element={<Shop />}
               ></Route>
-              <Route path="meal_timings" element={<Shop />}></Route>
+              <Route path="meal_timings" element={<PetMealTime />}></Route>
               <Route path="walk_timings" element={<Shop />}></Route>
+              <Route path="*" element={<ErrorPage />}></Route>
             </Route>
             <Route path="/shop" element={<Shop />}></Route>
             <Route path="/community" element={<Community />}></Route>

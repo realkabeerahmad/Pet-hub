@@ -1,0 +1,29 @@
+.details-about-pet {
+  width: 100%;
+}
+.details-header {
+  border-bottom: 1px solid #e2e2e2;
+  width: 100%;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.details-header-heading {
+  font-size: 18px;
+  color: #e92e4a;
+}
+.details-more {
+  padding: 10px;
+  font-size: 18px;
+  border-bottom: 1px solid #e2e2e2;
+}
+.details-more table {
+  width: 50%;
+}
+td {
+  padding: 10px;
+}
+td b {
+  color: #929292;
+}

@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import Logo from "../../assets/logo.png";
 import "./Navigation.css";
 const Navigation = (user) => {
+  const activeClassName = "is-active";
   return (
     <nav className="nav-bar">
       <div className="nav-logo">
@@ -10,41 +11,83 @@ const Navigation = (user) => {
       </div>
       <div className="nav">
         <div className="nav-links">
-          {user && user._id ? (
+          {true ? (
             <>
-              <NavLink exact to="/" activeClassName="is-active">
+              <NavLink
+                exact
+                to="/"
+                className={({ isActive }) =>
+                  isActive ? activeClassName : undefined
+                }
+              >
                 Home
               </NavLink>
-              <NavLink to="/my_pets" activeClassName="is-active">
+              <NavLink
+                to="/my_pets"
+                className={({ isActive }) =>
+                  isActive ? activeClassName : undefined
+                }
+              >
                 My Pets
               </NavLink>
-              <NavLink to="/shop" activeClassName="is-active">
+              <NavLink
+                to="/shop"
+                className={({ isActive }) =>
+                  isActive ? activeClassName : undefined
+                }
+              >
                 Shop
               </NavLink>
-              <NavLink to="/adopt" activeClassName="is-active">
+              <NavLink
+                to="/adopt"
+                className={({ isActive }) =>
+                  isActive ? activeClassName : undefined
+                }
+              >
                 Adopt
               </NavLink>
-              <NavLink to="/community" activeClassName="is-active">
+              <NavLink
+                to="/community"
+                className={({ isActive }) =>
+                  isActive ? activeClassName : undefined
+                }
+              >
                 Community
               </NavLink>
             </>
           ) : (
             <>
-              <NavLink exact to="/" activeClassName="is-active">
+              <NavLink
+                exact
+                to="/"
+                className={({ isActive }) =>
+                  isActive ? activeClassName : undefined
+                }
+              >
                 Home
               </NavLink>
             </>
           )}
         </div>
-        {user && user._id ? (
+        {user.name === "Kabeer" ? (
           <div className="auth_links">User</div>
         ) : (
           <div className="auth_links">
-            <NavLink to="/login" activeClassName="is-active">
+            <NavLink
+              to="/login"
+              className={({ isActive }) =>
+                isActive ? activeClassName : undefined
+              }
+            >
               Login
             </NavLink>{" "}
             |{" "}
-            <NavLink to="/register" activeClassName="is-active">
+            <NavLink
+              to="/register"
+              className={({ isActive }) =>
+                isActive ? activeClassName : undefined
+              }
+            >
               Register
             </NavLink>
           </div>

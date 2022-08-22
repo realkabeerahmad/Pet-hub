@@ -1,0 +1,15 @@
+.pet-gallery {
+  width: 100%;
+}
+.gallery-header {
+  border-bottom: 1px solid #e2e2e2;
+  width: 100%;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.gallery-header-heading {
+  font-size: 18px;
+  color: #e92e4a;
+}

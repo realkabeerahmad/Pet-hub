@@ -43,13 +43,20 @@
 .pet-profile-name {
   font-size: 25px;
 }
+.more-about-pet {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
 .more-about-pet-links {
-  width: 310px;
+  align-self: flex-start;
   position: sticky;
-  top: 0;
+  position: -webkit-sticky;
+  top: 70px;
+  width: 310px;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  border-right: 1px solid rgba(0, 0, 0, 0.125);
 }
 .more-about-pet-links a div {
   display: flex;
@@ -69,4 +76,16 @@
 }
 .more-about-pet-links a {
   color: black;
+}
+.more-about-pet-links a:hover {
+  color: #e92e4a !important;
+}
+.is-active {
+  color: #e92e4a !important;
+  font-weight: 700;
+}
+.pet-links-outlet {
+  flex-basis: 1;
+  width: 100%;
+  border-left: 1px solid rgba(0, 0, 0, 0.125);
 }

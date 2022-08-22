@@ -10,7 +10,6 @@ const MyPets = () => {
       <Link to="/my_pets/add_pet" className="add-pet-btn">
         Add Pet
       </Link>
-      <Outlet />
     </div>
   );
 };

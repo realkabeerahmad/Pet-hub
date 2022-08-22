@@ -1,7 +1,8 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink, Outlet } from "react-router-dom";
 import "./Pet.css";
 const Pet = () => {
+  const activeClassName = "is-active";
   return (
     <>
       <div className="pet">
@@ -18,18 +19,41 @@ const Pet = () => {
       </div>
       <div className="more-about-pet">
         <div className="more-about-pet-links">
-          <Link to="details_and_gallery">
+          <NavLink
+            to="details_and_gallery"
+            className={({ isActive }) =>
+              isActive ? activeClassName : undefined
+            }
+          >
             <div>DETAILS AND GALLERY</div>
-          </Link>
-          <Link to="vaccination_and_medical_details">
+          </NavLink>
+          <NavLink
+            to="vaccination_and_medical_details"
+            className={({ isActive }) =>
+              isActive ? activeClassName : undefined
+            }
+          >
             <div>VACCINATION AND MEDICAL DETAILS</div>
-          </Link>
-          <Link to="meal_timings">
+          </NavLink>
+          <NavLink
+            to="meal_timings"
+            className={({ isActive }) =>
+              isActive ? activeClassName : undefined
+            }
+          >
             <div>MEAL TIMINGS</div>
-          </Link>
-          <Link to="walk_timings">
+          </NavLink>
+          <NavLink
+            to="walk_timings"
+            className={({ isActive }) =>
+              isActive ? activeClassName : undefined
+            }
+          >
             <div>WALK TIMINGS</div>
-          </Link>
+          </NavLink>
+        </div>
+        <div className="pet-links-outlet">
+          <Outlet />
         </div>
       </div>
     </>
