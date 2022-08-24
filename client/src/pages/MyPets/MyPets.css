@@ -4,6 +4,17 @@
   align-items: center;
   flex-direction: column;
 }
+.mypets a {
+  color: #929292 !important;
+  transition: color 0.3s;
+  -webkit-transition: color 0.3s;
+  -moz-transition: color 0.3s;
+  -ms-transition: color 0.3s;
+  -o-transition: color 0.3s;
+}
+.mypets a:hover {
+  color: #e92e4a !important;
+}
 .add-pet-btn {
   width: 500px;
   padding: 10px;
@@ -14,11 +25,8 @@
   -moz-border-radius: 10px;
   -ms-border-radius: 10px;
   -o-border-radius: 10px;
-  border: 1px solid rgba(0, 0, 0, 0.125);
   background-color: white;
-}
-.add-pet-btn:hover {
-  box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.125);
-  -webkit-box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.125);
-  -moz-box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.125);
+  box-shadow: 0 2px 4px #0000001a, 0 8px 16px #0000001a;
+  -webkit-box-shadow: 0 2px 4px #0000001a, 0 8px 16px #0000001a;
+  -moz-box-shadow: 0 2px 4px #0000001a, 0 8px 16px #0000001a;
 }

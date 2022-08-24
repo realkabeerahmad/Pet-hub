@@ -1,7 +1,6 @@
 .pet-card {
   width: 500px;
   height: 150px;
-  border: 1px solid rgba(0, 0, 0, 0.125);
   background-color: white;
   padding: 10px;
   margin: 10px;
@@ -18,11 +17,9 @@
   -moz-transition: all 0.3s;
   -ms-transition: all 0.3s;
   -o-transition: all 0.3s;
-}
-.pet-card:hover {
-  box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.125);
-  -webkit-box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.125);
-  -moz-box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.125);
+  box-shadow: 0 2px 4px #0000001a, 0 8px 16px #0000001a;
+  -webkit-box-shadow: 0 2px 4px #0000001a, 0 8px 16px #0000001a;
+  -moz-box-shadow: 0 2px 4px #0000001a, 0 8px 16px #0000001a;
 }
 .pet-img {
   display: flex;
@@ -42,7 +39,6 @@
 }
 .pet-details {
   width: 300px;
-  color: rgba(0, 0, 0, 0.3);
   text-align: center;
 }
 .pet-name {

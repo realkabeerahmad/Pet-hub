@@ -4,7 +4,7 @@
 .details-header {
   border-bottom: 1px solid #e2e2e2;
   width: 100%;
-  padding: 10px;
+  padding: 10px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;

@@ -1,20 +1,47 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, NavLink, Outlet } from "react-router-dom";
+import Modal from "@mui/material/Modal";
 import "./Pet.css";
 const Pet = () => {
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   const activeClassName = "is-active";
+  const img_src = "https://source.unsplash.com/150x150/?pet";
   return (
     <>
       <div className="pet">
-        <div className="pet-header">
-          <img src="https://source.unsplash.com/1600x900/?nature" alt="" />
-        </div>
-        <div className="pet-profile-image">
-          <img src="https://source.unsplash.com/150x150/?pet" alt="" />
-        </div>
+        <Link to="/my_pets">
+          <i className="fa fa-arrow-left"></i>
+        </Link>
+        <div className="hidden"></div>
         <div className="pet-info">
-          <p className="pet-profile-name">Name</p>
-          <p className="pet-bio">This is Bio. I am Name</p>
+          <div className="pet-profile-image" onClick={handleOpen}>
+            <img src={img_src} alt="" />
+          </div>
+          <Modal open={open} onClose={handleClose}>
+            <div className="pet-img-pop-wrapper">
+              <div className="pet-img-pop">
+                <div className="pet-img-pop-header">
+                  <div className="pet-img-pop-close" onClick={handleClose}>
+                    <i className="fa fa-times"></i>
+                  </div>
+                </div>
+                <div className="pet-img-pop-img">
+                  <img src={img_src} alt="" />
+                </div>
+              </div>
+            </div>
+          </Modal>
+          <div className="pet-info-div">
+            <div>
+              <p className="pet-profile-name">Name</p>
+              <p className="pet-bio">This is Bio. I am Name</p>
+            </div>
+            <button>
+              <i className="fa fa-edit" /> Edit Pet
+            </button>
+          </div>
         </div>
       </div>
       <div className="more-about-pet">
@@ -25,7 +52,7 @@ const Pet = () => {
               isActive ? activeClassName : undefined
             }
           >
-            <div>DETAILS AND GALLERY</div>
+            <div>Details & Gallery</div>
           </NavLink>
           <NavLink
             to="vaccination_and_medical_details"
@@ -33,7 +60,7 @@ const Pet = () => {
               isActive ? activeClassName : undefined
             }
           >
-            <div>VACCINATION AND MEDICAL DETAILS</div>
+            <div>Vaccination & Medical Details</div>
           </NavLink>
           <NavLink
             to="meal_timings"
@@ -41,7 +68,7 @@ const Pet = () => {
               isActive ? activeClassName : undefined
             }
           >
-            <div>MEAL TIMINGS</div>
+            <div>Meal Timings</div>
           </NavLink>
           <NavLink
             to="walk_timings"
@@ -49,7 +76,7 @@ const Pet = () => {
               isActive ? activeClassName : undefined
             }
           >
-            <div>WALK TIMINGS</div>
+            <div>Walk Timings</div>
           </NavLink>
         </div>
         <div className="pet-links-outlet">

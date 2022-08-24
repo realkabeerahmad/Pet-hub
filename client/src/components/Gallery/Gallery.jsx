@@ -1,4 +1,5 @@
 import React from "react";
+import GalleryImage from "../GalleryImage/GalleryImage";
 import "./Gallery.css";
 const Gallery = () => {
   return (
@@ -7,7 +8,12 @@ const Gallery = () => {
         <p className="gallery-header-heading">
           <b>GALLERY</b>
         </p>
-        <button>ADD</button>
+        <button>
+          <i className="fa fa-plus"></i> ADD
+        </button>
+      </div>
+      <div className="gallery-main">
+        <GalleryImage></GalleryImage>
       </div>
     </div>
   );
