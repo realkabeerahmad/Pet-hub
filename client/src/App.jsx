@@ -37,7 +37,6 @@ function App() {
               ></Route>
               <Route path="meal_timings" element={<PetMealTime />}></Route>
               <Route path="walk_timings" element={<Shop />}></Route>
-              <Route path="*" element={<ErrorPage />}></Route>
             </Route>
             <Route path="/shop" element={<Shop />}></Route>
             <Route path="/community" element={<Community />}></Route>

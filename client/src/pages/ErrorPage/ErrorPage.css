@@ -1,0 +1,22 @@
+.Error-Page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: calc(100vh - 80px);
+  background: url(https://fearfuldogs.com/wp-content/uploads/2011/03/questioningdog.jpg);
+  background-position: left;
+  background-repeat: no-repeat;
+}
+.Error {
+  width: 500px;
+  height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+._404 {
+  font-size: 80px;
+  color: #e92e4a;
+}
