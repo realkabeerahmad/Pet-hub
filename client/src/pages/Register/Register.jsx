@@ -53,7 +53,7 @@ const Register = () => {
         <div className="button">SIGN UP</div>
         <div>or</div>
         <div className="toLogin">
-          Already Have an Account? <Link to="login">Login Here</Link>
+          Already Have an Account? <Link to="/login">Login Here</Link>
         </div>
       </div>
     </div>

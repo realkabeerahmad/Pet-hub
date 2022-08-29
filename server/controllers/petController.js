@@ -18,7 +18,9 @@ const PetWalkTime = require("../models/petWalkTime");
 
 // Pet Meal Time Model Created using MongoDB
 const PetMealTime = require("../models/petMealTime");
-const { date } = require("joi");
+
+const petVaccinationDetails = require("../models/petVaccinationDetails");
+const petVetDetails = require("../models/petVetDetails");
 
 // Using Router from Express JS to create exportable routes
 const router = express.Router();
@@ -200,5 +202,83 @@ router.get("/showAllWalkTimes", (req, res) => {
   }
 });
 
+// Add Pet Vaccination Details
+router.post("/addPetVaccination", (req, res) => {
+  const { petId, previousDate, nextDate, VaccinationAddress } = req.body;
+  try {
+    Pet.findById({ petId }, (pet, err) => {
+      if (pet) {
+        petVaccinationDetails.find({ petId }, (data, error) => {
+          if (data) {
+            res.status(400).send("Vaccination Details Already Exist");
+          } else if (error) {
+            res.status(500).send(error.message);
+          } else {
+            const details = new petVaccinationDetails({
+              petId,
+              previousDate,
+              nextDate,
+              VaccinationAddress,
+            });
+            details
+              .save()
+              .then(() => {
+                res.status(200).send("Details Saved");
+              })
+              .catch((error) => {
+                res.status(400).send(error.message);
+              });
+          }
+        });
+      }
+    });
+  } catch (err) {
+    res.status(400).send(err.message);
+  }
+});
+router.get("/getPetVaccination", (req, res) => {
+  const { petId } = req.body;
+  try {
+    petVaccinationDetails.findById({ petId }, (details, err) => {
+      if (details) {
+        res.status(200).send(details);
+      }
+    });
+  } catch (error) {}
+});
+// Add Pet Vet Details
+router.post("/addPetVet", (req, res) => {
+  const { petId, previousDate, nextDate, VetAddress } = req.body;
+  try {
+    Pet.findById({ petId }, (pet, err) => {
+      if (pet) {
+        petVaccinationDetails.find({ petId }, (data, error) => {
+          if (data) {
+            res.status(400).send("Vet Details Already Exist");
+          } else if (error) {
+            res.status(500).send(error.message);
+          } else {
+            const details = new petVetDetails({
+              petId,
+              previousDate,
+              nextDate,
+              VetAddress,
+            });
+            details
+              .save()
+              .then(() => {
+                res.status(200).send("Details Saved");
+              })
+              .catch((error) => {
+                res.status(400).send(error.message);
+              });
+          }
+        });
+      }
+    });
+  } catch (err) {
+    res.status(400).send(err.message);
+  }
+});
 // Exporting Routes
 module.exports = router;

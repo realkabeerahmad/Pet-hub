@@ -12,6 +12,7 @@ import ErrorPage from "./pages/ErrorPage/ErrorPage";
 import Pet from "./pages/Pet/Pet";
 import PetMealTime from "./components/PetMealTime/PetMealTime";
 import DetailsandGallery from "./pages/DetailsandGallery/DetailsandGallery";
+import ForgetPass from "./pages/ForgetPass/ForgetPass";
 
 function App() {
   const User = { name: "Kabeer", _id: "Some ID" };
@@ -41,6 +42,7 @@ function App() {
             <Route path="/shop" element={<Shop />}></Route>
             <Route path="/community" element={<Community />}></Route>
             <Route path="/login" element={<Login />}></Route>
+            <Route path="//forget_password" element={<ForgetPass />}></Route>
             <Route path="/register" element={<Register />}></Route>
             <Route path="*" element={<ErrorPage />}></Route>
           </Routes>

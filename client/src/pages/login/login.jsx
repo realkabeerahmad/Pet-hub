@@ -27,7 +27,10 @@ const Login = () => {
           </Box>
           <p>
             Forgot Password???&nbsp;
-            <span className="_button">Click Here</span>.
+            <Link to="/forget_password" className="_button">
+              Click Here
+            </Link>
+            .
           </p>
           <div className="button">LOGIN</div>
           <div> or </div>
