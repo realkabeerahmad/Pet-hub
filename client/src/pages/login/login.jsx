@@ -2,6 +2,25 @@ import { Box, TextField } from "@mui/material";
 import { Link } from "react-router-dom";
 import "./Login.css";
 const Login = () => {
+  const login = () => {
+    const { username, FirstName, Email, Password, reEnterPassword } = values;
+    if (
+      username &&
+      FirstName &&
+      Email &&
+      Password &&
+      Password === reEnterPassword
+    ) {
+      axios.post("http://localhost:8001/auth/register", values).then((res) => {
+        if (res.data.message === "Successfully Registered") {
+          history.push("/login");
+        }
+        alert(res.data.message);
+      });
+    } else {
+      alert("Invlid input");
+    }
+  };
   return (
     <div className="login-page">
       <div className="login-form">

@@ -34,9 +34,9 @@ router.post("/register", (req, res) => {
   // Check if email already exist in DB
   User.findOne({ email: email }, (err, user) => {
     if (user) {
-      res.status(400).send({ message: "User Already Exist" });
+      res.status(400).json({ status: "failed", message: "User Already Exist" });
     } else if (err) {
-      res.status(500).send({ message: "Server Error" });
+      res.status(500).json({ status: "failed", message: "Server Error" });
     } else {
       // Creating a user object to save in database
       const user = new User({
@@ -58,10 +58,11 @@ router.post("/register", (req, res) => {
           .save()
           .then((result) => {
             SendOtpVerificationEmail(result, res);
-            //res.status(200).send({ message: "Successfully Registered" });
           })
           .catch(() => {
-            res.status(400).send({ message: "Unable to Registered" });
+            res
+              .status(400)
+              .json({ status: "failed", message: "Unable to Registered" });
           });
       });
     }
@@ -75,7 +76,7 @@ router.get("/showUser", (req, res) => {
     if (user) {
       res.status(200).send(user);
     } else {
-      res.status(400).json({ status: "FAILED", error: err.message });
+      res.status(400).json({ status: "failed", error: err.message });
     }
   });
 });
@@ -87,12 +88,18 @@ router.post("/login", (req, res) => {
   // Checking if User exist
   User.findOne({ email: email }, (err, user) => {
     if (user) {
-      // Decrypting and comparing Password
-      const validPassword = bcrypt.compareSync(password, user.password);
-      if (validPassword) {
-        res.status(200).json({ message: "Valid password" });
+      if (user.verified) {
+        // Decrypting and comparing Password
+        const validPassword = bcrypt.compareSync(password, user.password);
+        if (validPassword) {
+          res
+            .status(200)
+            .json({ status: "success", message: "Valid password" });
+        } else {
+          res.status(400).json({ error: "Invalid Password" });
+        }
       } else {
-        res.status(400).json({ error: "Invalid Password" });
+        res.status(400).json({ status: "failed", message: "please verify" });
       }
     } else {
       res.status(401).json({ error: "User does not exist" });
@@ -135,7 +142,7 @@ router.post("/verifyOTP", async (req, res) => {
             await User.updateOne({ userID }, { verified: true });
             await userOtpVerification.deleteMany({ userID });
             res.json({
-              status: "VERIFIED",
+              status: "verified",
               message: "User Email Verified successfully.",
             });
           }
@@ -144,7 +151,7 @@ router.post("/verifyOTP", async (req, res) => {
     }
   } catch (error) {
     res.json({
-      status: "FAILED",
+      status: "failed",
       message: error.message,
     });
   }
@@ -158,18 +165,18 @@ router.post("/updateProfileImage", Upload.single("image"), (req, res) => {
       .then(() => {
         res
           .status(200)
-          .json({ status: "SUCCESS", message: "Image Added successfully" });
+          .json({ status: "success", message: "Image Added successfully" });
       })
       .catch((err) => {
         res.status(400).json({
-          status: "Failed",
+          status: "failed",
           message: "Unable to update Image",
           error: err.message,
         });
       });
   } catch (err) {
     res.status(500).json({
-      status: "Failed",
+      status: "failed",
       error: err.message,
     });
   }
@@ -191,7 +198,7 @@ router.post("/reSendOtpVerificatioCode", async (req, res) => {
     }
   } catch (error) {
     res.json({
-      status: "FAILED",
+      status: "failed",
       message: error.message,
     });
   }
@@ -233,12 +240,12 @@ const SendOtpVerificationEmail = async ({ _id, email }, res) => {
       if (err) {
         console.log(err);
         return res.status(400).json({
-          status: "FAILED",
+          status: "failed",
           error: "Not able to send OTP",
         });
       }
       return res.status(200).json({
-        status: "PENDING",
+        status: "pending",
         message: "Verification OTP email sent.",
         data: {
           userId: _id,
@@ -248,7 +255,7 @@ const SendOtpVerificationEmail = async ({ _id, email }, res) => {
     });
   } catch (error) {
     res.json({
-      status: "FAILED",
+      status: "failed",
       message: error.message,
     });
   }

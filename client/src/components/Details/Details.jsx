@@ -15,27 +15,19 @@ const Details = () => {
         <table>
           <tbody>
             <tr>
-              <td>
-                <b>Type:</b>
-              </td>
+              <th>Type:</th>
               <td>Cat</td>
             </tr>
             <tr>
-              <td>
-                <b>Breed:</b>
-              </td>
+              <th>Breed:</th>
               <td>Persian</td>
             </tr>
             <tr>
-              <td>
-                <b>Date of Birth:</b>
-              </td>
+              <th>Date of Birth:</th>
               <td>20/12/2021</td>
             </tr>
             <tr>
-              <td>
-                <b>Passport Number:</b>
-              </td>
+              <th>Passport Number:</th>
               <td>FE45S5a41</td>
             </tr>
           </tbody>

@@ -13,6 +13,7 @@ import Pet from "./pages/Pet/Pet";
 import PetMealTime from "./components/PetMealTime/PetMealTime";
 import DetailsandGallery from "./pages/DetailsandGallery/DetailsandGallery";
 import ForgetPass from "./pages/ForgetPass/ForgetPass";
+import VaccinationAndMedical from "./pages/VaccinationAndMedical/VaccinationAndMedical";
 
 function App() {
   const User = { name: "Kabeer", _id: "Some ID" };
@@ -33,7 +34,7 @@ function App() {
               ></Route>
               <Route
                 path="vaccination_and_medical_details"
-                element={<Shop />}
+                element={<VaccinationAndMedical />}
               ></Route>
               <Route path="meal_timings" element={<PetMealTime />}></Route>
               <Route path="walk_timings" element={<Shop />}></Route>
