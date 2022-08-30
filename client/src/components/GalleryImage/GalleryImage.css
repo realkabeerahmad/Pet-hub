@@ -1,11 +1,12 @@
 .gallery-image {
+  margin: 5px;
   width: 200px;
   height: 200px;
   display: flex;
   align-items: center;
   justify-content: center;
   contain: content;
-  background: #e2e2e2;
+  background: #f2f2f2;
   border-radius: 5px;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;

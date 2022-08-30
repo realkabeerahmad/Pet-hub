@@ -14,6 +14,14 @@ const Gallery = () => {
       </div>
       <div className="gallery-main">
         <GalleryImage></GalleryImage>
+        <GalleryImage></GalleryImage>
+        <GalleryImage></GalleryImage>
+        <GalleryImage></GalleryImage>
+        <GalleryImage></GalleryImage>
+        <GalleryImage></GalleryImage>
+        <GalleryImage></GalleryImage>
+        <GalleryImage></GalleryImage>
+        <GalleryImage></GalleryImage>
       </div>
     </div>
   );
