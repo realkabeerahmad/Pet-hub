@@ -15,7 +15,7 @@
   margin: 0 40px 20px 30px;
   height: 150px;
   width: 150px;
-  align-self: end;
+  align-self: flex-end;
   contain: content;
   border-radius: 50%;
   -webkit-border-radius: 50%;
@@ -108,7 +108,7 @@
 }
 .pet-img-pop-header {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   width: 100%;
   background-color: #fff;
   color: #929292;

@@ -56,3 +56,13 @@
 .toRegister a {
   color: #e92e4a;
 }
+.toRegister button {
+  background: transparent;
+  color: #e92e4a;
+  cursor: pointer;
+}
+.toRegister button:disabled {
+  background: transparent;
+  color: #ffbbc5;
+  cursor: no-drop;
+}

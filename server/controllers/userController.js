@@ -86,25 +86,31 @@ router.post("/login", (req, res) => {
   // Getting all required data from request body
   const { email, password } = req.body;
   // Checking if User exist
-  User.findOne({ email: email }, (err, user) => {
-    if (user) {
-      if (user.verified) {
-        // Decrypting and comparing Password
-        const validPassword = bcrypt.compareSync(password, user.password);
-        if (validPassword) {
+  try {
+    User.findOne({ email: email }, (err, user) => {
+      if (user) {
+        if (user.verified) {
+          // Decrypting and comparing Password
+          const validPassword = bcrypt.compareSync(password, user.password);
+          if (validPassword) {
+            res
+              .status(200)
+              .json({ status: "success", message: "Valid Password" });
+          } else {
+            res.status(200).json({ message: "Invalid Password" });
+          }
+        } else {
           res
             .status(200)
-            .json({ status: "success", message: "Valid password" });
-        } else {
-          res.status(400).json({ error: "Invalid Password" });
+            .json({ status: "failed", message: "Please Verify Your Email" });
         }
       } else {
-        res.status(400).json({ status: "failed", message: "please verify" });
+        res.status(200).json({ message: "User do not Exist" });
       }
-    } else {
-      res.status(401).json({ error: "User does not exist" });
-    }
-  });
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 // Verify OTP route

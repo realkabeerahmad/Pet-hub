@@ -1,9 +1,10 @@
 import { TextField } from "@mui/material";
 import { Box } from "@mui/system";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const ForgetPass = () => {
+  const Navigate = useNavigate();
   return (
     <div className="login-page">
       <div className="login-form">
@@ -19,7 +20,9 @@ const ForgetPass = () => {
               sx={{ width: 415, m: 1 }}
             />
           </Box>
-          <div className="button">SEND OTP</div>
+          <div className="button" onClick={() => Navigate("/verify_otp")}>
+            SEND OTP
+          </div>
           <div> or </div>
           <div className="toRegister">
             Remeber Password??? <Link to="/login">Login here</Link>

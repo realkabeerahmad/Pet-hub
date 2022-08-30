@@ -14,7 +14,7 @@ const Navigation = (user) => {
           {true ? (
             <>
               <NavLink
-                exact
+                exact={true}
                 to="/"
                 className={({ isActive }) =>
                   isActive ? activeClassName : undefined
@@ -58,7 +58,7 @@ const Navigation = (user) => {
           ) : (
             <>
               <NavLink
-                exact
+                exact={true}
                 to="/"
                 className={({ isActive }) =>
                   isActive ? activeClassName : undefined
