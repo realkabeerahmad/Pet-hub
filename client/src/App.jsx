@@ -10,13 +10,13 @@ import Register from "./pages/Register/Register";
 import AddPet from "./pages/AddPet/AddPet";
 import ErrorPage from "./pages/ErrorPage/ErrorPage";
 import Pet from "./pages/Pet/Pet";
-import PetMealTime from "./components/PetMealTime/PetMealTime";
-import DetailsandGallery from "./pages/DetailsandGallery/DetailsandGallery";
+import DetailsandGallery from "./pages/Pet/DetailsandGallery/DetailsandGallery";
 import ForgetPass from "./pages/ForgetPass/ForgetPass";
-import VaccinationAndMedical from "./pages/VaccinationAndMedical/VaccinationAndMedical";
+import VaccinationAndMedical from "./pages/Pet/VaccinationAndMedical/VaccinationAndMedical";
 import { Alert, Collapse, IconButton } from "@mui/material";
 import { useState } from "react";
 import Otp from "./pages/Otp/Otp";
+import MealTime from "./pages/Pet/MealTime/MealTime";
 
 function App() {
   const [alert, setAlert] = useState("true");
@@ -62,7 +62,7 @@ function App() {
                 path="vaccination_and_medical_details"
                 element={<VaccinationAndMedical />}
               ></Route>
-              <Route path="meal_timings" element={<PetMealTime />}></Route>
+              <Route path="meal_timings" element={<MealTime />}></Route>
               <Route path="walk_timings" element={<Shop />}></Route>
             </Route>
             <Route path="/shop" element={<Shop />}></Route>
