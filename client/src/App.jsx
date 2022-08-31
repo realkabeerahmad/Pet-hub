@@ -17,6 +17,7 @@ import { Alert, Collapse, IconButton } from "@mui/material";
 import { useState } from "react";
 import Otp from "./pages/Otp/Otp";
 import MealTime from "./pages/Pet/MealTime/MealTime";
+import WalkTime from "./pages/Pet/WalkTime/WalkTime";
 
 function App() {
   const [alert, setAlert] = useState("true");
@@ -63,7 +64,7 @@ function App() {
                 element={<VaccinationAndMedical />}
               ></Route>
               <Route path="meal_timings" element={<MealTime />}></Route>
-              <Route path="walk_timings" element={<Shop />}></Route>
+              <Route path="walk_timings" element={<WalkTime />}></Route>
             </Route>
             <Route path="/shop" element={<Shop />}></Route>
             <Route path="/community" element={<Community />}></Route>
