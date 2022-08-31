@@ -1,0 +1,44 @@
+.add-pet-form {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+.add-pet {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 80%;
+  background: #fff;
+  padding: 10px;
+  margin-top: 20px;
+  text-align: center;
+}
+.add-pet h1 {
+  margin: 20px;
+  color: #e92e4a;
+}
+.add-pet .button {
+  background: #209420;
+  color: white;
+  font-size: 20px;
+  padding: 10px 0px;
+  margin: 10px;
+  border-radius: 3px;
+  width: 415px;
+  cursor: pointer;
+  transition: background 0.3s;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -o-border-radius: 3px;
+  -webkit-transition: background 0.3s;
+  -moz-transition: background 0.3s;
+  -ms-transition: background 0.3s;
+  -o-transition: background 0.3s;
+}
+.register > .button:hover {
+  background-color: rgb(0, 107, 0);
+}
+.toLogin a {
+  color: #e92e4a;
+}
