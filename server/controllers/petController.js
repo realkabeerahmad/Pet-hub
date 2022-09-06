@@ -38,7 +38,7 @@ router.post("/addPet", upload.single("image"), (req, res) => {
     image: req.file.filename,
     passport: req.body.passport,
     dob: req.body.dob,
-    Link: req.body.petName + uuidv4(),
+    Link: req.body.petName + "_" + uuidv4(),
   };
   try {
     // Check if user Exist
@@ -246,6 +246,7 @@ router.get("/getPetVaccination", (req, res) => {
     });
   } catch (error) {}
 });
+
 // Add Pet Vet Details
 router.post("/addPetVet", (req, res) => {
   const { petId, previousDate, nextDate, VetAddress } = req.body;

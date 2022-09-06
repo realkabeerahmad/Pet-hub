@@ -8,6 +8,7 @@ const UserSchema = mongoose.Schema({
   password: { type: String, required: true },
   verified: { type: Boolean, default: false },
   Image: { type: String },
+  isAdmin: Boolean,
   createdAt: { type: Date, default: Date.now },
 });
 // Expoting User Model

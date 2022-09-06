@@ -11,6 +11,9 @@ const userRoutes = require("./server/controllers/userController");
 // Impoting Pet Routes
 const petRoutes = require("./server/controllers/petController");
 
+// Impoting Pet Routes
+const shopRoutes = require("./server/controllers/shopController");
+
 //Setting Up Envionment Variables
 dotenv.config();
 
@@ -35,6 +38,8 @@ app.use(express.static(path.join(__dirname + "/Assets")));
 app.use("/auth", userRoutes);
 
 app.use("/pet", petRoutes);
+
+app.use("/shop", shopRoutes);
 
 // Starting Server
 app.listen(process.env.PORT || 8000, () => {

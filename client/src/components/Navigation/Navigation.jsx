@@ -1,8 +1,26 @@
+import {
+  Avatar,
+  Button,
+  IconButton,
+  Menu,
+  MenuItem,
+  Tooltip,
+} from "@mui/material";
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import Logo from "../../assets/logo.png";
+import User from "../../assets/CUI.jpg";
 import "./Navigation.css";
+
 const Navigation = (user) => {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   const activeClassName = "is-active";
   return (
     <nav className="nav-bar">
@@ -69,8 +87,52 @@ const Navigation = (user) => {
             </>
           )}
         </div>
-        {user.name === "Kabeer" ? (
-          <div className="auth_links">User</div>
+        {true ? (
+          <div className="auth_links">
+            <span>Kabeer</span>
+            <Tooltip title="User Account Area">
+              <IconButton
+                onClick={handleClick}
+                size="small"
+                sx={{ ml: 2 }}
+                aria-controls={open ? "account-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+              >
+                <Avatar sx={{ width: 30, height: 30 }}>
+                  <img src={User} alt="" className="user_avatar" />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+            <div className="nav-menu">
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{
+                  "aria-labelledby": "basic-button",
+                }}
+              >
+                <Link to="/Profile">
+                  <MenuItem onClick={handleClose}>
+                    <img src={User} alt="" className="user_avatar" /> Kabeer
+                    Ahmad
+                  </MenuItem>
+                </Link>
+                <Link to="/Wishlist">
+                  <MenuItem onClick={handleClose}>My Wishlist</MenuItem>
+                </Link>
+                <Link to="/Orders">
+                  <MenuItem onClick={handleClose}>My Orders</MenuItem>
+                </Link>
+                <MenuItem onClick={handleClose}>
+                  <i className="fa fa-"></i>
+                  Logout
+                </MenuItem>
+              </Menu>
+            </div>
+          </div>
         ) : (
           <div className="auth_links">
             <NavLink
