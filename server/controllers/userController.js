@@ -24,6 +24,7 @@ const transporter = require("../config/transporter");
 
 // Import Multer Storage
 const Upload = require("../config/multer");
+const cart = require("../models/cart");
 
 // Register route for Creating a new user
 router.post("/register", (req, res) => {
@@ -56,7 +57,7 @@ router.post("/register", (req, res) => {
         // Storing user in our Database
         await user
           .save()
-          .then((result) => {
+          .then(async (result) => {
             SendOtpVerificationEmail(result, res);
           })
           .catch(() => {

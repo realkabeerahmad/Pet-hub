@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const CartItemSchema = mongoose.Schema({
   cartId: String,
   productId: String,
+  quantity: Number,
   createdAt: { type: Date, default: Date.now },
 });
 // Exporting Product Model

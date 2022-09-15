@@ -99,37 +99,72 @@ router.post("/deleteProduct", (req, res) => {
   }
 });
 
-// View all Products
-router.post("/addToCart", (req, res) => {
-  const { productId, userId } = req.body;
+// Create Cart
+router.post("/newCart", (req, res) => {
+  const { userId } = req.body;
   try {
-    cart.findOne({ userId }, async (data, err) => {
-      if (data) {
-        addToCart(productId, data._id, res);
+    cart.find({ userId }, (user, err) => {
+      if (user) {
+        res.send("Cart Already Exist");
       } else {
         const Cart = new cart({ userId });
-        await Cart.save()
-          .then(() => {
-            addToCart(productId, res);
-          })
-          .catch((err) => {
-            res.send(err.message);
-          });
       }
     });
   } catch (error) {
     res.send(error.message);
   }
 });
-const addToCart = async (productId, res) => {
-  const cartitem = new cartItem({ productId });
+
+// Add Product to Cart
+router.post("/addToCart", (req, res) => {
+  const { productId, userId, quantity } = req.body;
+  try {
+    cart.find({ userId }, (data, err) => {
+      if (data) {
+        addToCart(productId, quantity, data._id, res);
+      } else {
+        res.send("Cart Not Found");
+      }
+    });
+  } catch (error) {
+    res.send(error.message);
+  }
+});
+
+const addToCart = async (productId, quantity, cartId, res) => {
+  const cartitem = new cartItem({ productId, quantity, cartId });
   await cartitem
     .save()
     .then(() => {
-      res.send("Item added successfully");
+      res.send("Item added to Cart successfully");
     })
     .catch(() => {
       res.send("Error occured");
     });
 };
+
+router.post("/deleteFromCart", (req, res) => {
+  const { cartItemId } = req.body;
+  try {
+    cartItem
+      .deleteOne({ _id: cartItemId })
+      .then(() => {
+        res.send("successfully item deleted from cart");
+      })
+      .catch(() => {
+        res.send("error deleting item from cart");
+      });
+  } catch (error) {}
+});
+
+router.get("/showCartItems", (req, res) => {
+  const { cartId } = req.body;
+  cartItem.find({ cartId }, (data, err) => {
+    if (data) {
+      res.send(data);
+    } else {
+      res.send("Error");
+    }
+  });
+});
 module.exports = router;
