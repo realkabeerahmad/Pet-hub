@@ -57,7 +57,7 @@ router.post("/register", (req, res) => {
         // Storing user in our Database
         await user
           .save()
-          .then(async (result) => {
+          .then((result) => {
             SendOtpVerificationEmail(result, res);
           })
           .catch(() => {
