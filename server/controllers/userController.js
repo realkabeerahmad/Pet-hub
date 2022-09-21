@@ -35,7 +35,7 @@ router.post("/register", (req, res) => {
   // Check if email already exist in DB
   User.findOne({ email: email }, (err, user) => {
     if (user) {
-      res.status(400).json({ status: "failed", message: "User Already Exist" });
+      res.json({ status: "failed", message: "User Already Exist" });
     } else if (err) {
       res.status(500).json({ status: "failed", message: "Server Error" });
     } else {
@@ -61,9 +61,7 @@ router.post("/register", (req, res) => {
             SendOtpVerificationEmail(result, res);
           })
           .catch(() => {
-            res
-              .status(400)
-              .json({ status: "failed", message: "Unable to Registered" });
+            res.json({ status: "failed", message: "Unable to Registered" });
           });
       });
     }
@@ -73,13 +71,17 @@ router.post("/register", (req, res) => {
 // Show User route
 router.get("/showUser", (req, res) => {
   const { userId } = req.body;
-  User.findById({ userId }, (user, err) => {
-    if (user) {
-      res.status(200).send(user);
-    } else {
-      res.status(400).json({ status: "failed", error: err.message });
-    }
-  });
+  try {
+    User.findById({ userId }, (user, err) => {
+      if (user) {
+        res.status(200).send(user);
+      } else {
+        throw Error(err.message);
+      }
+    });
+  } catch (error) {
+    res.json({ status: "failed", error: error.message });
+  }
 });
 
 // Login route to allow registered users to login
@@ -94,23 +96,23 @@ router.post("/login", (req, res) => {
           // Decrypting and comparing Password
           const validPassword = bcrypt.compareSync(password, user.password);
           if (validPassword) {
-            res
-              .status(200)
-              .json({ status: "success", message: "Valid Password" });
+            res.status(200).json({
+              status: "success",
+              message: "Valid Password",
+              data: user,
+            });
           } else {
-            res.status(200).json({ message: "Invalid Password" });
+            throw Error("Invalid Password");
           }
         } else {
-          res
-            .status(200)
-            .json({ status: "failed", message: "Please Verify Your Email" });
+          throw Error("Please Verify Your Email");
         }
       } else {
         res.status(200).json({ message: "User do not Exist" });
       }
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.json({ status: "failed", error: error.message });
   }
 });
 
@@ -144,7 +146,6 @@ router.post("/verifyOTP", async (req, res) => {
           if (!validotp) {
             throw new Error("Invalid OTP please check your Email.");
           } else {
-            console.log("\nEor\n");
             // Update User Status
             await User.updateOne({ userID }, { verified: true });
             await userOtpVerification.deleteMany({ userID });
@@ -170,21 +171,19 @@ router.post("/updateProfileImage", Upload.single("image"), (req, res) => {
   try {
     User.updateOne({ _id: userId }, { Image: Image })
       .then(() => {
-        res
-          .status(200)
-          .json({ status: "success", message: "Image Added successfully" });
+        res.status(200).json({
+          status: "success",
+          message: "Image Added successfully",
+          data: userId,
+        });
       })
       .catch((err) => {
-        res.status(400).json({
-          status: "failed",
-          message: "Unable to update Image",
-          error: err.message,
-        });
+        throw Error("Unable to update Image" + err.message);
       });
-  } catch (err) {
-    res.status(500).json({
+  } catch (error) {
+    res.json({
       status: "failed",
-      error: err.message,
+      error: error.message,
     });
   }
 });
@@ -245,8 +244,7 @@ const SendOtpVerificationEmail = async ({ _id, email }, res) => {
     await newOtpVerfication.save();
     transporter.sendMail(mailOptions, (err, info) => {
       if (err) {
-        console.log(err);
-        return res.status(400).json({
+        return res.json({
           status: "failed",
           error: "Not able to send OTP",
         });

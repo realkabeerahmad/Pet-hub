@@ -103,11 +103,13 @@ router.post("/deleteProduct", (req, res) => {
 router.post("/newCart", (req, res) => {
   const { userId } = req.body;
   try {
-    cart.find({ userId }, (user, err) => {
+    cart.find({ userId }, async (user, err) => {
       if (user) {
         res.send("Cart Already Exist");
       } else {
         const Cart = new cart({ userId });
+        await Cart.save();
+        res.send("Cart Created");
       }
     });
   } catch (error) {
@@ -117,11 +119,11 @@ router.post("/newCart", (req, res) => {
 
 // Add Product to Cart
 router.post("/addToCart", (req, res) => {
-  const { productId, userId, quantity } = req.body;
+  const { productId, cartId, quantity } = req.body;
   try {
-    cart.find({ userId }, (data, err) => {
+    cart.findById({ cartId }, (data, err) => {
       if (data) {
-        addToCart(productId, quantity, data._id, res);
+        addToCart(productId, quantity, cartId, res);
       } else {
         res.send("Cart Not Found");
       }
@@ -132,9 +134,8 @@ router.post("/addToCart", (req, res) => {
 });
 
 const addToCart = async (productId, quantity, cartId, res) => {
-  const cartitem = new cartItem({ productId, quantity, cartId });
-  await cartitem
-    .save()
+  const Cartitem = new cartItem({ cartId, productId, quantity });
+  await Cartitem.save()
     .then(() => {
       res.send("Item added to Cart successfully");
     })
@@ -159,12 +160,29 @@ router.post("/deleteFromCart", (req, res) => {
 
 router.get("/showCartItems", (req, res) => {
   const { cartId } = req.body;
-  cartItem.find({ cartId }, (data, err) => {
-    if (data) {
-      res.send(data);
-    } else {
-      res.send("Error");
-    }
-  });
+  try {
+    cartItem.find({ cartId: cartId }, async (err, data) => {
+      if (data) {
+        let cartList = [];
+        var pd;
+        await data.forEach((CartItemDetails) => {
+          product.findById(
+            CartItemDetails.productId,
+            (pd = async (e, d) => {
+              if (d) {
+                await d;
+              }
+            })
+          );
+          console.log(pd);
+        });
+        // res.send(cartList);
+      } else {
+        res.send(err + "\nError Happend");
+      }
+    });
+  } catch (error) {
+    res.send(error);
+  }
 });
 module.exports = router;
