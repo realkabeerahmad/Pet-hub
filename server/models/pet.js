@@ -12,6 +12,7 @@ const PetSchema = mongoose.Schema({
   image: String,
   passport: String,
   dob: Date,
+  rehome: Boolean,
   Link: String,
   createdAt: { type: Date, default: Date.now },
 });

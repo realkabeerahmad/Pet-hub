@@ -18,6 +18,7 @@ import { useState } from "react";
 import Otp from "./pages/Otp/Otp";
 import MealTime from "./pages/Pet/MealTime/MealTime";
 import WalkTime from "./pages/Pet/WalkTime/WalkTime";
+import Adopt from "./pages/Adopt/Adopt";
 
 function App() {
   const [alert, setAlert] = useState("true");
@@ -67,6 +68,7 @@ function App() {
               <Route path="walk_timings" element={<WalkTime />}></Route>
             </Route>
             <Route path="/shop" element={<Shop />}></Route>
+            <Route path="/adopt" element={<Adopt />}></Route>
             <Route path="/community" element={<Community />}></Route>
             <Route
               path="/login"
@@ -80,7 +82,16 @@ function App() {
             ></Route>
             <Route path="/forget_password" element={<ForgetPass />}></Route>
             <Route path="/verify_otp" element={<Otp />}></Route>
-            <Route path="/register" element={<Register />}></Route>
+            <Route
+              path="/register"
+              element={
+                <Register
+                  setAlert={setAlert}
+                  setOpenAlert={setOpenAlert}
+                  setSeverity={setSeverity}
+                />
+              }
+            ></Route>
             <Route path="*" element={<ErrorPage />}></Route>
           </Routes>
         </div>

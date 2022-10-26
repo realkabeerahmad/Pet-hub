@@ -7,9 +7,6 @@ const Details = () => {
         <p className="details-header-heading">
           <b>DETAILS</b>
         </p>
-        <button>
-          <i className="fa fa-edit"></i> Edit
-        </button>
       </div>
       <div className="details-more">
         <table>

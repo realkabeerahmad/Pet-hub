@@ -33,39 +33,43 @@ router.post("/register", (req, res) => {
   // Generating Salt using genSaltSync function with 10 rounds
   const salt = bcrypt.genSaltSync(10);
   // Check if email already exist in DB
-  User.findOne({ email: email }, (err, user) => {
-    if (user) {
-      res.json({ status: "failed", message: "User Already Exist" });
-    } else if (err) {
-      res.status(500).json({ status: "failed", message: "Server Error" });
-    } else {
-      // Creating a user object to save in database
-      const user = new User({
-        firstName,
-        lastName,
-        email,
-        password,
-        Image: "newUser.png",
-      });
-      // Hashing users password
-      bcrypt.hash(user.password, salt, null, async (err, hash) => {
-        if (err) {
-          console.log(err);
-        }
-        // Storing HASH Password in user object
-        user.password = hash;
-        // Storing user in our Database
-        await user
-          .save()
-          .then((result) => {
-            SendOtpVerificationEmail(result, res);
-          })
-          .catch(() => {
-            res.json({ status: "failed", message: "Unable to Registered" });
-          });
-      });
-    }
-  });
+  try {
+    User.findOne({ email: email }, (err, user) => {
+      if (user) {
+        throw Error("User Already Exist");
+      } else if (err) {
+        throw Error("Server Error");
+      } else {
+        // Creating a user object to save in database
+        const user = new User({
+          firstName,
+          lastName,
+          email,
+          password,
+          Image: "newUser.png",
+        });
+        // Hashing users password
+        bcrypt.hash(user.password, salt, null, async (err, hash) => {
+          if (err) {
+            throw Error(err.message);
+          }
+          // Storing HASH Password in user object
+          user.password = hash;
+          // Storing user in our Database
+          await user
+            .save()
+            .then((result) => {
+              SendOtpVerificationEmail(result, res);
+            })
+            .catch(() => {
+              throw Error("Unable to Registered");
+            });
+        });
+      }
+    });
+  } catch (error) {
+    res.json({ status: "failed", message: error.message });
+  }
 });
 
 // Show User route

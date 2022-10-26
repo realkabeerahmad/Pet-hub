@@ -19,8 +19,13 @@ const PetWalkTime = require("../models/petWalkTime");
 // Pet Meal Time Model Created using MongoDB
 const PetMealTime = require("../models/petMealTime");
 
+// Pet Vacination Details Model
 const petVaccinationDetails = require("../models/petVaccinationDetails");
+
+// Pet Vet Details Model
 const petVetDetails = require("../models/petVetDetails");
+const pet = require("../models/pet");
+const gallery = require("../models/gallery");
 
 // Using Router from Express JS to create exportable routes
 const router = express.Router();
@@ -38,6 +43,7 @@ router.post("/addPet", upload.single("image"), (req, res) => {
     image: req.file.filename,
     passport: req.body.passport,
     dob: req.body.dob,
+    rehome: false,
     Link: req.body.petName + "_" + uuidv4(),
   };
   try {
@@ -51,27 +57,21 @@ router.post("/addPet", upload.single("image"), (req, res) => {
           .save()
           .then(() => {
             res.status(200).send({
-              status: "SUCCESS",
+              status: "success",
               message: "Pet Successfully Registered",
             });
           })
           .catch((err) => {
-            res.status(400).json({
-              status: "FAILED",
-              error: err.message,
-            });
+            throw Error("Unable to Register Pet\n" + err.message);
           });
       } else {
-        res.status(404).json({
-          status: "FAILED",
-          error: "User Not Found",
-        });
+        throw Error("User Not Found");
       }
     });
-  } catch (err) {
+  } catch (error) {
     res.status(500).json({
-      status: "FAILED",
-      error: err.message,
+      status: "failed",
+      error: error.message,
     });
   }
 });
@@ -82,13 +82,17 @@ router.get("/showPet", (req, res) => {
   try {
     Pet.findById({ petId }, (err, data) => {
       if (err) {
-        res.status(400).json({ error: err.message });
+        throw Error(err.message);
       } else {
-        res.status(200).send(data);
+        res.status(200).json({
+          status: "success",
+          message: "data fetched successfully",
+          data: data,
+        });
       }
     });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+  } catch (error) {
+    res.status(400).json({ status: "failed", error: error.message });
   }
 });
 
@@ -98,16 +102,38 @@ router.get("/showAllPets", (req, res) => {
   try {
     Pet.find({ userId }, (err, data) => {
       if (err) {
-        res.status(400).json({ error: err.message });
+        throw Error(err.message);
       } else {
-        res.status(200).send(data);
+        res.status(200).json({
+          status: "success",
+          message: "data fetched successfully",
+          data: data,
+        });
       }
     });
   } catch (err) {
-    res.status(500).send({ error: err.message });
+    res.status(500).json({ status: "failed", error: err.message });
   }
 });
 
+// Pet Rehome
+router.post("/rehome", (req, res) => {
+  var { petId } = req.body;
+  try {
+    pet.findByIdAndUpdate({ petId, rehome: true }, (err, data) => {
+      if (data) {
+        res.status(200).send({
+          status: "success",
+          message: "Pet Rehomed Succefully",
+          data: data,
+        });
+      }
+      throw Error("Error Occured");
+    });
+  } catch (error) {
+    res.send({ status: "failed", message: error.message });
+  }
+});
 // Add a Pet Meal Time
 router.post("/addPetMealTime", (req, res) => {
   const { petId, name, time } = req.body;
@@ -121,17 +147,17 @@ router.post("/addPetMealTime", (req, res) => {
           .then(() => {
             res
               .status(200)
-              .send({ status: "SUCCESS", message: "Meal Time Added" });
+              .send({ status: "success", message: "Meal Time Added" });
           })
           .catch((err) => {
-            res.status(400).send({ status: "FAILED", error: err.message });
+            throw Error(err.message);
           });
       } else {
-        res.status(400).json({ status: "FAILED", error: "Pet Not Found" });
+        throw Error("Pet Not Found");
       }
     });
-  } catch (err) {
-    res.status(500).json({ status: "FAILED", error: err.message });
+  } catch (error) {
+    res.status(500).json({ status: "failed", error: error.message });
   }
 });
 
@@ -155,6 +181,21 @@ router.get("/showAllMealTime", (req, res) => {
   }
 });
 
+// Delete Pet Meal Time
+router.post("/deleteMealTime", (req, res) => {
+  var { _id } = req.body;
+  try {
+    PetMealTime.findByIdAndDelete({ _id })
+      .then(() => {
+        res.send({ status: "success", message: "Meal Time Deleted" });
+      })
+      .catch(() => {
+        throw Error("Could not Delete");
+      });
+  } catch (error) {
+    res.send({ status: "failed", message: error.message });
+  }
+});
 // Add a pet's Walk Time
 router.post("/addPetWalkTime", (req, res) => {
   const { petId, name, time } = req.body;
@@ -202,6 +243,22 @@ router.get("/showAllWalkTimes", (req, res) => {
   }
 });
 
+// Delete Walk Time
+router.post("/deleteWalkTime", (req, res) => {
+  var { _id } = req.body;
+  try {
+    PetWalkTime.findByIdAndDelete({ _id })
+      .then(() => {
+        res.send({ status: "success", message: "Meal Time Deleted" });
+      })
+      .catch(() => {
+        throw Error("Could not Delete");
+      });
+  } catch (error) {
+    res.send({ status: "failed", message: error.message });
+  }
+});
+
 // Add Pet Vaccination Details
 router.post("/addPetVaccination", (req, res) => {
   const { petId, previousDate, nextDate, VaccinationAddress } = req.body;
@@ -210,9 +267,7 @@ router.post("/addPetVaccination", (req, res) => {
       if (pet) {
         petVaccinationDetails.find({ petId }, (data, error) => {
           if (data) {
-            res.status(400).send("Vaccination Details Already Exist");
-          } else if (error) {
-            res.status(500).send(error.message);
+            throw Error("Vaccination Details Already Exist");
           } else {
             const details = new petVaccinationDetails({
               petId,
@@ -226,27 +281,47 @@ router.post("/addPetVaccination", (req, res) => {
                 res.status(200).send("Details Saved");
               })
               .catch((error) => {
-                res.status(400).send(error.message);
+                throw Error(error.message);
               });
           }
         });
       }
     });
   } catch (err) {
-    res.status(400).send(err.message);
+    res.send({ status: "failed", message: err.message });
   }
 });
+
 router.get("/getPetVaccination", (req, res) => {
   const { petId } = req.body;
   try {
-    petVaccinationDetails.findById({ petId }, (details, err) => {
+    petVaccinationDetails.find({ petId }, (details, err) => {
       if (details) {
         res.status(200).send(details);
+      } else {
+        throw Error(err.message);
       }
     });
-  } catch (error) {}
+  } catch (error) {
+    res.status(400).json({ status: "failed", message: error.message });
+  }
 });
 
+router.post("/deleteVaccinationDetails", (req, res) => {
+  var { _id } = req.body;
+  try {
+    petVaccinationDetails
+      .findByIdAndDelete({ _id })
+      .then(() => {
+        res.send({ status: "success", message: "Vaccination Status Deleted" });
+      })
+      .catch(() => {
+        throw Error("Could not Delete");
+      });
+  } catch (error) {
+    res.send({ status: "failed", message: error.message });
+  }
+});
 // Add Pet Vet Details
 router.post("/addPetVet", (req, res) => {
   const { petId, previousDate, nextDate, VetAddress } = req.body;
@@ -255,9 +330,9 @@ router.post("/addPetVet", (req, res) => {
       if (pet) {
         petVaccinationDetails.find({ petId }, (data, error) => {
           if (data) {
-            res.status(400).send("Vet Details Already Exist");
+            throw Error("Vet Details Already Exist");
           } else if (error) {
-            res.status(500).send(error.message);
+            throw Error(error.message);
           } else {
             const details = new petVetDetails({
               petId,
@@ -271,15 +346,82 @@ router.post("/addPetVet", (req, res) => {
                 res.status(200).send("Details Saved");
               })
               .catch((error) => {
-                res.status(400).send(error.message);
+                throw Error(error.message);
               });
           }
         });
       }
     });
-  } catch (err) {
-    res.status(400).send(err.message);
+  } catch (error) {
+    res.status(400).json({ status: "failed", error: error.message });
   }
+});
+
+router.get("/getPetVet", (req, res) => {
+  const { petId } = req.body;
+  try {
+    petVetDetails.find({ petId }, (details, err) => {
+      if (details) {
+        res.status(200).send(details);
+      } else {
+        throw Error(err.message);
+      }
+    });
+  } catch (error) {
+    res.status(400).json({ status: "failed", message: error.message });
+  }
+});
+
+router.post("/deleteVetDetails", (req, res) => {
+  var { _id } = req.body;
+  try {
+    petVetDetails
+      .findByIdAndDelete({ _id })
+      .then(() => {
+        res.send({ status: "success", message: "Vaccination Status Deleted" });
+      })
+      .catch(() => {
+        throw Error("Could not Delete");
+      });
+  } catch (error) {
+    res.send({ status: "failed", message: error.message });
+  }
+});
+
+// Upload Image to Gallery
+router.post("/uploadImage", upload.single("image"), (req, res) => {
+  const { petId } = req.body;
+  const obj = { petId, image: req.file.filename };
+  try {
+    const Image = new gallery(obj);
+    Image.save()
+      .then(() => {
+        res.send({ status: "success", message: "Image Saved Successfully" });
+      })
+      .catch((err) => {
+        throw Error("Error Occoured\n", err.message);
+      });
+  } catch (error) {
+    res.send({ status: "failed", message: error.message });
+  }
+});
+
+// Get Images From Gallery
+router.get("/getImages", (req, res) => {
+  const { petId } = req.body;
+  try {
+    gallery.find(petId, (err, data) => {
+      if (err) {
+        throw Error("Error Occured\n", err.message);
+      } else {
+        res.send({
+          status: "success",
+          message: "Sent Successfully",
+          data: data,
+        });
+      }
+    });
+  } catch (error) {}
 });
 // Exporting Routes
 module.exports = router;

@@ -7,7 +7,11 @@ import "./Login.css";
 
 const Login = ({ setAlert, setOpenAlert, setLoginUser, setSeverity }) => {
   const Navigate = useNavigate();
-
+  const [Err, setErr] = useState({ err: false, helpText: "" });
+  function tester() {
+    Err.err = true;
+    Err.helpText = "Invalid Email";
+  }
   const [values, setValues] = useState({
     email: "",
     password: "",
@@ -56,6 +60,7 @@ const Login = ({ setAlert, setOpenAlert, setLoginUser, setSeverity }) => {
           <h1>LOGIN</h1>
           <Box component="form" noValidate autoComplete="off">
             <TextField
+              required
               name="email"
               label="Email"
               variant="outlined"
@@ -64,6 +69,8 @@ const Login = ({ setAlert, setOpenAlert, setLoginUser, setSeverity }) => {
               value={email}
               onChange={handleChange("email")}
               sx={{ width: 415, m: 1 }}
+              error={Err.err}
+              helperText={Err.helpText}
             />
             <TextField
               name="password"
@@ -76,6 +83,7 @@ const Login = ({ setAlert, setOpenAlert, setLoginUser, setSeverity }) => {
               sx={{ width: 415, m: 1 }}
             />
           </Box>
+          <button onClick={tester}>Click Me</button>
           <p>
             Forgot Password???&nbsp;
             <Link to="/forget_password" className="_button">

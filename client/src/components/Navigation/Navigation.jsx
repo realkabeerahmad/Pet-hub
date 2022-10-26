@@ -29,17 +29,17 @@ const Navigation = (user) => {
       </div>
       <div className="nav">
         <div className="nav-links">
-          {true ? (
+          <NavLink
+            exact={true}
+            to="/"
+            className={({ isActive }) =>
+              isActive ? activeClassName : undefined
+            }
+          >
+            Home
+          </NavLink>
+          {false ? (
             <>
-              <NavLink
-                exact={true}
-                to="/"
-                className={({ isActive }) =>
-                  isActive ? activeClassName : undefined
-                }
-              >
-                Home
-              </NavLink>
               <NavLink
                 to="/my_pets"
                 className={({ isActive }) =>
@@ -48,46 +48,37 @@ const Navigation = (user) => {
               >
                 My Pets
               </NavLink>
-              <NavLink
-                to="/shop"
-                className={({ isActive }) =>
-                  isActive ? activeClassName : undefined
-                }
-              >
-                Shop
-              </NavLink>
-              <NavLink
-                to="/adopt"
-                className={({ isActive }) =>
-                  isActive ? activeClassName : undefined
-                }
-              >
-                Adopt
-              </NavLink>
-              <NavLink
-                to="/community"
-                className={({ isActive }) =>
-                  isActive ? activeClassName : undefined
-                }
-              >
-                Community
-              </NavLink>
             </>
           ) : (
-            <>
-              <NavLink
-                exact={true}
-                to="/"
-                className={({ isActive }) =>
-                  isActive ? activeClassName : undefined
-                }
-              >
-                Home
-              </NavLink>
-            </>
+            <></>
           )}
+
+          <NavLink
+            to="/shop"
+            className={({ isActive }) =>
+              isActive ? activeClassName : undefined
+            }
+          >
+            Shop
+          </NavLink>
+          <NavLink
+            to="/adopt"
+            className={({ isActive }) =>
+              isActive ? activeClassName : undefined
+            }
+          >
+            Adopt
+          </NavLink>
+          <NavLink
+            to="/community"
+            className={({ isActive }) =>
+              isActive ? activeClassName : undefined
+            }
+          >
+            Community
+          </NavLink>
         </div>
-        {true ? (
+        {false ? (
           <div className="auth_links">
             <span>Kabeer</span>
             <Tooltip title="User Account Area">

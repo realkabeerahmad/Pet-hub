@@ -4,7 +4,10 @@ const mongoose = require("mongoose");
 const CartItemSchema = mongoose.Schema({
   cartId: String,
   productId: String,
+  name: String,
   quantity: Number,
+  price: Number,
+  image: String,
   createdAt: { type: Date, default: Date.now },
 });
 // Exporting Product Model

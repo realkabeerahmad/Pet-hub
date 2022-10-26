@@ -38,9 +38,6 @@ const Pet = () => {
               <p className="pet-profile-name">Name</p>
               <p className="pet-bio">This is Bio. I am Name</p>
             </div>
-            <button>
-              <i className="fa fa-edit" /> Edit Pet
-            </button>
           </div>
         </div>
       </div>

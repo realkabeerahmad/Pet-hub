@@ -14,25 +14,39 @@ const Register = () => {
     password: "",
     repassword: "",
   });
+  const [f_name, setF_name] = useState({ error: false, helperText: "" });
 
   const { firstName, lastName, email, password, repassword } = values;
 
   const handleChange = (value) => (e) => {
     setvalues({ ...values, [value]: e.target.value });
   };
+  const onBlur = (value) => (e) => {
+    if (value.length <= 2 && (value === "firstName" || value === "LastName")) {
+      setF_name({
+        error: true,
+        helperText: "First Name must be greater then 2",
+      });
+      console.log(f_name);
+    }
+  };
 
-  const register = () => {
+  const register = ({ setAlert, setOpenAlert, setSeverity }) => {
     const { firstName, lastName, email, password, repassword } = values;
     if (firstName && lastName && email && password && password === repassword) {
       axios
         .post("http://localhost:3005/auth/register", values)
         .then((res) => {
-          console.log(res);
-
-          if (res.data.message === "Successfully Registered") {
+          const message = res.data.message;
+          if (res.data.status === "success") {
+            setAlert(res.data.message);
+            setSeverity("success");
             Navigate("/login");
+          } else if (res.data.status === "failed") {
+            setAlert(res.data.message);
+            setSeverity("error");
           }
-          alert(res.data.message);
+          setOpenAlert(true);
         })
         .catch((err) => {
           console.log(err);
@@ -53,8 +67,11 @@ const Register = () => {
             type="text"
             color="success"
             onChange={handleChange("firstName")}
+            onBlur={onBlur("firstName")}
             value={firstName}
             sx={{ width: "40%", m: 1, ml: 0 }}
+            error={f_name.error}
+            helperText={f_name.helperText}
           />
           <TextField
             name="lastName"

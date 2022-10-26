@@ -20,6 +20,8 @@ const { v4: uuidv4 } = require("uuid");
 const product = require("../models/product");
 const cart = require("../models/cart");
 const cartItem = require("../models/cartItem");
+const order = require("../models/order");
+const orderItem = require("../models/orderItem");
 
 // Add a Product
 router.post("/addProduct", Upload.single("image"), (req, res) => {
@@ -40,13 +42,15 @@ router.post("/addProduct", Upload.single("image"), (req, res) => {
     const Product = new product(obj);
     Product.save()
       .then(() => {
-        res.status(200).send("Product Saved Successfully");
+        res
+          .status(200)
+          .send({ status: "success", message: "Product Saved Successfully" });
       })
       .catch((err) => {
-        res.send(err.message);
+        throw Error(err.message);
       });
   } catch (error) {
-    res.send(error.message);
+    res.send({ status: "failed", message: error.message });
   }
 });
 
@@ -56,13 +60,13 @@ router.post("/showProduct", Upload.single("image"), (req, res) => {
   try {
     product.findById({ productId }, (product, err) => {
       if (product) {
-        res.status(200).send(product);
+        res.status(200).send({ status: "success", data: product });
       } else {
-        res.send(err.message);
+        throw Error(err.message);
       }
     });
   } catch (error) {
-    res.send(error.message);
+    res.send({ status: "failed", message: error.message });
   }
 });
 
@@ -71,31 +75,33 @@ router.post("/showAllProducts", Upload.single("image"), (req, res) => {
   try {
     product.find((data, err) => {
       if (data) {
-        res.status(200).send(data);
+        res.status(200).send({ status: "success", data: data });
       } else {
-        res.send(err.message);
+        throw Error("Products not found");
       }
     });
   } catch (error) {
-    res.send(error.message);
+    res.send({ status: "failed", message: error.message });
   }
 });
 
-// View all Products
+// Delete a Product
 router.post("/deleteProduct", (req, res) => {
   const { productId } = req.body;
-  console.log(productId);
-
   try {
-    product.deleteOne({ productId }, (data, err) => {
-      if (data) {
-        res.send(data);
-      } else {
-        res.send(err);
-      }
-    });
+    product
+      .findByIdAndDelete({ productId })
+      .then(() => {
+        res.status(200).send({
+          status: "success",
+          message: "Product Deleted Successfully",
+        });
+      })
+      .catch((err) => {
+        throw Error(err.message);
+      });
   } catch (error) {
-    res.send(error.message);
+    res.send({ status: "failed", message: error.message });
   }
 });
 
@@ -103,59 +109,76 @@ router.post("/deleteProduct", (req, res) => {
 router.post("/newCart", (req, res) => {
   const { userId } = req.body;
   try {
-    cart.find({ userId }, async (user, err) => {
-      if (user) {
-        res.send("Cart Already Exist");
+    cart.find({ userId }, async (data, err) => {
+      if (data) {
+        throw Error("Cart Already Exist");
       } else {
         const Cart = new cart({ userId });
         await Cart.save();
-        res.send("Cart Created");
+        res.send({ status: "success", message: "Cart Created" });
       }
     });
   } catch (error) {
-    res.send(error.message);
+    res.send({ status: "failed", message: error.message });
   }
 });
 
 // Add Product to Cart
 router.post("/addToCart", (req, res) => {
-  const { productId, cartId, quantity } = req.body;
+  const { productId, name, price, image, cartId, quantity } = req.body;
+  const product = { productId, name, price, image, cartId, quantity };
   try {
     cart.findById({ cartId }, (data, err) => {
       if (data) {
-        addToCart(productId, quantity, cartId, res);
+        addToCart(product, res);
       } else {
-        res.send("Cart Not Found");
+        throw Error("Cart Not Found");
       }
     });
   } catch (error) {
-    res.send(error.message);
+    res.send({ status: "success", message: error.message });
   }
 });
 
-const addToCart = async (productId, quantity, cartId, res) => {
-  const Cartitem = new cartItem({ cartId, productId, quantity });
-  await Cartitem.save()
-    .then(() => {
-      res.send("Item added to Cart successfully");
-    })
-    .catch(() => {
-      res.send("Error occured");
+// Function to add to cart
+const addToCart = async (product, res) => {
+  const cartId = product.cartId;
+  const productId = product.productId;
+  try {
+    cartItem.find({ cartId, productId }, async (err, data) => {
+      if (data) {
+        throw Error("Product Already in Cart");
+      } else {
+        const Cartitem = new cartItem(product);
+        await Cartitem.save()
+          .then(() => {
+            res.send("Item added to Cart successfully");
+          })
+          .catch(() => {
+            throw Error("Error occured");
+          });
+      }
     });
+  } catch (error) {
+    res.send({ status: "failed", message: error.message });
+  }
 };
 
+// Delete From Cart
 router.post("/deleteFromCart", (req, res) => {
   const { cartItemId } = req.body;
   try {
     cartItem
-      .deleteOne({ _id: cartItemId })
+      .findByIdAndDelete({ cartItemId })
       .then(() => {
         res.send("successfully item deleted from cart");
       })
       .catch(() => {
-        res.send("error deleting item from cart");
+        throw Error("error deleting item from cart");
       });
-  } catch (error) {}
+  } catch (error) {
+    res.send({ status: "failed", message: error.message });
+  }
 });
 
 router.get("/showCartItems", (req, res) => {
@@ -163,26 +186,14 @@ router.get("/showCartItems", (req, res) => {
   try {
     cartItem.find({ cartId: cartId }, async (err, data) => {
       if (data) {
-        let cartList = [];
-        var pd;
-        await data.forEach((CartItemDetails) => {
-          product.findById(
-            CartItemDetails.productId,
-            (pd = async (e, d) => {
-              if (d) {
-                await d;
-              }
-            })
-          );
-          console.log(pd);
-        });
-        // res.send(cartList);
+        res.status(200).send(data);
       } else {
-        res.send(err + "\nError Happend");
+        throw Error(err + "\nError Happend");
       }
     });
   } catch (error) {
-    res.send(error);
+    res.send({ status: "failed", message: error.message });
   }
 });
+
 module.exports = router;
