@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./ShopCard.css";
 const ShopCard = ({ Product, setProduct }) => {
+  const { name, Image, quantity, price } = Product;
   const serverBaseURL = "http://localhost:8000";
   function setShopDetails() {
     setProduct(Product);
@@ -17,17 +18,14 @@ const ShopCard = ({ Product, setProduct }) => {
       >
         <div className="ShopCard">
           <div className="img">
-            <img
-              src={`${serverBaseURL}/${Product.Image}`}
-              alt={`${Product.name}`}
-            />
+            <img src={`${serverBaseURL}/${Image}`} alt={`${name}`} />
           </div>
           <div className="details">
-            <h2>{Product.name}</h2>
-            <h4>PKR&nbsp;&nbsp;{Product.price}</h4>
+            <h2>{name}</h2>
+            <h4>PKR&nbsp;&nbsp;{price}</h4>
           </div>
           <p className="Quantity">
-            {Product.quantity <= 0 ? "Out of Stock" : "In Stock"}
+            {quantity <= 0 ? "Out of Stock" : "In Stock"}
           </p>
         </div>
       </Link>

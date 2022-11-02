@@ -14,41 +14,22 @@ const Shop = ({ setProduct }) => {
     axios
       .get("http://localhost:8000/shop/showAllProducts/")
       .then((res) => {
-        console.log(res);
+        console.log(res.data.products);
         setProducts(res.data.products);
       })
       .catch((err) => {
         console.log(err);
       });
   };
-  const product = {
-    FastShipping: " dummy",
-    Image: "fe7702c8-e15e-4b60-abae-aea769a03798-1662467836510.png",
-    Link: " dummy_ dummy_ed3361f4-97a7-439e-8f68-9d3a7f56be95",
-    Return: " dummy",
-    StandardShipping: " dummy",
-    Warranty: " dummy",
-    createdAt: "2022-09-06T12:37:16.598Z",
-    description: " dummy",
-    name: " dummy",
-    price: 120,
-    quantity: 200,
-    __v: 0,
-    _id: "63173efc621caaf178b0decc",
-  };
   return (
     <>
       <div className="shop">
         <div className="shopRow">
-          {console.log(Products)}
           {Products.forEach((Product) => {
-            <ShopCard Product={Product} setProduct={setProduct} />;
-            console.log("This ", Product, "This");
+            console.log(Product);
+            <ShopCard Product={Product} />;
           })}
-          {/* <ShopCard Product={product} />
-          <ShopCard Product={product} />
-          <ShopCard Product={product} />
-          <ShopCard Product={product} /> */}
+          {/* <ShopCard Product={Products[0]} />; */}
         </div>
       </div>
     </>
