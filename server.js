@@ -46,7 +46,8 @@ app.use("/shop", shopRoutes);
 
 app.use("/adoption", petAdoptionRoutes);
 
+const Port = 8000;
 // Starting Server
-app.listen(process.env.PORT || 8000, () => {
-  console.log(`Server Connected`.toUpperCase());
+app.listen(Port, () => {
+  console.log(`Server Connected at ${Port}`.toUpperCase());
 });

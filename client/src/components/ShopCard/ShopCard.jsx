@@ -1,29 +1,37 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./ShopCard.css";
-const ShopCard = ({ name, price, img, des, quan, link, setShopItem }) => {
-  const serverBaseURL = "http://localhost:9002";
+const ShopCard = ({ Product, setProduct }) => {
+  const serverBaseURL = "http://localhost:8000";
   function setShopDetails() {
-    setShopItem({ name, price, img, des, quan, link });
+    setProduct(Product);
   }
+
   return (
-    <Link
-      exact
-      to={`/${link}`}
-      onClick={setShopDetails}
-      className="ShopCardWrap"
-    >
-      <div className="ShopCard">
-        <div className="img">
-          <img src={`${serverBaseURL}/${img}`} alt={`${name}`} />
+    <>
+      <Link
+        exact
+        to={`/product`}
+        onClick={setShopDetails}
+        className="ShopCardWrap"
+      >
+        <div className="ShopCard">
+          <div className="img">
+            <img
+              src={`${serverBaseURL}/${Product.Image}`}
+              alt={`${Product.name}`}
+            />
+          </div>
+          <div className="details">
+            <h2>{Product.name}</h2>
+            <h4>PKR&nbsp;&nbsp;{Product.price}</h4>
+          </div>
+          <p className="Quantity">
+            {Product.quantity <= 0 ? "Out of Stock" : "In Stock"}
+          </p>
         </div>
-        <div className="details">
-          <h2>{name} Dummy</h2>
-          <h4>PKR&nbsp;&nbsp;{price}</h4>
-        </div>
-        <p className="Quantity">{quan <= 0 ? "Out of Stock" : "In Stock"}</p>
-      </div>
-    </Link>
+      </Link>
+    </>
   );
 };
 

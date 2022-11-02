@@ -36,9 +36,9 @@ router.post("/register", (req, res) => {
   try {
     User.findOne({ email: email }, (err, user) => {
       if (user) {
-        throw Error("User Already Exist");
+        res.json({ status: "failed", message: "User Already Exist" });
       } else if (err) {
-        throw Error("Server Error");
+        res.json({ status: "failed", message: "Server Error" });
       } else {
         // Creating a user object to save in database
         const user = new User({
@@ -62,7 +62,7 @@ router.post("/register", (req, res) => {
               SendOtpVerificationEmail(result, res);
             })
             .catch(() => {
-              throw Error("Unable to Registered");
+              res.json({ status: "failed", message: "Unable to Registered" });
             });
         });
       }

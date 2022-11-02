@@ -12,7 +12,7 @@ import Logo from "../../assets/logo.png";
 import User from "../../assets/CUI.jpg";
 import "./Navigation.css";
 
-const Navigation = (user) => {
+const Navigation = (login) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -38,7 +38,7 @@ const Navigation = (user) => {
           >
             Home
           </NavLink>
-          {false ? (
+          {login.login ? (
             <>
               <NavLink
                 to="/my_pets"
@@ -78,9 +78,8 @@ const Navigation = (user) => {
             Community
           </NavLink>
         </div>
-        {false ? (
+        {login.login ? (
           <div className="auth_links">
-            <span>Kabeer</span>
             <Tooltip title="User Account Area">
               <IconButton
                 onClick={handleClick}

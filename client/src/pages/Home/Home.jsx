@@ -15,26 +15,30 @@ const Home = () => {
           <div className="home-about-left">
             <h4>Project Supervisor</h4>
             <table>
-              <tr>
-                <td>Amaid Zia</td>
-                <td>Lecturer, CUI, Lahore</td>
-              </tr>
+              <tbody>
+                <tr>
+                  <td>Amaid Zia</td>
+                  <td>Lecturer, CUI, Lahore</td>
+                </tr>
+              </tbody>
             </table>
             <br />
             <h4>Group Members</h4>
             <table>
-              <tr>
-                <td>Kabeer Ahmad</td>
-                <td>SP19-BCS-113</td>
-              </tr>
-              <tr>
-                <td>Muhammad Umar</td>
-                <td>FA18-BCS-181</td>
-              </tr>
-              <tr>
-                <td>Rimshah Qudoss</td>
-                <td>SP19-BCS-109</td>
-              </tr>
+              <tbody>
+                <tr>
+                  <td>Kabeer Ahmad</td>
+                  <td>SP19-BCS-113</td>
+                </tr>
+                <tr>
+                  <td>Muhammad Umar</td>
+                  <td>FA18-BCS-181</td>
+                </tr>
+                <tr>
+                  <td>Rimshah Qudoss</td>
+                  <td>SP19-BCS-109</td>
+                </tr>
+              </tbody>
             </table>
           </div>
           <div className="home-about-right">

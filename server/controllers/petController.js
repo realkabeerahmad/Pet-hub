@@ -421,7 +421,26 @@ router.get("/getImages", (req, res) => {
         });
       }
     });
-  } catch (error) {}
+  } catch (error) {
+    res.send({ status: "failed", message: error.message });
+  }
 });
+// Delete Image
+router.get("/deleteImage", (req, res) => {
+  const { galleryId } = req.body;
+  try {
+    gallery
+      .findByIdAndDelete(galleryId)
+      .then(() => {
+        res.send({ status: "success", message: "Deleted Successfully" });
+      })
+      .catch((err) => {
+        throw Error("Error Occured\n", err.message);
+      });
+  } catch (error) {
+    res.send({ status: "failed", message: error.message });
+  }
+});
+// delete Image from Gallery
 // Exporting Routes
 module.exports = router;

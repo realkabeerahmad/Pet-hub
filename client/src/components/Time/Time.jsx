@@ -7,8 +7,14 @@ const Time = () => {
         <tr>
           <th>Time Name</th>
           <td>
-            <button>Edit</button>
-            <button>Delete</button>
+            <button className="btn">
+              <i className="fa fa-edit"></i>&nbsp;&nbsp;Edit
+            </button>
+          </td>
+          <td>
+            <button className="btn">
+              <i className="fa fa-times-rectangle"></i>&nbsp;&nbsp;Delete
+            </button>
           </td>
         </tr>
         <tr>

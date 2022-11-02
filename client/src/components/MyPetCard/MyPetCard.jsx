@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import "./MyPetCard.css";
 const MyPetCard = () => {
   return (
-    <Link to="/my_pets/pet">
+    <Link to="/my_pets/pet/details_and_gallery">
       <div className="pet-card">
         <div className="pet-img">
           <img

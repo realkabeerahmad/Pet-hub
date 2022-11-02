@@ -5,6 +5,7 @@ const OrderSchema = mongoose.Schema({
   Name: String,
   Address: String,
   Phone: String,
+  status: String,
   TrackingId: String,
   TrackingService: String,
   createdAt: { type: Date, default: Date.now },

@@ -5,7 +5,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./Register.css";
 
-const Register = () => {
+const Register = ({ setAlert, setOpenAlert, setSeverity }) => {
   const Navigate = useNavigate();
   const [values, setvalues] = useState({
     firstName: "",
@@ -31,17 +31,18 @@ const Register = () => {
     }
   };
 
-  const register = ({ setAlert, setOpenAlert, setSeverity }) => {
+  const register = () => {
     const { firstName, lastName, email, password, repassword } = values;
     if (firstName && lastName && email && password && password === repassword) {
       axios
-        .post("http://localhost:3005/auth/register", values)
+        .post("http://localhost:8000/auth/register", values)
         .then((res) => {
-          const message = res.data.message;
+          console.log("I am here");
+          console.log(res);
           if (res.data.status === "success") {
-            setAlert(res.data.message);
+            setAlert("Registered Successfully Please Verify Email");
             setSeverity("success");
-            Navigate("/login");
+            Navigate("/verify_otp");
           } else if (res.data.status === "failed") {
             setAlert(res.data.message);
             setSeverity("error");
@@ -49,10 +50,13 @@ const Register = () => {
           setOpenAlert(true);
         })
         .catch((err) => {
+          console.log("I will here");
           console.log(err);
         });
     } else {
-      alert("Invlid input");
+      setAlert("Please Enter Required details");
+      setSeverity("error");
+      setOpenAlert(true);
     }
   };
   return (

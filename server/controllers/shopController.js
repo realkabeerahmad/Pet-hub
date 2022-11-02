@@ -55,7 +55,7 @@ router.post("/addProduct", Upload.single("image"), (req, res) => {
 });
 
 // View a Product
-router.post("/showProduct", Upload.single("image"), (req, res) => {
+router.get("/showProduct", (req, res) => {
   const { productId } = req.body;
   try {
     product.findById({ productId }, (product, err) => {
@@ -71,11 +71,12 @@ router.post("/showProduct", Upload.single("image"), (req, res) => {
 });
 
 // View all Products
-router.post("/showAllProducts", Upload.single("image"), (req, res) => {
+router.get("/showAllProducts", (req, res) => {
   try {
-    product.find((data, err) => {
+    console.log("here");
+    product.find((err, data) => {
       if (data) {
-        res.status(200).send({ status: "success", data: data });
+        res.status(200).send({ status: "success", products: data });
       } else {
         throw Error("Products not found");
       }

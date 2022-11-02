@@ -24,11 +24,13 @@ function App() {
   const [alert, setAlert] = useState("true");
   const [severity, setSeverity] = useState("success");
   const [openAlert, setOpenAlert] = useState(false);
-  const User = { name: "Kabeer", _id: "Some ID" };
+  const [Product, setProduct] = useState({});
+  const [login, setLogin] = useState(false);
+
   return (
     <>
       <BrowserRouter>
-        <Navigation user={User} />
+        <Navigation login={login} />
         <Collapse in={openAlert}>
           <Alert
             severity={severity}
@@ -52,7 +54,22 @@ function App() {
         <div className="App">
           <Routes>
             <Route exact path="/" element={<Home />}></Route>
-            <Route path="/my_pets" element={<MyPets />}></Route>
+            {console.log(login)}
+            {login ? (
+              <Route path="/my_pets" element={<MyPets />}></Route>
+            ) : (
+              <Route
+                path="/my_pets"
+                element={
+                  <Login
+                    setAlert={setAlert}
+                    setOpenAlert={setOpenAlert}
+                    setSeverity={setSeverity}
+                    setLogin={setLogin}
+                  />
+                }
+              ></Route>
+            )}
             <Route path="/my_pets/add_pet" element={<AddPet />} />
             <Route path="/my_pets/pet" element={<Pet />}>
               <Route index element={<DetailsandGallery />}></Route>
@@ -67,7 +84,10 @@ function App() {
               <Route path="meal_timings" element={<MealTime />}></Route>
               <Route path="walk_timings" element={<WalkTime />}></Route>
             </Route>
-            <Route path="/shop" element={<Shop />}></Route>
+            <Route
+              path="/shop"
+              element={<Shop setProduct={setProduct} />}
+            ></Route>
             <Route path="/adopt" element={<Adopt />}></Route>
             <Route path="/community" element={<Community />}></Route>
             <Route
@@ -77,6 +97,7 @@ function App() {
                   setAlert={setAlert}
                   setOpenAlert={setOpenAlert}
                   setSeverity={setSeverity}
+                  setLogin={setLogin}
                 />
               }
             ></Route>
@@ -89,6 +110,7 @@ function App() {
                   setAlert={setAlert}
                   setOpenAlert={setOpenAlert}
                   setSeverity={setSeverity}
+                  setLogin={setLogin}
                 />
               }
             ></Route>

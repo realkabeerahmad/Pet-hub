@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 
-const Login = ({ setAlert, setOpenAlert, setLoginUser, setSeverity }) => {
+const Login = ({ setAlert, setOpenAlert, setLogin, setSeverity }) => {
   const Navigate = useNavigate();
   const [Err, setErr] = useState({ err: false, helpText: "" });
   function tester() {
@@ -24,26 +24,19 @@ const Login = ({ setAlert, setOpenAlert, setLoginUser, setSeverity }) => {
     const { email, password } = values;
     if (email && password) {
       axios
-        .post("http://localhost:3005/auth/login", values)
+        .post("http://localhost:8000/auth/login", values)
         .then((res) => {
           console.log(res.data);
-          if (res.data.message === "User do not Exist") {
-            setAlert(res.data.message);
-            setOpenAlert(true);
-            setSeverity("info");
-          } else if (res.data.message === "Invalid Password") {
-            setAlert(res.data.message);
-            setOpenAlert(true);
-            setSeverity("error");
-          } else if (res.data.message === "Please Verify Your Email") {
-            setAlert(res.data.message);
-            setOpenAlert(true);
-            setSeverity("warning");
-          } else if (res.data.message === "Valid Password") {
-            setAlert("Login Pressed");
+          if (res.data.status === "success") {
+            setAlert("Welcome!!!");
             setOpenAlert(true);
             setSeverity("success");
             Navigate("/my_pets");
+            setLogin(true);
+          } else if (res.data.status === "failed") {
+            setAlert(res.data.message);
+            setOpenAlert(true);
+            setSeverity("error");
           }
         })
         .catch((err) => console.log(err));

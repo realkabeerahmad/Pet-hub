@@ -26,6 +26,7 @@ const petVaccinationDetails = require("../models/petVaccinationDetails");
 const petVetDetails = require("../models/petVetDetails");
 const shelter = require("../models/shelter");
 const pet = require("../models/pet");
+const adoptionForm = require("../models/adoptionForm");
 
 // Using Router from Express JS to create exportable routes
 const router = express.Router();
@@ -134,4 +135,34 @@ router.get("/showAllPets", (req, res) => {
     res.send({ status: "failed", message: error.message });
   }
 });
+
+router.post("/adoptPet", (req, res) => {
+  const { petId, userId, age, address, phone, house_type, isYardFenced } =
+    req.body;
+  const obj = { petId, userId, age, address, phone, house_type, isYardFenced };
+  try {
+    adoptionForm.find({ petId: petId, userId: userId }, (err, data) => {
+      if (data) {
+        throw Error("Application Already Sent");
+      } else if (err) {
+        throw Error("Error Occured\n", err.message);
+      } else {
+        Adoption = new adoptionForm(obj);
+        Adoption.save()
+          .then(() => {
+            res.send({
+              status: "success",
+              message: "Your Application is Forwarded to the Shelter",
+            });
+          })
+          .then((err) => {
+            throw Error("Error Occured\n", err.message);
+          });
+      }
+    });
+  } catch (error) {
+    res.send({ status: "failed", message: error.message });
+  }
+});
+
 module.exports = router;

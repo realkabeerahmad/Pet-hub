@@ -8,8 +8,8 @@ const MealTime = () => {
         <p className="details-header-heading">
           <b>Meal Time</b>
         </p>
-        <button>
-          <i className="fa fa-plus"></i> Add
+        <button className="btn">
+          <i className="fa fa-plus"></i>&nbsp;&nbsp;Add
         </button>
       </div>
       <div className="details-more">
