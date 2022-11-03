@@ -19,6 +19,7 @@ import Otp from "./pages/Otp/Otp";
 import MealTime from "./pages/Pet/MealTime/MealTime";
 import WalkTime from "./pages/Pet/WalkTime/WalkTime";
 import Adopt from "./pages/Adopt/Adopt";
+import ShopDetails from "./pages/Shop/ShopDetails/ShopDetails";
 
 function App() {
   const [alert, setAlert] = useState("true");
@@ -26,6 +27,7 @@ function App() {
   const [openAlert, setOpenAlert] = useState(false);
   const [Product, setProduct] = useState({});
   const [login, setLogin] = useState(false);
+  const [userId, setUserId] = useState("");
 
   return (
     <>
@@ -71,6 +73,7 @@ function App() {
               ></Route>
             )}
             <Route path="/my_pets/add_pet" element={<AddPet />} />
+            {/* <Route path="/" element={<AddPet />} /> */}
             <Route path="/my_pets/pet" element={<Pet />}>
               <Route index element={<DetailsandGallery />}></Route>
               <Route
@@ -88,6 +91,10 @@ function App() {
               path="/shop"
               element={<Shop setProduct={setProduct} />}
             ></Route>
+            <Route
+              path={`/product/${Product._id}`}
+              element={<ShopDetails Product={Product} />}
+            ></Route>
             <Route path="/adopt" element={<Adopt />}></Route>
             <Route path="/community" element={<Community />}></Route>
             <Route
@@ -102,7 +109,17 @@ function App() {
               }
             ></Route>
             <Route path="/forget_password" element={<ForgetPass />}></Route>
-            <Route path="/verify_otp" element={<Otp />}></Route>
+            <Route
+              path="/verify_otp"
+              element={
+                <Otp
+                  userId={userId}
+                  setAlert={setAlert}
+                  setOpenAlert={setOpenAlert}
+                  setSeverity={setSeverity}
+                />
+              }
+            ></Route>
             <Route
               path="/register"
               element={
@@ -110,7 +127,7 @@ function App() {
                   setAlert={setAlert}
                   setOpenAlert={setOpenAlert}
                   setSeverity={setSeverity}
-                  setLogin={setLogin}
+                  setUserId={setUserId}
                 />
               }
             ></Route>

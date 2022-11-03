@@ -25,11 +25,11 @@ const Shop = ({ setProduct }) => {
     <>
       <div className="shop">
         <div className="shopRow">
-          {Products.forEach((Product) => {
-            console.log(Product);
-            <ShopCard Product={Product} />;
+          {Products.map((Product) => {
+            return (
+              <ShopCard Product={Product} setProduct={setProduct}></ShopCard>
+            );
           })}
-          {/* <ShopCard Product={Products[0]} />; */}
         </div>
       </div>
     </>
