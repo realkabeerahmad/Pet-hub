@@ -23,13 +23,24 @@ const Shop = ({ setProduct }) => {
   };
   return (
     <>
-      <div className="shop-search">
-        {/* <form onSubmit={false}> */}
-        <input type="text" placeholder="SEARCH" />
-        <button>
-          <i className="fa fa-search"></i>
-        </button>
-        {/* </form> */}
+      <div className="shop-nav">
+        <select name="" id="">
+          <option value="1" selected disabled>
+            Category
+          </option>
+          <option value="1">1</option>
+          <option value="1">1</option>
+          <option value="1">1</option>
+          <option value="1">1</option>
+        </select>
+        <div className="shop-search">
+          {/* <form onSubmit={false}> */}
+          <input type="text" placeholder="SEARCH" />
+          <button>
+            <i className="fa fa-search"></i>
+          </button>
+          {/* </form> */}
+        </div>
       </div>
       <div className="shop">
         <div className="shopRow">

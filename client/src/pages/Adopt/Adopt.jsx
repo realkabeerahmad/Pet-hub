@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import AdoptCard from "../../components/AdoptCard/AdoptCard";
 import "./Adopt.css";
-const Adopt = () => {
+const Adopt = ({ setPet }) => {
   const [Pets, setPets] = useState([]);
   useEffect(() => {
     fetchItem();
@@ -18,15 +19,32 @@ const Adopt = () => {
       });
   };
   return (
-    <div className="pet-Adoption">
-      <AdoptCard></AdoptCard>
-      <AdoptCard></AdoptCard>
-      <AdoptCard></AdoptCard>
-      <AdoptCard></AdoptCard>
-      <AdoptCard></AdoptCard>
-      <AdoptCard></AdoptCard>
-      <AdoptCard></AdoptCard>
-    </div>
+    <>
+      <div className="shop-nav">
+        <select name="" id="">
+          <option value="1" selected disabled>
+            Category
+          </option>
+          <option value="1">1</option>
+          <option value="1">1</option>
+          <option value="1">1</option>
+          <option value="1">1</option>
+        </select>
+        <div className="shop-search">
+          {/* <form onSubmit={false}> */}
+          <input type="text" placeholder="SEARCH" />
+          <button>
+            <i className="fa fa-search"></i>
+          </button>
+          {/* </form> */}
+        </div>
+      </div>
+      <div className="pet-Adoption">
+        {Pets.map((Pet) => {
+          return <AdoptCard Pet={Pet} setPet={setPet} />;
+        })}
+      </div>
+    </>
   );
 };
 

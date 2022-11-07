@@ -20,13 +20,16 @@ import MealTime from "./pages/Pet/MealTime/MealTime";
 import WalkTime from "./pages/Pet/WalkTime/WalkTime";
 import Adopt from "./pages/Adopt/Adopt";
 import ShopDetails from "./pages/Shop/ShopDetails/ShopDetails";
+import AdoptDetails from "./pages/Adopt/AdoptDetails/AdoptDetails";
 
 function App() {
   const [alert, setAlert] = useState("true");
   const [severity, setSeverity] = useState("success");
   const [openAlert, setOpenAlert] = useState(false);
   const [Product, setProduct] = useState({});
+  const [pet, setPet] = useState({});
   const [login, setLogin] = useState(false);
+  const [user, setUser] = useState({});
   const [userId, setUserId] = useState("");
 
   return (
@@ -95,7 +98,11 @@ function App() {
               path={`/product/${Product._id}`}
               element={<ShopDetails Product={Product} />}
             ></Route>
-            <Route path="/adopt" element={<Adopt />}></Route>
+            <Route path="/adopt" element={<Adopt setPet={setPet} />}></Route>
+            <Route
+              path={`/adopt/${pet._id}`}
+              element={<AdoptDetails Pet={pet} />}
+            ></Route>
             <Route path="/community" element={<Community />}></Route>
             <Route
               path="/login"
