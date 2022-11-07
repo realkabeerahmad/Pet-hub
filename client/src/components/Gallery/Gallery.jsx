@@ -1,9 +1,11 @@
 import Modal from "@mui/material/Modal";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import GalleryImage from "../GalleryImage/GalleryImage";
 import upload_image from "../../assets/upload_image.png";
 import "./Gallery.css";
-const Gallery = () => {
+import axios from "axios";
+
+const Gallery = ({ Pet }) => {
   const [open, setOpen] = useState(false);
   const [image, setimage] = useState(upload_image);
   const handleOpen = () => setOpen(true);
@@ -18,6 +20,22 @@ const Gallery = () => {
     });
     reader.readAsDataURL(e.target.files[0]);
   };
+  const data = { petId: Pet._id };
+  const [Images, setImages] = useState([]);
+  useEffect(() => {
+    fetchItem();
+  }, []);
+  const fetchItem = () => {
+    axios
+      .post("http://localhost:8000/pet/getImages/", data)
+      .then((res) => {
+        // console.log(res);
+        setImages(res.data.gallery);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   return (
     <>
       <div className="pet-gallery">
@@ -30,15 +48,9 @@ const Gallery = () => {
           </button>
         </div>
         <div className="gallery-main">
-          <GalleryImage></GalleryImage>
-          <GalleryImage></GalleryImage>
-          <GalleryImage></GalleryImage>
-          <GalleryImage></GalleryImage>
-          <GalleryImage></GalleryImage>
-          <GalleryImage></GalleryImage>
-          <GalleryImage></GalleryImage>
-          <GalleryImage></GalleryImage>
-          <GalleryImage></GalleryImage>
+          {Images.map((Image) => {
+            return <GalleryImage Image={Image} />;
+          })}
         </div>
       </div>
       <Modal open={open} onClose={handleClose}>

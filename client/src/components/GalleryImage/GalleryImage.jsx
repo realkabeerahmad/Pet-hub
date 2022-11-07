@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import Modal from "@mui/material/Modal";
 import "./GalleryImage.css";
 
-const GalleryImage = () => {
+const GalleryImage = ({ Image }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   return (
     <div>
       <div className="gallery-image" onClick={handleOpen}>
-        <img src="https://source.unsplash.com/1600x900/?pet" alt="" />
+        <img src={"http://localhost:8000/" + Image.image} alt="" />
       </div>
       <Modal open={open} onClose={handleClose}>
         <div className="gallery-image-zoom">
@@ -20,7 +20,7 @@ const GalleryImage = () => {
               </button>
             </div>
             <div className="gallery-image-zoom-img">
-              <img src="https://source.unsplash.com/1600x900/?pet" alt="" />
+              <img src={"http://localhost:8000/" + Image.image} alt="" />
             </div>
           </div>
         </div>
