@@ -7,19 +7,25 @@ import {
   Tooltip,
 } from "@mui/material";
 import React from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import Logo from "../../assets/logo.png";
 import User from "../../assets/CUI.jpg";
 import "./Navigation.css";
 
-const Navigation = (login) => {
+const Navigation = ({ login, setLogin }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  const Navigate = useNavigate();
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+  const handleLogout = () => {
+    setLogin(false);
+    handleClose();
+    Navigate("/login");
   };
   const activeClassName = "is-active";
   return (
@@ -38,7 +44,7 @@ const Navigation = (login) => {
           >
             Home
           </NavLink>
-          {login.login ? (
+          {login ? (
             <>
               <NavLink
                 to="/my_pets"
@@ -78,8 +84,11 @@ const Navigation = (login) => {
             Community
           </NavLink>
         </div>
-        {login.login ? (
+        {login ? (
           <div className="auth_links">
+            <Link to="/cart">
+              <i className="fa fa-shopping-cart"></i>
+            </Link>
             <Tooltip title="User Account Area">
               <IconButton
                 onClick={handleClick}
@@ -116,9 +125,8 @@ const Navigation = (login) => {
                 <Link to="/Orders">
                   <MenuItem onClick={handleClose}>My Orders</MenuItem>
                 </Link>
-                <MenuItem onClick={handleClose}>
-                  <i className="fa fa-"></i>
-                  Logout
+                <MenuItem onClick={handleLogout}>
+                  <i className="fa fa-power-off"></i> &nbsp;&nbsp; Logout
                 </MenuItem>
               </Menu>
             </div>

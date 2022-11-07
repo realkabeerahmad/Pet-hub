@@ -32,7 +32,7 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        <Navigation login={login} />
+        <Navigation login={login} setLogin={setLogin} />
         <Collapse in={openAlert}>
           <Alert
             severity={severity}

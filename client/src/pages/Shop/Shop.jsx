@@ -23,6 +23,14 @@ const Shop = ({ setProduct }) => {
   };
   return (
     <>
+      <div className="shop-search">
+        {/* <form onSubmit={false}> */}
+        <input type="text" placeholder="SEARCH" />
+        <button>
+          <i className="fa fa-search"></i>
+        </button>
+        {/* </form> */}
+      </div>
       <div className="shop">
         <div className="shopRow">
           {Products.map((Product) => {

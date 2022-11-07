@@ -42,3 +42,29 @@
 .toLogin a {
   color: #e92e4a;
 }
+input[type="file"] {
+  padding: none;
+  border: none;
+}
+input,
+select {
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  padding: 10px;
+  margin: 8px 4px;
+  width: 300px;
+  height: 50px;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  transition: all 0.1s;
+  -webkit-transition: all 0.1s;
+  -moz-transition: all 0.1s;
+  -ms-transition: all 0.1s;
+  -o-transition: all 0.1s;
+}
+input:focus,
+select:focus {
+  border: 2px solid rgb(0, 150, 0);
+}
