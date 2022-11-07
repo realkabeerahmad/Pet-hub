@@ -35,7 +35,7 @@ router.post("/addPet", upload.single("image"), (req, res) => {
   // Getting Data
   const obj = {
     userId: req.body.userId,
-    name: req.body.petName,
+    name: req.body.name,
     bio: req.body.bio,
     gender: req.body.gender,
     breed: req.body.breed,
@@ -43,12 +43,13 @@ router.post("/addPet", upload.single("image"), (req, res) => {
     image: req.file.filename,
     passport: req.body.passport,
     dob: req.body.dob,
+    vaccination: { status: req.body.vaccinationStatus },
     rehome: false,
-    Link: req.body.petName + "_" + uuidv4(),
   };
+  const _id = obj.userId;
   try {
     // Check if user Exist
-    User.findById({ _id: `"${obj.userId}"` }, (user, err) => {
+    User.findById({ _id }, (err, user) => {
       if (user) {
         // Create an obj to store in DB
         const pet = new Pet(obj);
@@ -97,17 +98,25 @@ router.get("/showPet", (req, res) => {
 });
 
 // Show All Pets of a User
-router.get("/showAllPets", (req, res) => {
-  var { userId } = req.body;
+router.post("/showAllPets", (req, res) => {
+  const { userId } = req.body;
+  console.log(userId);
+
   try {
     Pet.find({ userId }, (err, data) => {
-      if (err) {
-        throw Error(err.message);
-      } else {
+      console.log(err);
+
+      if (data !== [] || data !== null) {
+        console.log(data);
         res.status(200).json({
           status: "success",
           message: "data fetched successfully",
-          data: data,
+          pets: data,
+        });
+      } else {
+        res.json({
+          status: "failed",
+          message: "Pets not Found",
         });
       }
     });
@@ -134,6 +143,7 @@ router.post("/rehome", (req, res) => {
     res.send({ status: "failed", message: error.message });
   }
 });
+
 // Add a Pet Meal Time
 router.post("/addPetMealTime", (req, res) => {
   const { petId, name, time } = req.body;
@@ -196,6 +206,7 @@ router.post("/deleteMealTime", (req, res) => {
     res.send({ status: "failed", message: error.message });
   }
 });
+
 // Add a pet's Walk Time
 router.post("/addPetWalkTime", (req, res) => {
   const { petId, name, time } = req.body;
@@ -260,131 +271,117 @@ router.post("/deleteWalkTime", (req, res) => {
 });
 
 // Add Pet Vaccination Details
-router.post("/addPetVaccination", (req, res) => {
-  const { petId, previousDate, nextDate, VaccinationAddress } = req.body;
+router.post("/addVaccination", (req, res) => {
+  const { _id, DoseDate, address, status } = req.body;
+  console.log(req.body);
   try {
-    Pet.findById({ petId }, (pet, err) => {
-      if (pet) {
-        petVaccinationDetails.find({ petId }, (data, error) => {
-          if (data) {
-            throw Error("Vaccination Details Already Exist");
-          } else {
-            const details = new petVaccinationDetails({
-              petId,
-              previousDate,
-              nextDate,
-              VaccinationAddress,
-            });
-            details
-              .save()
-              .then(() => {
-                res.status(200).send("Details Saved");
-              })
-              .catch((error) => {
-                throw Error(error.message);
-              });
-          }
-        });
+    Pet.updateOne(
+      { _id: _id },
+      {
+        $set: {
+          "vaccination.status": status,
+          "vaccination.DoseDate": DoseDate,
+          "vaccination.address": address,
+          "vaccination.updatedAt": Date.now(),
+        },
       }
-    });
+    )
+      .then(() => {
+        res.send({ status: "success", message: "Vaccination Details Added" });
+      })
+      .catch((err) => {
+        res.send({
+          status: "failed",
+          message: "Error Occured\n" + err.message,
+        });
+      });
   } catch (err) {
     res.send({ status: "failed", message: err.message });
   }
 });
 
-router.get("/getPetVaccination", (req, res) => {
-  const { petId } = req.body;
+// Update Pet Vaccination Date
+router.post("/updateVaccinationDate", (req, res) => {
+  const { _id, DoseDate } = req.body;
   try {
-    petVaccinationDetails.find({ petId }, (details, err) => {
-      if (details) {
-        res.status(200).send(details);
-      } else {
-        throw Error(err.message);
+    Pet.updateOne(
+      { _id: _id },
+      {
+        $set: {
+          "vaccination.DoseDate": DoseDate,
+          "vaccination.updatedAt": Date.now(),
+        },
       }
-    });
-  } catch (error) {
-    res.status(400).json({ status: "failed", message: error.message });
-  }
-});
-
-router.post("/deleteVaccinationDetails", (req, res) => {
-  var { _id } = req.body;
-  try {
-    petVaccinationDetails
-      .findByIdAndDelete({ _id })
+    )
       .then(() => {
-        res.send({ status: "success", message: "Vaccination Status Deleted" });
+        res.send({ status: "success", message: "Vaccination Date Updated" });
       })
-      .catch(() => {
-        throw Error("Could not Delete");
-      });
-  } catch (error) {
-    res.send({ status: "failed", message: error.message });
-  }
-});
-// Add Pet Vet Details
-router.post("/addPetVet", (req, res) => {
-  const { petId, previousDate, nextDate, VetAddress } = req.body;
-  try {
-    Pet.findById({ petId }, (pet, err) => {
-      if (pet) {
-        petVaccinationDetails.find({ petId }, (data, error) => {
-          if (data) {
-            throw Error("Vet Details Already Exist");
-          } else if (error) {
-            throw Error(error.message);
-          } else {
-            const details = new petVetDetails({
-              petId,
-              previousDate,
-              nextDate,
-              VetAddress,
-            });
-            details
-              .save()
-              .then(() => {
-                res.status(200).send("Details Saved");
-              })
-              .catch((error) => {
-                throw Error(error.message);
-              });
-          }
+      .catch((err) => {
+        res.send({
+          status: "failed",
+          message: "Error Occured\n" + err.message,
         });
-      }
-    });
-  } catch (error) {
-    res.status(400).json({ status: "failed", error: error.message });
-  }
-});
-
-router.get("/getPetVet", (req, res) => {
-  const { petId } = req.body;
-  try {
-    petVetDetails.find({ petId }, (details, err) => {
-      if (details) {
-        res.status(200).send(details);
-      } else {
-        throw Error(err.message);
-      }
-    });
-  } catch (error) {
-    res.status(400).json({ status: "failed", message: error.message });
-  }
-});
-
-router.post("/deleteVetDetails", (req, res) => {
-  var { _id } = req.body;
-  try {
-    petVetDetails
-      .findByIdAndDelete({ _id })
-      .then(() => {
-        res.send({ status: "success", message: "Vaccination Status Deleted" });
-      })
-      .catch(() => {
-        throw Error("Could not Delete");
       });
-  } catch (error) {
-    res.send({ status: "failed", message: error.message });
+  } catch (err) {
+    res.send({ status: "failed", message: err.message });
+  }
+});
+
+// Add Pet Vet Details
+router.post("/addVet", (req, res) => {
+  const { _id, AppointmentDate, address } = req.body;
+  try {
+    Pet.updateOne(
+      { _id: _id },
+      {
+        $set: {
+          "vet.AppointmentDate": AppointmentDate,
+          "vet.address": address,
+          "vet.updatedAt": Date.now(),
+        },
+      }
+    )
+      .then(() => {
+        res.send({ status: "success", message: "Vet Details Added" });
+      })
+      .catch((err) => {
+        res.send({
+          status: "failed",
+          message: "Error Occured\n" + err.message,
+        });
+      });
+  } catch (err) {
+    res.send({ status: "failed", message: err.message });
+  }
+});
+
+// Update Pet Vaccination Date
+router.post("/updateVetDate", (req, res) => {
+  const { _id, AppointmentDate } = req.body;
+  try {
+    Pet.updateOne(
+      { _id: _id },
+      {
+        $set: {
+          "vet.AppointmentDate": AppointmentDate,
+          "vaccination.updatedAt": Date.now(),
+        },
+      }
+    )
+      .then(() => {
+        res.send({
+          status: "success",
+          message: "Vet Appointment Date Updated",
+        });
+      })
+      .catch((err) => {
+        res.send({
+          status: "failed",
+          message: "Error Occured\n" + err.message,
+        });
+      });
+  } catch (err) {
+    res.send({ status: "failed", message: err.message });
   }
 });
 
@@ -425,7 +422,8 @@ router.get("/getImages", (req, res) => {
     res.send({ status: "failed", message: error.message });
   }
 });
-// Delete Image
+
+// delete Image from Gallery
 router.get("/deleteImage", (req, res) => {
   const { galleryId } = req.body;
   try {
@@ -441,6 +439,5 @@ router.get("/deleteImage", (req, res) => {
     res.send({ status: "failed", message: error.message });
   }
 });
-// delete Image from Gallery
 // Exporting Routes
 module.exports = router;

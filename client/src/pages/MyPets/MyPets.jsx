@@ -1,11 +1,31 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import MyPetCard from "../../components/MyPetCard/MyPetCard";
 import "./MyPets.css";
-const MyPets = () => {
+import axios from "axios";
+const MyPets = ({ user, setPet }) => {
+  const data = { userId: user._id };
+  // console.log(user._id);
+  const [Pets, setPets] = useState([]);
+  useEffect(() => {
+    fetchItem();
+  }, []);
+  const fetchItem = () => {
+    axios
+      .post("http://localhost:8000/pet/showAllPets/", data)
+      .then((res) => {
+        console.log(res);
+        setPets(res.data.pets);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   return (
     <div className="mypets">
-      <MyPetCard></MyPetCard>
+      {Pets.map((Pet) => {
+        return <MyPetCard Pet={Pet} setPet={setPet} />;
+      })}
       <Link to="/my_pets/add_pet" className="add-pet-btn">
         <i className="fa fa-plus"></i> Add Pet
       </Link>

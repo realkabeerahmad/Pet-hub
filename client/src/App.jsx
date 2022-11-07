@@ -31,11 +31,21 @@ function App() {
   const [login, setLogin] = useState(false);
   const [user, setUser] = useState({});
   const [userId, setUserId] = useState("");
-
+  const LoginComponent = (
+    <Login
+      setAlert={setAlert}
+      setOpenAlert={setOpenAlert}
+      setSeverity={setSeverity}
+      setLogin={setLogin}
+      setUser={setUser}
+    />
+  );
   return (
     <>
       <BrowserRouter>
-        <Navigation login={login} setLogin={setLogin} />
+        {/* Navigation Bar */}
+        <Navigation login={login} setLogin={setLogin} user={user} />
+        {/* Alert Area */}
         <Collapse in={openAlert}>
           <Alert
             severity={severity}
@@ -56,39 +66,42 @@ function App() {
             {alert}
           </Alert>
         </Collapse>
+        {/* App Structure */}
         <div className="App">
           <Routes>
+            {/* Home */}
             <Route exact path="/" element={<Home />}></Route>
-            {console.log(login)}
-            {login ? (
-              <Route path="/my_pets" element={<MyPets />}></Route>
-            ) : (
-              <Route
-                path="/my_pets"
-                element={
-                  <Login
-                    setAlert={setAlert}
-                    setOpenAlert={setOpenAlert}
-                    setSeverity={setSeverity}
-                    setLogin={setLogin}
-                  />
-                }
-              ></Route>
-            )}
-            <Route path="/my_pets/add_pet" element={<AddPet />} />
-            {/* <Route path="/" element={<AddPet />} /> */}
-            <Route path="/my_pets/pet" element={<Pet />}>
+            {/* My Pets */}
+            <Route
+              path="/my_pets"
+              element={
+                login ? <MyPets user={user} setPet={setPet} /> : LoginComponent
+              }
+            ></Route>
+            {/* Add Pet Form */}
+            <Route
+              path="/my_pets/add_pet"
+              element={login ? <AddPet /> : LoginComponent}
+            />
+            {/* Pet Screen */}
+            <Route path={"/my_pets/" + pet._id} element={<Pet Pet={pet} />}>
               <Route index element={<DetailsandGallery />}></Route>
               <Route
                 path="details_and_gallery"
-                element={<DetailsandGallery />}
+                element={<DetailsandGallery Pet={pet} />}
               ></Route>
               <Route
                 path="vaccination_and_medical_details"
-                element={<VaccinationAndMedical />}
+                element={<VaccinationAndMedical Pet={pet} />}
               ></Route>
-              <Route path="meal_timings" element={<MealTime />}></Route>
-              <Route path="walk_timings" element={<WalkTime />}></Route>
+              <Route
+                path="meal_timings"
+                element={<MealTime Pet={pet} />}
+              ></Route>
+              <Route
+                path="walk_timings"
+                element={<WalkTime Pet={pet} />}
+              ></Route>
             </Route>
             <Route
               path="/shop"
@@ -104,17 +117,7 @@ function App() {
               element={<AdoptDetails Pet={pet} />}
             ></Route>
             <Route path="/community" element={<Community />}></Route>
-            <Route
-              path="/login"
-              element={
-                <Login
-                  setAlert={setAlert}
-                  setOpenAlert={setOpenAlert}
-                  setSeverity={setSeverity}
-                  setLogin={setLogin}
-                />
-              }
-            ></Route>
+            <Route path="/login" element={LoginComponent}></Route>
             <Route path="/forget_password" element={<ForgetPass />}></Route>
             <Route
               path="/verify_otp"

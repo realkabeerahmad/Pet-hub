@@ -8,6 +8,15 @@ const OrderSchema = mongoose.Schema({
   status: String,
   TrackingId: String,
   TrackingService: String,
+  OrderItems: [
+    {
+      productId: String,
+      name: String,
+      quantity: Number,
+      price: Number,
+      image: String,
+    },
+  ],
   createdAt: { type: Date, default: Date.now },
 });
 

@@ -2,11 +2,11 @@ import React from "react";
 import Medical from "../../../components/Medical/Medical";
 import Vaccination from "../../../components/Vaccination/Vaccination";
 
-const VaccinationAndMedical = () => {
+const VaccinationAndMedical = ({ Pet }) => {
   return (
     <div>
-      <Vaccination />
-      <Medical />
+      <Vaccination Pet={Pet} />
+      <Medical Pet={Pet} />
     </div>
   );
 };

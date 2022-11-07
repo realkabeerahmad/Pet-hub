@@ -2,11 +2,11 @@ import React from "react";
 import Details from "../../../components/Details/Details";
 import Gallery from "../../../components/Gallery/Gallery";
 
-const DetailsandGallery = () => {
+const DetailsandGallery = ({ Pet }) => {
   return (
     <>
-      <Details />
-      <Gallery />
+      <Details Pet={Pet} />
+      <Gallery Pet={Pet} />
     </>
   );
 };

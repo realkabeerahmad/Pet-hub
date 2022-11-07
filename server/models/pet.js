@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const PetSchema = mongoose.Schema({
   userId: String,
   shelterID: String,
+  shelterName: String,
   name: String,
   bio: String,
   gender: String,
@@ -13,7 +14,17 @@ const PetSchema = mongoose.Schema({
   passport: String,
   dob: Date,
   rehome: Boolean,
-  Link: String,
+  vaccination: {
+    status: Boolean,
+    address: String,
+    DoseDate: Date,
+    updatedAt: Date,
+  },
+  vet: {
+    address: String,
+    AppointmentDate: Date,
+    updatedAt: { type: Date, default: Date.now },
+  },
   createdAt: { type: Date, default: Date.now },
 });
 // Exporting Pet Model

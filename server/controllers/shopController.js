@@ -36,8 +36,8 @@ router.post("/addProduct", Upload.single("image"), (req, res) => {
     StandardShipping: req.body.StandardShipping,
     FastShipping: req.body.FastShipping,
     Image: req.file.filename,
-    Link: req.body.category + "_" + req.body.name + "_" + uuidv4(),
   };
+  console.log(obj.Image);
   try {
     const Product = new product(obj);
     Product.save()

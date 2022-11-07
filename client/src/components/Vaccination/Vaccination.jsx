@@ -1,6 +1,7 @@
 import React from "react";
 import "./Vaccination.css";
-const Vaccination = () => {
+const Vaccination = ({ Pet }) => {
+  console.log(Pet);
   return (
     <div className="vaccination-details">
       <div className="vaccination-details-header">
@@ -11,17 +12,22 @@ const Vaccination = () => {
       <div className="vaccination-details-more">
         <table>
           <tr>
-            <th>Previous Dose</th>
-            <th>Next Dose</th>
+            <th>Vaccinated</th>
+            <td>{Pet.vaccination.status ? "Yes" : "No"}</td>
           </tr>
           <tr>
-            <td>02/02/2022</td>
-            <td>02/02/2023</td>
+            <th>Next Dose Date</th>
+            <td>
+              {Pet.vaccination.DoseDate
+                ? Pet.vaccination.DoseDate.slice(0, 10)
+                : "N/A"}
+            </td>
           </tr>
           <tr>
             <th>Vaccination Center Address</th>
-            <td>ABC-123, Some Street in Pakistan</td>
+            <td>{Pet.vaccination.address ? Pet.vaccination.address : "N/A"}</td>
           </tr>
+          <tr></tr>
         </table>
       </div>
     </div>

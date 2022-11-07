@@ -27,6 +27,8 @@ const petVetDetails = require("../models/petVetDetails");
 const shelter = require("../models/shelter");
 const pet = require("../models/pet");
 const adoptionForm = require("../models/adoptionForm");
+const mongoose = require("mongoose");
+const ObjectId = mongoose.Types.ObjectId;
 
 // Using Router from Express JS to create exportable routes
 const router = express.Router();
@@ -34,13 +36,16 @@ const router = express.Router();
 // Add a Shelter
 router.post("/addShelter", (req, res) => {
   const { name, description, address, RegistrationNo } = req.body;
+  const obj = { name, description, address, RegistrationNo };
   try {
-    shelter.find({ RegistrationNo }, (err, data) => {
+    shelter.findOne({ RegistrationNo: RegistrationNo }, async (err, data) => {
       if (data) {
-        throw Error("Shelter Already Registered");
+        res.send({ status: "failed", message: "Shelter Already Registered" });
       } else if (err) {
-        throw Error(err.message);
+        res.send({ status: "failed", message: err.message });
       } else {
+        const Shelter = new shelter(obj);
+        await Shelter.save();
         res.status(200).send({
           status: "success",
           message: "Shelter Registered Successfully",
@@ -60,7 +65,7 @@ router.get("/showAllShelters", (req, res) => {
         res.status(200).send({
           status: "success",
           message: "Sent Successfully",
-          data: data,
+          shelters: data,
         });
       } else {
         throw Error("Error Occured \n", err.message);
@@ -76,7 +81,7 @@ router.post("/addPet", upload.single("image"), (req, res) => {
   // Getting Data
   const obj = {
     shelterID: req.body.shelterID,
-    name: req.body.petName,
+    name: req.body.name,
     bio: req.body.bio,
     gender: req.body.gender,
     breed: req.body.breed,
@@ -85,12 +90,17 @@ router.post("/addPet", upload.single("image"), (req, res) => {
     passport: req.body.passport,
     dob: req.body.dob,
     rehome: true,
-    Link: req.body.petName + "_" + uuidv4(),
+    shelterName: "",
   };
+  // const _id = "'" + obj.shelterID + "'";
+  const _id = obj.shelterID;
+  console.log(_id);
   try {
     // Check if user Exist
-    shelter.findById({ _id: `"${obj.shelterID}"` }, (user, err) => {
-      if (user) {
+    shelter.findById({ _id }, (err, data) => {
+      if (data) {
+        console.log(obj.name);
+        obj.shelterName = data.name;
         // Create an obj to store in DB
         const pet = new Pet(obj);
         // Save obj in DB
@@ -103,10 +113,16 @@ router.post("/addPet", upload.single("image"), (req, res) => {
             });
           })
           .catch((err) => {
-            throw Error("Unable to Register Pet\n" + err.message);
+            res.json({
+              status: "failed",
+              error: "Unable to Register\n" + err.message,
+            });
           });
       } else {
-        throw Error("User Not Found");
+        res.json({
+          status: "failed",
+          error: "Shelter Not Found",
+        });
       }
     });
   } catch (error) {
@@ -120,12 +136,12 @@ router.post("/addPet", upload.single("image"), (req, res) => {
 // Show All Pets
 router.get("/showAllPets", (req, res) => {
   try {
-    pet.find({ rehome: true }, (data, err) => {
+    pet.find({ rehome: true }, (err, data) => {
       if (data) {
         res.status(200).send({
           status: "success",
           message: "Sent Successfully",
-          data: data,
+          pets: data,
         });
       } else {
         throw Error("Error Occured \n", err.message);

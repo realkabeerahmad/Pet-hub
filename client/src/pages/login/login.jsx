@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 
-const Login = ({ setAlert, setOpenAlert, setLogin, setSeverity }) => {
+const Login = ({ setAlert, setOpenAlert, setLogin, setSeverity, setUser }) => {
   const Navigate = useNavigate();
   const [Err, setErr] = useState({ err: false, helpText: "" });
   function tester() {
@@ -27,6 +27,7 @@ const Login = ({ setAlert, setOpenAlert, setLogin, setSeverity }) => {
         .post("http://localhost:8000/auth/login", values)
         .then((res) => {
           console.log(res.data);
+          setUser(res.data.user);
           if (res.data.status === "success") {
             setAlert("Welcome!!!");
             setOpenAlert(true);

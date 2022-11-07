@@ -1,6 +1,6 @@
 import React from "react";
 import "./Details.css";
-const Details = () => {
+const Details = ({ Pet }) => {
   return (
     <div className="details-about-pet">
       <div className="details-header">
@@ -13,19 +13,23 @@ const Details = () => {
           <tbody>
             <tr>
               <th>Type:</th>
-              <td>Cat</td>
+              <td>{Pet.type}</td>
             </tr>
             <tr>
               <th>Breed:</th>
-              <td>Persian</td>
+              <td>{Pet.breed}</td>
+            </tr>
+            <tr>
+              <th>Gender:</th>
+              <td>{Pet.gender}</td>
             </tr>
             <tr>
               <th>Date of Birth:</th>
-              <td>20/12/2021</td>
+              <td>{Pet.dob.slice(0, 10)}</td>
             </tr>
             <tr>
               <th>Passport Number:</th>
-              <td>FE45S5a41</td>
+              <td>{Pet.passport}</td>
             </tr>
           </tbody>
         </table>

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, NavLink, Outlet } from "react-router-dom";
 import Modal from "@mui/material/Modal";
 import "./Pet.css";
-const Pet = () => {
+const Pet = ({ Pet }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -17,7 +17,7 @@ const Pet = () => {
         <div className="hidden"></div>
         <div className="pet-info">
           <div className="pet-profile-image" onClick={handleOpen}>
-            <img src={img_src} alt="" />
+            <img src={"http://localhost:8000/" + Pet.image} alt="" />
           </div>
           <Modal open={open} onClose={handleClose}>
             <div className="pet-img-pop-wrapper">
@@ -28,15 +28,15 @@ const Pet = () => {
                   </div>
                 </div>
                 <div className="pet-img-pop-img">
-                  <img src={img_src} alt="" />
+                  <img src={"http://localhost:8000/" + Pet.image} alt="" />
                 </div>
               </div>
             </div>
           </Modal>
           <div className="pet-info-div">
             <div>
-              <p className="pet-profile-name">Name</p>
-              <p className="pet-bio">This is Bio. I am Name</p>
+              <p className="pet-profile-name">{Pet.name}</p>
+              <p className="pet-bio">{Pet.bio}</p>
             </div>
           </div>
         </div>

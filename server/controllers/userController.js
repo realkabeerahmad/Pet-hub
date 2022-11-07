@@ -103,7 +103,7 @@ router.post("/login", (req, res) => {
             res.status(200).json({
               status: "success",
               message: "Valid Password",
-              data: user,
+              user: user,
             });
           } else {
             throw Error("Invalid Password");
@@ -207,7 +207,7 @@ router.post("/reSendOtpVerificatioCode", async (req, res) => {
       SendOtpVerificationEmail({ userID, email }, res);
     }
   } catch (error) {
-    res.json({
+    res.send({
       status: "failed",
       message: error.message,
     });
@@ -248,12 +248,12 @@ const SendOtpVerificationEmail = async ({ _id, email }, res) => {
     await newOtpVerfication.save();
     transporter.sendMail(mailOptions, (err, info) => {
       if (err) {
-        return res.json({
+        return res.send({
           status: "failed",
           error: "Not able to send OTP",
         });
       }
-      return res.status(200).json({
+      return res.send({
         status: "pending",
         message: "Verification OTP email sent.",
         data: {

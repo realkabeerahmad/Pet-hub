@@ -12,7 +12,7 @@ import Logo from "../../assets/logo.png";
 import User from "../../assets/CUI.jpg";
 import "./Navigation.css";
 
-const Navigation = ({ login, setLogin }) => {
+const Navigation = ({ login, setLogin, user }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const Navigate = useNavigate();
@@ -99,7 +99,11 @@ const Navigation = ({ login, setLogin }) => {
                 aria-expanded={open ? "true" : undefined}
               >
                 <Avatar sx={{ width: 30, height: 30 }}>
-                  <img src={User} alt="" className="user_avatar" />
+                  <img
+                    src={"http://localhost:8000/" + user.Image}
+                    alt=""
+                    className="user_avatar"
+                  />
                 </Avatar>
               </IconButton>
             </Tooltip>
@@ -115,8 +119,12 @@ const Navigation = ({ login, setLogin }) => {
               >
                 <Link to="/Profile">
                   <MenuItem onClick={handleClose}>
-                    <img src={User} alt="" className="user_avatar" /> Kabeer
-                    Ahmad
+                    <img
+                      src={"http://localhost:8000/" + user.Image}
+                      alt=""
+                      className="user_avatar"
+                    />{" "}
+                    {" " + user.firstName + " " + user.lastName}
                   </MenuItem>
                 </Link>
                 <Link to="/Wishlist">

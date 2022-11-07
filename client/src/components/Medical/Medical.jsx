@@ -1,6 +1,6 @@
 import React from "react";
 import "./Medical.css";
-const Medical = () => {
+const Medical = ({ Pet }) => {
   return (
     <div className="medical-details">
       <div className="medical-details-header">
@@ -9,16 +9,16 @@ const Medical = () => {
       <div className="medical-details-more">
         <table>
           <tr>
-            <th>Previous Appointment</th>
-            <th>Next Appointment</th>
-          </tr>
-          <tr>
-            <td>02/02/2022</td>
-            <td>02/02/2023</td>
+            <th>Next Appointment Date</th>
+            <td>
+              {Pet.vet.AppointmentDate
+                ? Pet.vet.AppointmentDate.slice(0, 10)
+                : "N/A"}
+            </td>
           </tr>
           <tr>
             <th>Vet Address</th>
-            <td>ABC-123, Some Street in Pakistan</td>
+            <td>{Pet.vet.address ? Pet.vet.address : "N/A"}</td>
           </tr>
         </table>
       </div>
