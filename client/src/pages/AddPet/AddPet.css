@@ -1,6 +1,8 @@
 .add-pet-form {
   display: flex;
-  justify-content: center;
+  /* justify-content: center; */
+  align-items: center;
+  flex-direction: column;
   width: 100%;
 }
 .add-pet {
@@ -67,4 +69,26 @@ select {
 input:focus,
 select:focus {
   border: 2px solid rgb(0, 150, 0);
+}
+.add-image-1 {
+  width: 200px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  contain: content;
+  margin: 10px;
+  background-color: rgba(0, 0, 0, 0.25);
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+}
+.add-image-1 img {
+  width: 100%;
+}
+input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
 }

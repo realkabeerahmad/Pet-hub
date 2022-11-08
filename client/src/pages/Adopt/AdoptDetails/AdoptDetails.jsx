@@ -1,10 +1,10 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./AdoptDetails.css";
 const AdoptDetails = ({ Pet }) => {
   const Server = "http://localhost:8000/";
   console.log(Pet);
-
+  const Navigate = useNavigate();
   return (
     <div className="Details">
       <div className="Details-Left">
@@ -43,7 +43,12 @@ const AdoptDetails = ({ Pet }) => {
           <div className="details-fav">
             <i className="fa fa-heart"></i>
           </div>
-          <div className="details-adopt">Adopt</div>
+          <div
+            className="details-adopt"
+            onClick={() => Navigate("/adopt/" + Pet._id + "/application")}
+          >
+            Adopt
+          </div>
         </div>
       </div>
     </div>

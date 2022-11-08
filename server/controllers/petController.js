@@ -100,14 +100,9 @@ router.get("/showPet", (req, res) => {
 // Show All Pets of a User
 router.post("/showAllPets", (req, res) => {
   const { userId } = req.body;
-  console.log(userId);
-
   try {
     Pet.find({ userId }, (err, data) => {
-      console.log(err);
-
       if (data !== [] || data !== null) {
-        console.log(data);
         res.status(200).json({
           status: "success",
           message: "data fetched successfully",
@@ -273,7 +268,6 @@ router.post("/deleteWalkTime", (req, res) => {
 // Add Pet Vaccination Details
 router.post("/addVaccination", (req, res) => {
   const { _id, DoseDate, address, status } = req.body;
-  console.log(req.body);
   try {
     Pet.updateOne(
       { _id: _id },
@@ -404,17 +398,22 @@ router.post("/uploadImage", upload.single("image"), (req, res) => {
 });
 
 // Get Images From Gallery
-router.get("/getImages", (req, res) => {
+router.post("/getImages", (req, res) => {
   const { petId } = req.body;
+  console.log(petId);
   try {
-    gallery.find(petId, (err, data) => {
+    gallery.find({ petId }, (err, data) => {
+      console.log(err);
       if (err) {
-        throw Error("Error Occured\n", err.message);
+        res.send({
+          status: "failed",
+          message: "Error Occured",
+        });
       } else {
         res.send({
           status: "success",
           message: "Sent Successfully",
-          data: data,
+          gallery: data,
         });
       }
     });

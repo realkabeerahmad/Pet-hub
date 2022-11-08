@@ -21,6 +21,7 @@ import WalkTime from "./pages/Pet/WalkTime/WalkTime";
 import Adopt from "./pages/Adopt/Adopt";
 import ShopDetails from "./pages/Shop/ShopDetails/ShopDetails";
 import AdoptDetails from "./pages/Adopt/AdoptDetails/AdoptDetails";
+import AdoptApplication from "./pages/Adopt/AdoptApplication/AdoptApplication";
 
 function App() {
   const [alert, setAlert] = useState("true");
@@ -81,7 +82,7 @@ function App() {
             {/* Add Pet Form */}
             <Route
               path="/my_pets/add_pet"
-              element={login ? <AddPet /> : LoginComponent}
+              element={login ? <AddPet user={user} /> : LoginComponent}
             />
             {/* Pet Screen */}
             <Route path={"/my_pets/" + pet._id} element={<Pet Pet={pet} />}>
@@ -113,8 +114,18 @@ function App() {
             ></Route>
             <Route path="/adopt" element={<Adopt setPet={setPet} />}></Route>
             <Route
-              path={`/adopt/${pet._id}`}
+              path={"/adopt/" + pet._id}
               element={<AdoptDetails Pet={pet} />}
+            ></Route>
+            <Route
+              path={"/adopt/" + pet._id + "/application"}
+              element={
+                login ? (
+                  <AdoptApplication Pet={pet} user={user} />
+                ) : (
+                  LoginComponent
+                )
+              }
             ></Route>
             <Route path="/community" element={<Community />}></Route>
             <Route path="/login" element={LoginComponent}></Route>

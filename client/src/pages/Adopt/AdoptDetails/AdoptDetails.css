@@ -53,6 +53,11 @@
   display: flex;
   width: 100%;
 }
+.details-button a {
+  color: white;
+  text-decoration: none;
+  display: block;
+}
 .details-fav {
   width: 20%;
   justify-content: center;

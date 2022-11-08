@@ -1,32 +1,8 @@
-import {
-  Box,
-  // MenuItem,
-  //  Select,
-  // TextField
-} from "@mui/material";
-import React, { useState } from "react";
-// import { Link } from "react-router-dom";
-import "./AddPet.css";
-const AddPet = ({ user }) => {
-  const [image, setimage] = useState();
-  const handleImage = (e) => {
-    const reader = new FileReader();
-    reader.addEventListener("load", () => {
-      setimage(reader.result);
-    });
-    reader.readAsDataURL(e.target.files[0]);
-  };
+import React from "react";
+
+const AdoptApplication = ({ user, Pet }) => {
   return (
-    <div className="add-pet-form">
-      <div className="add-image-1">
-        <img src={image} alt="" />
-      </div>
-      <input
-        type="file"
-        name="Image"
-        accept=".png, .jpg, .jpeg"
-        onChange={handleImage}
-      />
+    <div>
       <table>
         <tbody>
           <tr>
@@ -37,7 +13,7 @@ const AddPet = ({ user }) => {
               <input
                 name="petId"
                 type="text"
-                // value={Pet._id}
+                value={Pet._id}
                 disabled
                 required
               />
@@ -135,4 +111,4 @@ const AddPet = ({ user }) => {
   );
 };
 
-export default AddPet;
+export default AdoptApplication;
