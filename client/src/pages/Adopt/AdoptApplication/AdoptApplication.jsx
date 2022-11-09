@@ -2,7 +2,7 @@ import React from "react";
 
 const AdoptApplication = ({ user, Pet }) => {
   return (
-    <div>
+    <div className="add-pet-form">
       <table>
         <tbody>
           <tr>

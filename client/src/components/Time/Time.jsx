@@ -1,24 +1,17 @@
 import React from "react";
 
-const Time = () => {
+const Time = ({ time }) => {
   return (
     <table>
       <tbody>
         <tr>
-          <th>Time Name</th>
+          <th>{time.name.toUpperCase()}:</th>
+          <td>{time.time.toUpperCase()}</td>
           <td>
-            <button className="btn">
-              <i className="fa fa-edit"></i>&nbsp;&nbsp;Edit
-            </button>
-          </td>
-          <td>
-            <button className="btn">
+            <button>
               <i className="fa fa-times-rectangle"></i>&nbsp;&nbsp;Delete
             </button>
           </td>
-        </tr>
-        <tr>
-          <td>10:30 AM</td>
         </tr>
       </tbody>
     </table>

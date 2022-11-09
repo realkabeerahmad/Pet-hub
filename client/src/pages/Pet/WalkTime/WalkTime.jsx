@@ -1,7 +1,7 @@
 import React from "react";
 import Time from "../../../components/Time/Time";
 
-const WalkTime = () => {
+const WalkTime = ({ Pet }) => {
   return (
     <div className="details-about-pet">
       <div className="details-header">
@@ -13,10 +13,15 @@ const WalkTime = () => {
         </button>
       </div>
       <div className="details-more">
-        <Time />
-        <Time />
-        <Time />
-        <Time />
+        {Pet.walkTime === [] ||
+        Pet.walkTime === undefined ||
+        Pet.walkTime === null ? (
+          <div className="NA">ADD WALK TIME PLEASE</div>
+        ) : (
+          Pet.walkTimes.map((time) => {
+            return <Time time={time} />;
+          })
+        )}
       </div>
     </div>
   );

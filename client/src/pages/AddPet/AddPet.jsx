@@ -31,18 +31,6 @@ const AddPet = ({ user }) => {
         <tbody>
           <tr>
             <th>
-              <label htmlFor="petId">Pet ID:</label>
-            </th>
-            <td>
-              <input
-                name="petId"
-                type="text"
-                // value={Pet._id}
-                disabled
-                required
-              />
-            </td>
-            <th>
               <label htmlFor="petId">User ID:</label>
             </th>
             <td>
@@ -54,74 +42,83 @@ const AddPet = ({ user }) => {
                 required
               />
             </td>
-          </tr>
-          <tr>
             <th>
-              <label htmlFor="fullName">Full Name:</label>
+              <label htmlFor="Name">Name:</label>
             </th>
             <td>
-              <input
-                name="fullName"
-                type="text"
-                value={user.firstName + " " + user.lastName}
-                disabled
-                required
-              />
+              <input name="Name" type="text" required />
             </td>
+          </tr>
+          <tr>
             <th>
               <label htmlFor="age">Age:</label>
             </th>
             <td>
-              <input name="age" type="number" min="18" required />
+              <input name="age" type="number" min="0" required />
+            </td>
+            <th>
+              <label htmlFor="bio">Bio:</label>
+            </th>
+            <td>
+              <input name="bio" type="text" required />
             </td>
           </tr>
           <tr>
             <th>
-              <label htmlFor="address">Address:</label>
+              <label htmlFor="gender">Gender:</label>
             </th>
             <td>
-              <input name="address" type="text" required />
-            </td>
-            <th>
-              <label htmlFor="phone">Phone:</label>
-            </th>
-            <td>
-              <input name="phone" type="text" required />
-            </td>
-          </tr>
-          <tr>
-            <th>
-              <label htmlFor="housetype">House Type:</label>
-            </th>
-            <td>
-              <select name="housetype" id="" required>
-                <option value="select" selected disabled>
+              <select name="gender" type="text" required>
+                <option value="" disabled selected>
                   Select
                 </option>
-                <option value="Own">Own</option>
-                <option value="Rent">Rent</option>
-                <option value="Shared">Shared</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
               </select>
             </td>
             <th>
-              <label htmlFor="email">Email:</label>
+              <label htmlFor="type">Type:</label>
+            </th>
+            <td>
+              <select name="type" type="text" required>
+                <option value="" disabled selected>
+                  Select
+                </option>
+                <option value="Cat">Cat</option>
+                <option value="Dog">Dog</option>
+                <option value="Horse">Horse</option>
+                <option value="Parrot">Parrot</option>
+                <option value="Hen">Hen</option>
+                <option value="Rabbit">Rabbit</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <th>
+              <label htmlFor="breed">Breed:</label>
+            </th>
+            <td>
+              <input name="breed" type="text" required />
+            </td>
+            <th>
+              <label htmlFor="passport">Passport:</label>
             </th>
             <td>
               <input
-                name="email"
+                name="passport"
                 type="text"
-                value={user.email}
+                // value={user.email}
                 required
-                disabled
+                // disabled
               />
             </td>
           </tr>
           <tr>
             <th>
-              <label htmlFor="isYardFenced">is Yard Fenced:</label>
+              <label htmlFor="dob">Date of Birth:</label>
             </th>
             <td>
-              <input name="isYardFenced" type="checkbox" required />
+              <input name="dob" type="date" required />
             </td>
             <th></th>
             <td>

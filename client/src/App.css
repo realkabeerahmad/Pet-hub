@@ -22,3 +22,12 @@
   color: #a2a2a2 !important;
   cursor: pointer;
 }
+.NA {
+  height: 150px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #e92e4a;
+  font-weight: 700;
+}

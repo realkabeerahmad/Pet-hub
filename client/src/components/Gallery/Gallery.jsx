@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import GalleryImage from "../GalleryImage/GalleryImage";
 import upload_image from "../../assets/upload_image.png";
 import "./Gallery.css";
-import axios from "axios";
 
 const Gallery = ({ Pet }) => {
   const [open, setOpen] = useState(false);
@@ -20,22 +19,7 @@ const Gallery = ({ Pet }) => {
     });
     reader.readAsDataURL(e.target.files[0]);
   };
-  const data = { petId: Pet._id };
-  const [Images, setImages] = useState([]);
-  useEffect(() => {
-    fetchItem();
-  }, []);
-  const fetchItem = () => {
-    axios
-      .post("http://localhost:8000/pet/getImages/", data)
-      .then((res) => {
-        // console.log(res);
-        setImages(res.data.gallery);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  console.log(Pet.gallery);
   return (
     <>
       <div className="pet-gallery">
@@ -48,7 +32,7 @@ const Gallery = ({ Pet }) => {
           </button>
         </div>
         <div className="gallery-main">
-          {Images.map((Image) => {
+          {Pet.gallery.map((Image) => {
             return <GalleryImage Image={Image} />;
           })}
         </div>
