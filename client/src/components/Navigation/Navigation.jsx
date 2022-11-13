@@ -1,18 +1,17 @@
-import {
-  Avatar,
-  // Button,
-  IconButton,
-  Menu,
-  MenuItem,
-  Tooltip,
-} from "@mui/material";
+import { Avatar, IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
 import React from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import Logo from "../../assets/logo.png";
-import User from "../../assets/CUI.jpg";
 import "./Navigation.css";
 
-const Navigation = ({ login, setLogin, user }) => {
+const Navigation = ({
+  login,
+  setLogin,
+  user,
+  setAlert,
+  setOpenAlert,
+  setSeverity,
+}) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const Navigate = useNavigate();
@@ -26,6 +25,9 @@ const Navigation = ({ login, setLogin, user }) => {
     setLogin(false);
     handleClose();
     Navigate("/login");
+    setAlert("You have been Logged out");
+    setSeverity("success");
+    setOpenAlert(true);
   };
   const activeClassName = "is-active";
   return (
@@ -117,7 +119,7 @@ const Navigation = ({ login, setLogin, user }) => {
                   "aria-labelledby": "basic-button",
                 }}
               >
-                <Link to="/Profile">
+                <Link to="/user">
                   <MenuItem onClick={handleClose}>
                     <img
                       src={"http://localhost:8000/" + user.Image}

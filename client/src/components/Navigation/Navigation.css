@@ -7,7 +7,7 @@
   position: sticky;
   top: 0;
   background-color: #fff;
-  border-bottom: 1px solid #d2d2d2;
+  border-bottom: 1px solid #c2c2c2;
   z-index: 200;
 }
 .nav-logo {
@@ -52,7 +52,7 @@
 }
 .nav-links a,
 .auth_links a {
-  color: black;
+  color: #2f2f2f;
 }
 .nav-links a:hover,
 .auth_links a:hover {

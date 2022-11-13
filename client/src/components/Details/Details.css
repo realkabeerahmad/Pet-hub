@@ -2,7 +2,8 @@
   width: 100%;
 }
 .details-header {
-  border-bottom: 1px solid #e2e2e2;
+  border-bottom: 1px solid #c2c2c2;
+  background-color: #fff;
   width: 100%;
   padding: 10px 20px;
   display: flex;
@@ -16,14 +17,16 @@
 .details-more {
   padding: 10px;
   font-size: 18px;
-  border-bottom: 1px solid #e2e2e2;
+  border-bottom: 1px solid #c2c2c2;
 }
 .details-more table {
-  width: 50%;
+  width: 70% !important;
 }
-td {
+td,
+th {
   padding: 10px;
+  text-align: left;
 }
-td b {
-  color: #929292;
+th {
+  color: #2f2f2f !important;
 }

@@ -65,6 +65,7 @@ select {
   -moz-transition: all 0.1s;
   -ms-transition: all 0.1s;
   -o-transition: all 0.1s;
+  appearance: none;
 }
 input:focus,
 select:focus {
@@ -91,4 +92,40 @@ select:focus {
 input[type="checkbox"] {
   width: 20px;
   height: 20px;
+}
+input[type="file"] {
+  display: none;
+}
+.custom-file-upload {
+  border: 1px solid #ccc;
+  width: 100%;
+  height: 100%;
+  display: inline-block;
+  padding: 6px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  font-size: 50px;
+  color: #ccc;
+}
+.save-btn {
+  padding: 10px;
+  width: 300px;
+  border-radius: 5px;
+  font-size: 20px;
+  background-color: #209420;
+  color: #fff;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+}
+.add-pet-form a {
+  position: absolute;
+  color: #e92e4a;
+  font-size: 30px;
+  top: 80px;
+  left: 20px;
 }

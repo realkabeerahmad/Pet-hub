@@ -1,7 +1,5 @@
-// import { Box, MenuItem, Select, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-// import { Link } from "react-router-dom";
 import "./Shop.css";
 import ShopCard from "../../components/ShopCard/ShopCard";
 

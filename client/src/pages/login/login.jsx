@@ -5,13 +5,15 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 
-const Login = ({ setAlert, setOpenAlert, setLogin, setSeverity, setUser }) => {
+const Login = ({
+  setAlert,
+  setOpenAlert,
+  setLogin,
+  setSeverity,
+  setUser,
+  user,
+}) => {
   const Navigate = useNavigate();
-  const [Err, setErr] = useState({ err: false, helpText: "" });
-  function tester() {
-    Err.err = true;
-    Err.helpText = "Invalid Email";
-  }
   const [values, setValues] = useState({
     email: "",
     password: "",
@@ -34,6 +36,16 @@ const Login = ({ setAlert, setOpenAlert, setLogin, setSeverity, setUser }) => {
             setSeverity("success");
             Navigate("/my_pets");
             setLogin(true);
+
+            const userId = user._id;
+            axios
+              .post("http://localhost:8000/shop/cart", userId)
+              .then((res) => {
+                console.log(res);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
           } else if (res.data.status === "failed") {
             setAlert(res.data.message);
             setOpenAlert(true);
@@ -63,8 +75,6 @@ const Login = ({ setAlert, setOpenAlert, setLogin, setSeverity, setUser }) => {
               value={email}
               onChange={handleChange("email")}
               sx={{ width: 415, m: 1 }}
-              error={Err.err}
-              helperText={Err.helpText}
             />
             <TextField
               name="password"
@@ -77,7 +87,6 @@ const Login = ({ setAlert, setOpenAlert, setLogin, setSeverity, setUser }) => {
               sx={{ width: 415, m: 1 }}
             />
           </Box>
-          <button onClick={tester}>Click Me</button>
           <p>
             Forgot Password???&nbsp;
             <Link to="/forget_password" className="_button">

@@ -1,12 +1,12 @@
 .gallery-image {
   margin: 5px;
-  width: 200px;
-  height: 200px;
+  width: 180px;
+  height: 180px;
   display: flex;
   align-items: center;
   justify-content: center;
   contain: content;
-  background: #f2f2f2;
+  background: #ffffff;
   border-radius: 5px;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
@@ -43,9 +43,10 @@
 }
 .gallery-image-zoom-header button {
   font-size: 25px;
-  margin-right: 10px;
+  margin-right: 20px;
   background: transparent;
   cursor: pointer;
+  /* align-self: flex-end; */
 }
 .gallery-image-zoom-img {
   height: 400px;
@@ -57,4 +58,17 @@
 .gallery-image-zoom-img,
 .gallery-image-zoom-img img {
   width: 500px;
+}
+.delete-btn-l {
+  justify-self: start !important;
+  margin-left: 20px;
+  color: #e92e4a;
+  transition: 0.3s;
+  -webkit-transition: 0.3s;
+  -moz-transition: 0.3s;
+  -ms-transition: 0.3s;
+  -o-transition: 0.3s;
+}
+.delete-btn-l:hover {
+  color: #c80000;
 }

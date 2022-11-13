@@ -22,16 +22,23 @@ import Adopt from "./pages/Adopt/Adopt";
 import ShopDetails from "./pages/Shop/ShopDetails/ShopDetails";
 import AdoptDetails from "./pages/Adopt/AdoptDetails/AdoptDetails";
 import AdoptApplication from "./pages/Adopt/AdoptApplication/AdoptApplication";
-
+import User from "./pages/User/User";
+import Cart from "./pages/Cart/Cart";
 function App() {
   const [alert, setAlert] = useState("true");
   const [severity, setSeverity] = useState("success");
   const [openAlert, setOpenAlert] = useState(false);
   const [Product, setProduct] = useState({});
   const [pet, setPet] = useState({});
+  // const [Pets, setPets] = useState({});
   const [login, setLogin] = useState(false);
   const [user, setUser] = useState({});
   const [userId, setUserId] = useState("");
+  if (openAlert === true) {
+    setTimeout(() => {
+      setOpenAlert(false);
+    }, 5000);
+  }
   const LoginComponent = (
     <Login
       setAlert={setAlert}
@@ -39,13 +46,22 @@ function App() {
       setSeverity={setSeverity}
       setLogin={setLogin}
       setUser={setUser}
+      user={user}
     />
   );
+
   return (
     <>
       <BrowserRouter>
         {/* Navigation Bar */}
-        <Navigation login={login} setLogin={setLogin} user={user} />
+        <Navigation
+          login={login}
+          setLogin={setLogin}
+          user={user}
+          setAlert={setAlert}
+          setOpenAlert={setOpenAlert}
+          setSeverity={setSeverity}
+        />
         {/* Alert Area */}
         <Collapse in={openAlert}>
           <Alert
@@ -72,6 +88,11 @@ function App() {
           <Routes>
             {/* Home */}
             <Route exact path="/" element={<Home />}></Route>
+            {/* My User */}
+            <Route
+              path="/user"
+              element={login ? <User user={user} /> : LoginComponent}
+            ></Route>
             {/* My Pets */}
             <Route
               path="/my_pets"
@@ -89,24 +110,28 @@ function App() {
               <Route index element={<DetailsandGallery />}></Route>
               <Route
                 path="details_and_gallery"
-                element={<DetailsandGallery Pet={pet} />}
+                element={<DetailsandGallery Pet={pet} setPet={setPet} />}
               ></Route>
               <Route
                 path="vaccination_and_medical_details"
-                element={<VaccinationAndMedical Pet={pet} />}
+                element={<VaccinationAndMedical Pet={pet} setPet={setPet} />}
               ></Route>
               <Route
                 path="meal_timings"
-                element={<MealTime Pet={pet} />}
+                element={<MealTime Pet={pet} setPet={setPet} />}
               ></Route>
               <Route
                 path="walk_timings"
-                element={<WalkTime Pet={pet} />}
+                element={<WalkTime Pet={pet} setPet={setPet} />}
               ></Route>
             </Route>
             <Route
               path="/shop"
               element={<Shop setProduct={setProduct} />}
+            ></Route>
+            <Route
+              path="/cart"
+              element={login ? <Cart user={user} /> : LoginComponent}
             ></Route>
             <Route
               path={`/product/${Product._id}`}

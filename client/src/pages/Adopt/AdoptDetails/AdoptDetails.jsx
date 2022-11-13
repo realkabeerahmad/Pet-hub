@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import "./AdoptDetails.css";
 const AdoptDetails = ({ Pet }) => {
   const Server = "http://localhost:8000/";
-  console.log(Pet);
   const Navigate = useNavigate();
   return (
     <div className="Details">

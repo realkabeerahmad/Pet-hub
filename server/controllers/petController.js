@@ -43,7 +43,7 @@ router.post("/addPet", upload.single("image"), (req, res) => {
     image: req.file.filename,
     passport: req.body.passport,
     dob: req.body.dob,
-    vaccination: { status: req.body.vaccinationStatus },
+    vaccination: {},
     rehome: false,
   };
   const _id = obj.userId;
@@ -78,20 +78,39 @@ router.post("/addPet", upload.single("image"), (req, res) => {
 });
 
 // Show a Single Pet Details
-router.get("/showPet", (req, res) => {
-  var { petId } = req.body;
+router.post("/showPet", (req, res) => {
+  var { _id } = req.body;
   try {
-    Pet.findById({ petId }, (err, data) => {
-      if (err) {
-        throw Error(err.message);
-      } else {
+    Pet.findById({ _id: _id }, (err, data) => {
+      if (data) {
         res.status(200).json({
           status: "success",
           message: "data fetched successfully",
-          data: data,
+          pet: data,
         });
+      } else {
+        res.send({ status: "failed", error: err.message });
       }
-    });
+    }).clone();
+  } catch (error) {
+    res.status(400).json({ status: "failed", error: error.message });
+  }
+});
+
+// Show a Single Pet Details
+router.post("/deletePet", (req, res) => {
+  const { _id } = req.body;
+  try {
+    Pet.findByIdAndDelete({ _id })
+      .then(() => {
+        res.send({ status: "success", message: "Pet Deleted Successfully" });
+      })
+      .catch((err) => {
+        res.send({
+          status: "failed",
+          message: "Unable to Delete due to \n" + err,
+        });
+      });
   } catch (error) {
     res.status(400).json({ status: "failed", error: error.message });
   }
@@ -114,7 +133,7 @@ router.post("/showAllPets", (req, res) => {
           message: "Pets not Found",
         });
       }
-    });
+    }).clone();
   } catch (err) {
     res.status(500).json({ status: "failed", error: err.message });
   }
@@ -140,57 +159,70 @@ router.post("/rehome", (req, res) => {
 });
 
 // Add a Pet Meal Time
-router.post("/addPetMealTime", (req, res) => {
-  const { petId, name, time } = req.body;
-  let hour = Number(time.slice(0, 2));
-  let minute = Math.ceil((Number(time.slice(3, 5)) / 6) * 10);
+router.post("/addMealTime", (req, res) => {
+  const { _id, name, time } = req.body;
+  console.log(req.body);
   try {
-    Pet.findById({ petId }, (pet, err) => {
-      if (pet) {
-        const MealTime = new PetMealTime({ petId, name, hour, minute });
-        MealTime.save()
-          .then(() => {
-            res
-              .status(200)
-              .send({ status: "success", message: "Meal Time Added" });
-          })
-          .catch((err) => {
-            throw Error(err.message);
-          });
-      } else {
-        throw Error("Pet Not Found");
+    Pet.findByIdAndUpdate(
+      { _id: _id },
+      {
+        $push: {
+          mealTimes: { name: name, time: time, $sort: { createdAt: -1 } },
+        },
       }
-    });
+    )
+      .then(() => {
+        res
+          .status(200)
+          .send({ status: "success", message: "Meal Time Added Successfully" });
+      })
+      .catch((err) => {
+        res.send({
+          status: "failed",
+          message: "Unable to Add Meal Time\n" + err.message,
+        });
+      });
   } catch (error) {
     res.status(500).json({ status: "failed", error: error.message });
   }
 });
 
-// View a pets All Meal Times
-router.get("/showAllMealTime", (req, res) => {
-  var { petId } = req.body;
+// Add a Pet Walk Time
+router.post("/addWalkTime", (req, res) => {
+  const { _id, name, time } = req.body;
   try {
-    PetMealTime.find({ petId }, (err, data) => {
-      if (err) {
-        res.status(400).json({ error: err.message });
-      } else {
-        data.forEach((element) => {
-          let min = Math.floor((Number(element.minute) / 10) * 6);
-          element.minute = min;
-        });
-        res.status(200).send(data);
+    Pet.findByIdAndUpdate(
+      { _id: _id },
+      {
+        $push: {
+          walkTimes: { name: name, time: time, $sort: { createdAt: -1 } },
+        },
       }
-    });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    )
+      .then(() => {
+        res
+          .status(200)
+          .send({ status: "success", message: "Walk Time Added Successfully" });
+      })
+      .catch((err) => {
+        res.send({
+          status: "failed",
+          message: "Unable to Add Meal Time\n" + err.message,
+        });
+      });
+  } catch (error) {
+    res.status(500).json({ status: "failed", error: error.message });
   }
 });
 
 // Delete Pet Meal Time
 router.post("/deleteMealTime", (req, res) => {
-  var { _id } = req.body;
+  const { _id, timeId } = req.body;
   try {
-    PetMealTime.findByIdAndDelete({ _id })
+    Pet.findByIdAndUpdate(
+      { _id: _id },
+      { $pull: { mealTimes: { _id: timeId } } }
+    )
       .then(() => {
         res.send({ status: "success", message: "Meal Time Deleted" });
       })
@@ -201,61 +233,16 @@ router.post("/deleteMealTime", (req, res) => {
     res.send({ status: "failed", message: error.message });
   }
 });
-
-// Add a pet's Walk Time
-router.post("/addPetWalkTime", (req, res) => {
-  const { petId, name, time } = req.body;
-  let hour = Number(time.slice(0, 2));
-  let minute = Math.ceil((Number(time.slice(3, 5)) / 6) * 10);
-  try {
-    Pet.findById({ petId }, (pet, err) => {
-      if (pet) {
-        const WalkTime = new PetWalkTime({ petId, name, hour, minute });
-        WalkTime.save()
-          .then(() => {
-            res
-              .status(200)
-              .send({ status: "SUCCESS", message: "Meal Time Added" });
-          })
-          .catch((err) => {
-            res.status(400).send({ status: "FAILED", error: err.message });
-          });
-      } else {
-        res.status(400).json({ status: "FAILED", error: "Pet Not Found" });
-      }
-    });
-  } catch (err) {
-    res.status(500).json({ status: "FAILED", error: err.message });
-  }
-});
-
-// Show All Walk Times of a Pet
-router.get("/showAllWalkTimes", (req, res) => {
-  var { petId } = req.body;
-  try {
-    PetWalkTime.find({ petId }, (err, data) => {
-      if (err) {
-        res.status(400).json({ error: err.message });
-      } else {
-        data.forEach((element) => {
-          let min = Math.floor((Number(element.minute) / 10) * 6);
-          element.minute = min;
-        });
-        res.status(200).send(data);
-      }
-    });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// Delete Walk Time
+// Delete Pet Walk Time
 router.post("/deleteWalkTime", (req, res) => {
-  var { _id } = req.body;
+  const { _id, timeId } = req.body;
   try {
-    PetWalkTime.findByIdAndDelete({ _id })
+    Pet.findByIdAndUpdate(
+      { _id: _id },
+      { $pull: { walkTimes: { _id: timeId } } }
+    )
       .then(() => {
-        res.send({ status: "success", message: "Meal Time Deleted" });
+        res.send({ status: "success", message: "Walk Time Deleted" });
       })
       .catch(() => {
         throw Error("Could not Delete");
@@ -280,8 +267,12 @@ router.post("/addVaccination", (req, res) => {
         },
       }
     )
-      .then(() => {
-        res.send({ status: "success", message: "Vaccination Details Added" });
+      .then((data) => {
+        res.send({
+          status: "success",
+          message: "Vaccination Details Added",
+          pet: data,
+        });
       })
       .catch((err) => {
         res.send({
@@ -379,64 +370,54 @@ router.post("/updateVetDate", (req, res) => {
   }
 });
 
-// Upload Image to Gallery
-router.post("/uploadImage", upload.single("image"), (req, res) => {
-  const { petId } = req.body;
-  const obj = { petId, image: req.file.filename };
+// Add a Pet Image
+router.post("/addImage", upload.single("image"), (req, res) => {
+  const { _id } = req.body;
+  const obj = { image: req.file.filename };
+  console.log(_id, obj);
   try {
-    const Image = new gallery(obj);
-    Image.save()
+    Pet.findByIdAndUpdate(
+      { _id: _id },
+      {
+        $push: {
+          gallery: { image: obj.image, $sort: { createdAt: -1 } },
+        },
+      }
+    )
       .then(() => {
-        res.send({ status: "success", message: "Image Saved Successfully" });
+        res
+          .status(200)
+          .send({ status: "success", message: "Image Added Successfully" });
       })
       .catch((err) => {
-        throw Error("Error Occoured\n", err.message);
-      });
-  } catch (error) {
-    res.send({ status: "failed", message: error.message });
-  }
-});
-
-// Get Images From Gallery
-router.post("/getImages", (req, res) => {
-  const { petId } = req.body;
-  console.log(petId);
-  try {
-    gallery.find({ petId }, (err, data) => {
-      console.log(err);
-      if (err) {
         res.send({
           status: "failed",
-          message: "Error Occured",
+          message: "Unable to Add Image\n" + err.message,
         });
-      } else {
-        res.send({
-          status: "success",
-          message: "Sent Successfully",
-          gallery: data,
-        });
-      }
-    });
+      });
   } catch (error) {
-    res.send({ status: "failed", message: error.message });
+    res.status(500).json({ status: "failed", error: error.message });
   }
 });
 
-// delete Image from Gallery
-router.get("/deleteImage", (req, res) => {
-  const { galleryId } = req.body;
+// Delete Pet Meal Time
+router.post("/deleteImage", (req, res) => {
+  const { _id, imageId } = req.body;
   try {
-    gallery
-      .findByIdAndDelete(galleryId)
+    Pet.findByIdAndUpdate(
+      { _id: _id },
+      { $pull: { gallery: { _id: imageId } } }
+    )
       .then(() => {
-        res.send({ status: "success", message: "Deleted Successfully" });
+        res.send({ status: "success", message: "Image Deleted" });
       })
-      .catch((err) => {
-        throw Error("Error Occured\n", err.message);
+      .catch(() => {
+        throw Error("Could not Delete");
       });
   } catch (error) {
     res.send({ status: "failed", message: error.message });
   }
 });
+
 // Exporting Routes
 module.exports = router;

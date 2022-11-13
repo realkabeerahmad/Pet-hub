@@ -1,24 +1,15 @@
-.pet-gallery {
-  width: 100%;
-}
-.gallery-header {
-  border-bottom: 1px solid #e2e2e2;
-  width: 100%;
-  padding: 10px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.gallery-header-heading {
-  font-size: 18px;
-  color: #e92e4a;
-}
 .gallery-main {
-  padding: 20px;
+  width: 80%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+.gallery-wrapper {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
   justify-content: center;
+  width: 100%;
+  height: 100%;
 }
 .add {
   display: flex;
@@ -28,28 +19,44 @@
   height: 100vh;
 }
 .add-wrapper {
-  width: 500px;
-  height: 500px;
+  width: 400px;
+  height: 400px;
   background-color: #fff;
-  border-radius: 10px;
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-  -ms-border-radius: 10px;
-  -o-border-radius: 10px;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
   contain: content;
 }
 .add-top-bar {
   display: flex;
-  flex-direction: column;
+  position: relative;
+  flex-direction: row;
   font-size: 30px;
-  border-bottom: 1px solid #d2d2d2;
+  padding: 10px;
+  border-bottom: 1px solid #c2c2c2;
 }
 .add-top-bar i {
-  align-self: flex-end;
+  position: absolute;
+  top: 0px;
+  right: 10px;
   padding: 10px;
 }
+.add-screen form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.add-screen table {
+  width: 100%;
+}
+.add-screen table input {
+  width: 200px;
+}
 .add-screen {
-  height: 449px;
+  height: 300px;
   width: 100%;
   display: flex;
   align-items: center;
@@ -61,8 +68,8 @@
   margin: 10px;
 }
 .add-image {
-  width: 300px;
-  height: 300px;
+  width: 200px;
+  height: 200px;
   contain: content;
   display: flex;
   align-items: center;
@@ -72,8 +79,13 @@
   -moz-border-radius: 10px;
   -ms-border-radius: 10px;
   -o-border-radius: 10px;
-  background-color: #d2d2d2;
+  background-color: #c2c2c2;
+  margin-bottom: 20px;
 }
 .add-image img {
   width: 100%;
+}
+.add-top-bar h2 {
+  font-size: 20px;
+  color: #e92e4a;
 }

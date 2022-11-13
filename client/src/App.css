@@ -31,3 +31,8 @@
   color: #e92e4a;
   font-weight: 700;
 }
+.delete-btn-t {
+  color: #e92e4a;
+  cursor: pointer;
+  font-size: 15px;
+}

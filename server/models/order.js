@@ -8,13 +8,14 @@ const OrderSchema = mongoose.Schema({
   status: String,
   TrackingId: String,
   TrackingService: String,
-  OrderItems: [
+  products: [
     {
-      productId: String,
+      _id: String,
       name: String,
-      quantity: Number,
+      Image: String,
       price: Number,
-      image: String,
+      quantity: Number,
+      createdAt: { type: Date, default: Date.now },
     },
   ],
   createdAt: { type: Date, default: Date.now },

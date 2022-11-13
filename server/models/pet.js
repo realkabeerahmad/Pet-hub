@@ -25,6 +25,26 @@ const PetSchema = mongoose.Schema({
     AppointmentDate: Date,
     updatedAt: { type: Date, default: Date.now },
   },
+  mealTimes: [
+    {
+      name: String,
+      time: String,
+      createdAt: { type: Date, default: Date.now },
+    },
+  ],
+  walkTimes: [
+    {
+      name: String,
+      time: String,
+      createdAt: { type: Date, default: Date.now },
+    },
+  ],
+  gallery: [
+    {
+      image: String,
+      createdAt: { type: Date, default: Date.now },
+    },
+  ],
   createdAt: { type: Date, default: Date.now },
 });
 // Exporting Pet Model

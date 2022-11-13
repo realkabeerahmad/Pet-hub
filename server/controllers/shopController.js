@@ -73,7 +73,6 @@ router.get("/showProduct", (req, res) => {
 // View all Products
 router.get("/showAllProducts", (req, res) => {
   try {
-    console.log("here");
     product.find((err, data) => {
       if (data) {
         res.status(200).send({ status: "success", products: data });
@@ -88,10 +87,10 @@ router.get("/showAllProducts", (req, res) => {
 
 // Delete a Product
 router.post("/deleteProduct", (req, res) => {
-  const { productId } = req.body;
+  const { _id } = req.body;
   try {
     product
-      .findByIdAndDelete({ productId })
+      .findByIdAndDelete({ _id: _id })
       .then(() => {
         res.status(200).send({
           status: "success",
@@ -107,12 +106,16 @@ router.post("/deleteProduct", (req, res) => {
 });
 
 // Create Cart
-router.post("/newCart", (req, res) => {
+router.post("/cart", (req, res) => {
   const { userId } = req.body;
   try {
-    cart.find({ userId }, async (data, err) => {
+    cart.findOne({ userId }, async (err, data) => {
       if (data) {
-        throw Error("Cart Already Exist");
+        res.send({
+          status: "failed",
+          message: "Cart Already Exist",
+          cart: data,
+        });
       } else {
         const Cart = new cart({ userId });
         await Cart.save();
@@ -126,14 +129,45 @@ router.post("/newCart", (req, res) => {
 
 // Add Product to Cart
 router.post("/addToCart", (req, res) => {
-  const { productId, name, price, image, cartId, quantity } = req.body;
-  const product = { productId, name, price, image, cartId, quantity };
+  const { _id, name, price, image, cartId, quantity } = req.body;
   try {
-    cart.findById({ cartId }, (data, err) => {
+    cart.findById({ _id: cartId }, (err, data) => {
       if (data) {
-        addToCart(product, res);
-      } else {
-        throw Error("Cart Not Found");
+        data.products.forEach((product) => {
+          if (product._id === _id) {
+            res.send({
+              status: "failed",
+              error: "Product already in Cart",
+            });
+          }
+        });
+        cart
+          .updateOne(
+            { _id: cartId },
+            {
+              $push: {
+                products: {
+                  _id: _id,
+                  name: name,
+                  Image: image,
+                  price: price,
+                  quantity: quantity,
+                },
+              },
+            }
+          )
+          .then(() => {
+            res.send({
+              status: "success",
+              message: "Product Added to Cart Successfully",
+            });
+          })
+          .catch((err) => {
+            res.send({
+              status: "failed",
+              error: "Faild to add due to following:\n" + err.message,
+            });
+          });
       }
     });
   } catch (error) {
@@ -141,55 +175,41 @@ router.post("/addToCart", (req, res) => {
   }
 });
 
-// Function to add to cart
-const addToCart = async (product, res) => {
-  const cartId = product.cartId;
-  const productId = product.productId;
-  try {
-    cartItem.find({ cartId, productId }, async (err, data) => {
-      if (data) {
-        throw Error("Product Already in Cart");
-      } else {
-        const Cartitem = new cartItem(product);
-        await Cartitem.save()
-          .then(() => {
-            res.send("Item added to Cart successfully");
-          })
-          .catch(() => {
-            throw Error("Error occured");
-          });
-      }
-    });
-  } catch (error) {
-    res.send({ status: "failed", message: error.message });
-  }
-};
-
 // Delete From Cart
 router.post("/deleteFromCart", (req, res) => {
-  const { cartItemId } = req.body;
+  const { cartId, _id } = req.body;
   try {
-    cartItem
-      .findByIdAndDelete({ cartItemId })
+    cart
+      .findByIdAndUpdate({ _id: cartId }, { $pull: { products: { _id: _id } } })
       .then(() => {
-        res.send("successfully item deleted from cart");
+        res.send({ status: "success", message: "Deleted Successfully" });
       })
-      .catch(() => {
-        throw Error("error deleting item from cart");
+      .catch((err) => {
+        res.send({
+          status: "failed",
+          message: "Unable to Delete" + err.message,
+        });
       });
   } catch (error) {
     res.send({ status: "failed", message: error.message });
   }
 });
 
-router.get("/showCartItems", (req, res) => {
+router.post("/showCart", (req, res) => {
   const { cartId } = req.body;
   try {
-    cartItem.find({ cartId: cartId }, async (err, data) => {
+    cart.findById({ _id: cartId }, (err, data) => {
       if (data) {
-        res.status(200).send(data);
+        res.status(200).send({
+          status: "success",
+          message: "Operation Successfull",
+          cart: data,
+        });
       } else {
-        throw Error(err + "\nError Happend");
+        res.send({
+          status: "failed",
+          error: "Faild due to following:\n" + err.message,
+        });
       }
     });
   } catch (error) {

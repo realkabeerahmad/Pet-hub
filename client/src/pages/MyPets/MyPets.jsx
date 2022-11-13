@@ -5,7 +5,6 @@ import "./MyPets.css";
 import axios from "axios";
 const MyPets = ({ user, setPet }) => {
   const data = { userId: user._id };
-  // console.log(user._id);
   const [Pets, setPets] = useState([]);
   useEffect(() => {
     fetchItem();
@@ -14,7 +13,6 @@ const MyPets = ({ user, setPet }) => {
     axios
       .post("http://localhost:8000/pet/showAllPets/", data)
       .then((res) => {
-        console.log(res);
         setPets(res.data.pets);
       })
       .catch((err) => {
@@ -24,7 +22,7 @@ const MyPets = ({ user, setPet }) => {
   return (
     <div className="mypets">
       {Pets.map((Pet) => {
-        return <MyPetCard Pet={Pet} setPet={setPet} />;
+        return <MyPetCard Pet={Pet} setPet={setPet} setPets={setPets} />;
       })}
       <Link to="/my_pets/add_pet" className="add-pet-btn">
         <i className="fa fa-plus"></i> Add Pet
