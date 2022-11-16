@@ -49,6 +49,21 @@
 .register > .button:hover {
   background-color: rgb(0, 107, 0);
 }
+.register > .button:disabled {
+  background-color: rgba(0, 107, 0, 0.5);
+  cursor: not-allowed;
+}
 .toLogin a {
   color: #e92e4a;
+}
+.pass-field {
+  position: relative;
+}
+.showPass {
+  position: absolute;
+  font-size: large;
+  color: #3f3f3f;
+  top: 26px;
+  right: 50px;
+  cursor: pointer;
 }
