@@ -34,6 +34,7 @@ function App() {
   const [login, setLogin] = useState(false);
   const [user, setUser] = useState({});
   const [userId, setUserId] = useState("");
+  const [cart, setCart] = useState("");
   if (openAlert === true) {
     setTimeout(() => {
       setOpenAlert(false);
@@ -47,6 +48,7 @@ function App() {
       setLogin={setLogin}
       setUser={setUser}
       user={user}
+      setCart={setCart}
     />
   );
 
@@ -131,11 +133,11 @@ function App() {
             ></Route>
             <Route
               path="/cart"
-              element={login ? <Cart user={user} /> : LoginComponent}
+              element={login ? <Cart cart={cart} /> : LoginComponent}
             ></Route>
             <Route
               path={`/product/${Product._id}`}
-              element={<ShopDetails Product={Product} />}
+              element={<ShopDetails Product={Product} cart={cart} />}
             ></Route>
             <Route path="/adopt" element={<Adopt setPet={setPet} />}></Route>
             <Route

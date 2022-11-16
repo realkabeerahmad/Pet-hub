@@ -22,7 +22,9 @@ const MyPets = ({ user, setPet }) => {
   return (
     <div className="mypets">
       {Pets.map((Pet) => {
-        return <MyPetCard Pet={Pet} setPet={setPet} setPets={setPets} />;
+        return (
+          <MyPetCard Pet={Pet} setPet={setPet} setPets={setPets} user={user} />
+        );
       })}
       <Link to="/my_pets/add_pet" className="add-pet-btn">
         <i className="fa fa-plus"></i> Add Pet

@@ -94,7 +94,7 @@ const Medical = ({ Pet, setPet }) => {
                   <tbody>
                     <tr>
                       <th>
-                        <label htmlFor="nextDoseDate">Next Dose Date</label>
+                        <label htmlFor="nextDoseDate">Appointment Date</label>
                       </th>
                       <td>
                         <input
@@ -108,9 +108,7 @@ const Medical = ({ Pet, setPet }) => {
                     </tr>
                     <tr>
                       <th>
-                        <label htmlFor="vaccinationAddress">
-                          Vaccination Address
-                        </label>
+                        <label htmlFor="vaccinationAddress">Vet Address</label>
                       </th>
                       <td>
                         <input

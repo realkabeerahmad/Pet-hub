@@ -119,8 +119,9 @@ router.post("/deletePet", (req, res) => {
 // Show All Pets of a User
 router.post("/showAllPets", (req, res) => {
   const { userId } = req.body;
+  console.log(userId);
   try {
-    Pet.find({ userId }, (err, data) => {
+    Pet.find({ userId: userId }, (err, data) => {
       if (data !== [] || data !== null) {
         res.status(200).json({
           status: "success",

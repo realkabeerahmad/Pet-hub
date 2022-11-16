@@ -4,13 +4,14 @@ import "./Shop.css";
 import ShopCard from "../../components/ShopCard/ShopCard";
 
 const Shop = ({ setProduct }) => {
+  console.log("shop");
   const [Products, setProducts] = useState([]);
   useEffect(() => {
     fetchItem();
   }, []);
   const fetchItem = () => {
     axios
-      .get("http://localhost:8000/shop/showAllProducts/")
+      .get("http://localhost:8000/shop/showAllProducts")
       .then((res) => {
         console.log(res.data.products);
         setProducts(res.data.products);

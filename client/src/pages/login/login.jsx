@@ -12,6 +12,7 @@ const Login = ({
   setSeverity,
   setUser,
   user,
+  setCart,
 }) => {
   const Navigate = useNavigate();
   const [values, setValues] = useState({
@@ -41,7 +42,11 @@ const Login = ({
             axios
               .post("http://localhost:8000/shop/cart", userId)
               .then((res) => {
-                console.log(res);
+                if (res.data.cart) {
+                  console.log(res.data.cart);
+
+                  setCart(res.data.cart);
+                }
               })
               .catch((err) => {
                 console.log(err);
