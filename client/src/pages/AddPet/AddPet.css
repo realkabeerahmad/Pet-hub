@@ -1,23 +1,56 @@
 .add-pet-form {
   display: flex;
-  /* justify-content: center; */
+  justify-content: center;
   align-items: center;
   flex-direction: column;
   width: 100%;
 }
-.add-pet {
+.add-pet-form form {
+  width: 100%;
   display: flex;
   align-items: center;
+  justify-content: center;
   flex-direction: column;
+}
+.add-pet {
+  display: flex;
+  /*flex-wrap: wrap;
+  */
+  flex-direction: row;
   width: 80%;
+  height: 400px;
   background: #fff;
-  padding: 10px;
+  padding: 30px 20px;
   margin-top: 20px;
   text-align: center;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
 }
-.add-pet h1 {
+.__btn {
+  background-color: transparent;
+  color: white;
+  font: inherit;
+  width: 100%;
+  height: 100%;
+}
+.add-pet-left {
+  width: 30%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.add-pet-right {
+  width: 70%;
+  height: 100%;
+}
+.add-pet-form h1 {
   margin: 20px;
   color: #e92e4a;
+  /* background: #fff; */
 }
 .add-pet .button {
   background: #209420;
@@ -38,38 +71,11 @@
   -ms-transition: background 0.3s;
   -o-transition: background 0.3s;
 }
-.register > .button:hover {
+.add-pet-right > .save-btn:hover {
   background-color: rgb(0, 107, 0);
 }
 .toLogin a {
   color: #e92e4a;
-}
-input[type="file"] {
-  padding: none;
-  border: none;
-}
-input,
-select {
-  border: 1px solid rgba(0, 0, 0, 0.25);
-  padding: 10px;
-  margin: 8px 4px;
-  width: 300px;
-  height: 50px;
-  border-radius: 5px;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
-  -o-border-radius: 5px;
-  transition: all 0.1s;
-  -webkit-transition: all 0.1s;
-  -moz-transition: all 0.1s;
-  -ms-transition: all 0.1s;
-  -o-transition: all 0.1s;
-  appearance: none;
-}
-input:focus,
-select:focus {
-  /* border: 2px solid rgb(0, 150, 0); */
 }
 .add-image-1 {
   width: 200px;
@@ -79,12 +85,20 @@ select:focus {
   justify-content: center;
   contain: content;
   margin: 10px;
-  background-color: rgba(0, 0, 0, 0.25);
+  background-color: rgba(0, 0, 0, 0.125);
   border-radius: 5px;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   -ms-border-radius: 5px;
   -o-border-radius: 5px;
+  transition: color 0.3s;
+  -webkit-transition: color 0.3s;
+  -moz-transition: color 0.3s;
+  -ms-transition: color 0.3s;
+  -o-transition: color 0.3s;
+}
+.add-image-1:hover {
+  background-color: rgba(0, 0, 0, 0.175);
 }
 .add-image-1 img {
   width: 100%;
@@ -121,6 +135,12 @@ input[type="file"] {
   -moz-border-radius: 5px;
   -ms-border-radius: 5px;
   -o-border-radius: 5px;
+  transition: color 0.3s;
+  -webkit-transition: color 0.3s;
+  -moz-transition: color 0.3s;
+  -ms-transition: color 0.3s;
+  -o-transition: color 0.3s;
+  cursor: pointer;
 }
 .add-pet-form a {
   position: absolute;

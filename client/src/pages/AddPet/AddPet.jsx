@@ -1,8 +1,19 @@
 import React, { useState } from "react";
+import {
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from "@mui/material";
 import "./AddPet.css";
 import axios from "axios";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
+import dayjs from "dayjs";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 const AddPet = ({ user }) => {
   const Navigate = useNavigate();
@@ -16,7 +27,6 @@ const AddPet = ({ user }) => {
     type: "",
     image: "",
     passport: "",
-    dob: "",
   });
 
   const handleChange = (value) => (e) => {
@@ -24,6 +34,7 @@ const AddPet = ({ user }) => {
   };
 
   const [_image, setimage] = useState();
+
   const handleImage = (e) => {
     setValues({ ...values, image: e.target.files[0] });
     const reader = new FileReader();
@@ -33,6 +44,11 @@ const AddPet = ({ user }) => {
     reader.readAsDataURL(e.target.files[0]);
   };
 
+  const [date, setDate] = useState(dayjs("2019-01-20T21:11:54"));
+
+  const handleDate = (e) => {
+    setDate(e);
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -45,7 +61,7 @@ const AddPet = ({ user }) => {
     formData.append("breed", values.breed);
     formData.append("type", values.type);
     formData.append("passport", values.passport);
-    formData.append("dob", values.dob);
+    formData.append("dob", date);
     const config = {
       headers: { "content-type": "multipart/form-data" },
     };
@@ -82,155 +98,153 @@ const AddPet = ({ user }) => {
         encType="multipart/form-data"
         autoComplete="off"
       >
-        <table>
-          <tbody>
-            <tr>
-              <th></th>
-              <td>
-                <div className="add-image-1">
-                  <img src={_image} alt="" />
-                  <label className="custom-file-upload" htmlFor="image-upload">
-                    <i className="fa fa-plus"></i>
-                    <input
-                      id="image-upload"
-                      type="file"
-                      name="image-upload"
-                      accept=".png, .jpg, .jpeg"
-                      onChange={handleImage}
-                    />
-                  </label>
-                </div>
-              </td>
-              <th>
-                <label htmlFor="userId">User ID:</label>
-              </th>
-              <td>
+        <h1>Add Pet</h1>
+        <div className="add-pet">
+          <div className="add-pet-left">
+            <div className="add-image-1">
+              <img src={_image} alt="" />
+              <label className="custom-file-upload" htmlFor="image-upload">
+                <i className="fa fa-plus"></i>
                 <input
-                  name="userId"
-                  type="password"
-                  value={user._id}
-                  disabled
-                  required
+                  id="image-upload"
+                  type="file"
+                  name="image-upload"
+                  accept=".png, .jpg, .jpeg"
+                  onChange={handleImage}
                 />
-              </td>
-            </tr>
-            <tr>
-              <th>
-                <label htmlFor="Name">Name:</label>
-              </th>
-              <td>
-                <input
-                  name="name"
-                  type="text"
-                  value={values.name}
-                  onChange={handleChange("name")}
-                  required
-                />
-              </td>
-
-              <th>
-                <label htmlFor="bio">Bio:</label>
-              </th>
-              <td>
-                <input
-                  name="bio"
-                  type="text"
-                  value={values.bio}
-                  onChange={handleChange("bio")}
-                  required
-                />
-              </td>
-            </tr>
-            <tr>
-              <th>
-                <label htmlFor="gender">Gender:</label>
-              </th>
-              <td>
-                <select
+              </label>
+            </div>
+          </div>
+          <div className="add-pet-right">
+            <div>
+              <TextField
+                label="User Id"
+                variant="outlined"
+                color="success"
+                name="userId"
+                type="password"
+                value={user._id}
+                disabled
+                required
+                sx={{ width: "40%", m: 1 }}
+              />
+              <TextField
+                label="Pet Name"
+                variant="outlined"
+                color="success"
+                sx={{ width: "40%", m: 1 }}
+                name="name"
+                type="text"
+                value={values.name}
+                onChange={handleChange("name")}
+                required
+              />
+            </div>
+            <div>
+              <TextField
+                label="Pet Bio"
+                variant="outlined"
+                color="success"
+                sx={{ width: "40%", m: 1 }}
+                name="bio"
+                type="text"
+                value={values.bio}
+                onChange={handleChange("bio")}
+                required
+              />
+              <FormControl sx={{ width: "40%", m: 1 }}>
+                <InputLabel id="gender" color="success">
+                  Gender
+                </InputLabel>
+                <Select
+                  label="Gender"
                   name="gender"
-                  type="text"
+                  id="gender"
+                  // variant="outlined"
+                  color="success"
+                  // sx={{ width: "84%", m: 1 }}
                   value={values.gender}
                   onChange={handleChange("gender")}
                   required
                 >
-                  <option value="" disabled selected>
-                    Select
-                  </option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                </select>
-              </td>
-              <th>
-                <label htmlFor="type">Type:</label>
-              </th>
-              <td>
-                <select
+                  <MenuItem value="Male">Male</MenuItem>
+                  <MenuItem value="Female">Female</MenuItem>
+                </Select>
+              </FormControl>
+            </div>
+            <div>
+              <FormControl sx={{ width: "40%", m: 1 }}>
+                <InputLabel id="type" color="success">
+                  Pet Type
+                </InputLabel>
+                <Select
+                  label="Gender"
+                  id="type"
+                  color="success"
                   name="type"
                   type="text"
                   value={values.type}
                   onChange={handleChange("type")}
                   required
                 >
-                  <option value="" disabled selected>
-                    Select
-                  </option>
-                  <option value="Cat">Cat</option>
-                  <option value="Dog">Dog</option>
-                  <option value="Horse">Horse</option>
-                  <option value="Parrot">Parrot</option>
-                  <option value="Hen">Hen</option>
-                  <option value="Rabbit">Rabbit</option>
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <th>
-                <label htmlFor="breed">Breed:</label>
-              </th>
-              <td>
-                <input
-                  name="breed"
-                  type="text"
-                  value={values.breed}
-                  onChange={handleChange("breed")}
-                  required
-                />
-              </td>
-              <th>
-                <label htmlFor="passport">Passport:</label>
-              </th>
-              <td>
-                <input
-                  name="passport"
-                  type="text"
-                  value={values.passport}
-                  onChange={handleChange("passport")}
-                  required
-                />
-              </td>
-            </tr>
-            <tr>
-              <th>
-                <label htmlFor="dob">Date of Birth:</label>
-              </th>
-              <td>
-                <input
+                  <MenuItem value="Cat">Cat</MenuItem>
+                  <MenuItem value="Dog">Dog</MenuItem>
+                  <MenuItem value="Horse">Horse</MenuItem>
+                  <MenuItem value="Parrot">Parrot</MenuItem>
+                  <MenuItem value="Hen">Hen</MenuItem>
+                  <MenuItem value="Rabbit">Rabbit</MenuItem>
+                </Select>
+              </FormControl>
+              <TextField
+                label="Breed"
+                variant="outlined"
+                color="success"
+                sx={{ width: "40%", m: 1 }}
+                name="breed"
+                type="text"
+                value={values.breed}
+                onChange={handleChange("breed")}
+                required
+              />
+            </div>
+            <div>
+              <TextField
+                label="Pet Passport"
+                variant="outlined"
+                color="success"
+                sx={{ width: "40%", m: 1 }}
+                name="passport"
+                type="text"
+                value={values.passport}
+                onChange={handleChange("passport")}
+                required
+              />
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  label="Date of Birth"
+                  variant="outlined"
+                  color="success"
                   name="dob"
-                  type="date"
-                  value={values.dob}
-                  onChange={handleChange("dob")}
-                  required
+                  value={date}
+                  inputFormat="MM/DD/YYYY"
+                  onChange={handleDate}
+                  renderInput={(params) => (
+                    <TextField {...params} sx={{ width: "40%", m: 1 }} />
+                  )}
                 />
-              </td>
-              <th></th>
-              <td>
-                <button className="save-btn" type="submit">
-                  Submit
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+              </LocalizationProvider>
+            </div>
+            <Button
+              variant="contained"
+              color="success"
+              sx={{ width: "40%", m: 1 }}
+            >
+              <button className="__btn" type="submit">
+                Submit
+              </button>
+            </Button>
+          </div>
+        </div>
       </form>
     </div>
   );

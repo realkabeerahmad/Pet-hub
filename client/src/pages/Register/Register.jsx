@@ -182,8 +182,8 @@ const Register = ({ setAlert, setOpenAlert, setSeverity, setUserId }) => {
             name="email"
             label="Email"
             variant="outlined"
-            type="email"
             color="success"
+            type="email"
             onChange={handleChange("email")}
             value={email}
             onBlur={onBlur("email")}

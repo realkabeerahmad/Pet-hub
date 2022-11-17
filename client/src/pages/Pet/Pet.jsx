@@ -7,7 +7,7 @@ const Pet = ({ Pet }) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const activeClassName = "is-active";
-  const img_src = "https://source.unsplash.com/150x150/?pet";
+
   return (
     <>
       <div className="pet">
