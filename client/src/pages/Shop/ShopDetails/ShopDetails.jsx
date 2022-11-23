@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./ShopDetails.css";
 import axios from "axios";
-import { Box, TextField } from "@mui/material";
+import { Box, Button, TextField } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { AddShoppingCartSharp } from "@mui/icons-material";
 const ShopDetails = ({ Product, cart, setCart }) => {
   const Server = "http://localhost:8000/";
   const [values, setValues] = useState({
@@ -88,6 +89,12 @@ const ShopDetails = ({ Product, cart, setCart }) => {
                 <th>Fast Shipping:</th>
                 <td>{Product.FastShipping}</td>
               </tr>
+              <tr>
+                <th>Availability:</th>
+                <td>{Product.quantity > 0 ? "Instock" : "N/A"}</td>
+                <th></th>
+                <td></td>
+              </tr>
             </tbody>
           </table>
           <TextField
@@ -104,6 +111,7 @@ const ShopDetails = ({ Product, cart, setCart }) => {
             error={qtyErr.error}
             helperText={qtyErr.helperText}
             sx={{ width: "30%", mt: 3 }}
+            disabled={Product.quantity <= 0 ? true : false}
           />
         </div>
         <div className="details-button">
@@ -111,18 +119,21 @@ const ShopDetails = ({ Product, cart, setCart }) => {
             <i className="fa fa-heart"></i>
           </div>
           <div className="details-buyNow">BUY NOW</div> */}
-          <Box
-            className="details-addToCart"
+          <Button
+            color="error"
+            variant="contained"
             sx={{
+              fontSize: 20,
+              position: "sticky",
+              bottom: 0,
               width: "100%",
               justifyContent: "center",
-              backgroundColor: "red",
             }}
             onClick={addToCart}
           >
-            <ShoppingCartIcon />
+            <AddShoppingCartSharp />
             &nbsp;&nbsp;ADD TO CART
-          </Box>
+          </Button>
         </div>
       </div>
     </div>

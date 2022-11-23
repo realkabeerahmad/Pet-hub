@@ -24,6 +24,10 @@ import AdoptDetails from "./pages/Adopt/AdoptDetails/AdoptDetails";
 import AdoptApplication from "./pages/Adopt/AdoptApplication/AdoptApplication";
 import User from "./pages/User/User";
 import Cart from "./pages/Cart/Cart";
+
+// -------------------------------------------------------------------------
+// -------------------------------------------------------------------------
+
 function App() {
   const [alert, setAlert] = useState("true");
   const [severity, setSeverity] = useState("success");
@@ -134,7 +138,9 @@ function App() {
             ></Route>
             <Route
               path="/cart"
-              element={login ? <Cart cart={cart} /> : LoginComponent}
+              element={
+                login ? <Cart cart={cart} setCart={setCart} /> : LoginComponent
+              }
             ></Route>
             <Route
               path={`/product/${Product._id}`}

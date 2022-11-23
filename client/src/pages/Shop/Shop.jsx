@@ -4,6 +4,7 @@ import "./Shop.css";
 import ShopCard from "../../components/ShopCard/ShopCard";
 import {
   Box,
+  Button,
   FormControl,
   InputLabel,
   MenuItem,
@@ -11,6 +12,9 @@ import {
   SwipeableDrawer,
   TextField,
 } from "@mui/material";
+import { FilterList, Search } from "@mui/icons-material";
+
+// ----------------------------------------------------------
 
 const Shop = ({ setProduct }) => {
   const [state, setState] = useState({
@@ -31,7 +35,7 @@ const Shop = ({ setProduct }) => {
 
     setState({ ...state, [anchor]: open });
   };
-  console.log("shop");
+
   const [Products, setProducts] = useState([]);
   useEffect(() => {
     fetchItem();
@@ -49,11 +53,29 @@ const Shop = ({ setProduct }) => {
   };
   return (
     <>
-      <div className="shop-nav">
-        <button onClick={toggleDrawer("left", true)}>
-          <i className="fa fa-filter"></i>
-          &nbsp; &nbsp;Filter
-        </button>
+      <Box
+        sx={{
+          width: "100%",
+          p: 2,
+          backgroundColor: "white",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Box
+          sx={{
+            width: "20%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Button color="error" onClick={toggleDrawer("left", true)}>
+            <FilterList />
+            &nbsp; &nbsp;Filter
+          </Button>
+        </Box>
         <SwipeableDrawer
           anchor={"left"}
           open={state["left"]}
@@ -96,26 +118,26 @@ const Shop = ({ setProduct }) => {
             ></TextField>
           </Box>
         </SwipeableDrawer>
-        <div className="shop-search">
-          {/* <form onSubmit={false}> */}
+        <Box sx={{ width: "80%", display: "flex" }}>
           <TextField
             variant="outlined"
             color="error"
             sx={{
-              width: "100%",
-              m: 1,
-              mr: 0,
+              width: "60%",
             }}
             type="text"
-            label="Search"
             placeholder="Search"
           />
-          <button>
-            <i className="fa fa-search"></i>
-          </button>
+          <Button
+            color="error"
+            variant="contained"
+            sx={{ width: 50, ml: "-65px" }}
+          >
+            <Search />
+          </Button>
           {/* </form> */}
-        </div>
-      </div>
+        </Box>
+      </Box>
       <div className="shop">
         <div className="shopRow">
           {Products.map((Product) => {

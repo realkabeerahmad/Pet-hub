@@ -4,9 +4,10 @@ import Time from "../../../components/Time/Time";
 import axios from "axios";
 import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { TextField } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import dayjs from "dayjs";
-
+import { AddCircle, CheckCircle } from "@mui/icons-material";
+//------------------------------------------------
 const WalkTime = ({ Pet, setPet }) => {
   const [values, setValues] = useState({
     _id: Pet._id,
@@ -64,9 +65,9 @@ const WalkTime = ({ Pet, setPet }) => {
         <p className="details-header-heading">
           <b>Walk Time</b>
         </p>
-        <button className="btn" onClick={handleOpen}>
-          <i className="fa fa-plus"></i>&nbsp;&nbsp;ADD
-        </button>
+        <Button onClick={handleOpen} color="error">
+          <AddCircle />
+        </Button>
       </div>
       <div className="details-more">
         {Pet.walkTimes === [] ||
@@ -125,10 +126,21 @@ const WalkTime = ({ Pet, setPet }) => {
                     )}
                   />
                 </LocalizationProvider>
-                <button className="save-btn">
-                  <i className="fa fa-save"></i>
-                  &nbsp;&nbsp;SAVE
-                </button>
+                <Button
+                  className="save-btn"
+                  color="success"
+                  fullWidth
+                  variant="contained"
+                  sx={{
+                    width: "100%",
+                    position: "absolute",
+                    bottom: 0,
+                    fontSize: 18,
+                  }}
+                >
+                  <CheckCircle sx={{ mr: 1 }} />
+                  SAVE
+                </Button>
               </div>
             </form>
           </div>

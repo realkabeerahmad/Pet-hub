@@ -2,11 +2,14 @@ import Modal from "@mui/material/Modal";
 import React, { useState } from "react";
 import Time from "../../../components/Time/Time";
 import axios from "axios";
-import { TextField } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
-import EditIcon from "@mui/icons-material/Edit";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+
+// ------------------------------------------------------------
 
 const MealTime = ({ Pet, setPet }) => {
   const [values, setValues] = useState({
@@ -65,9 +68,9 @@ const MealTime = ({ Pet, setPet }) => {
         <p className="details-header-heading">
           <b>Meal Time</b>
         </p>
-        <button className="btn" onClick={handleOpen}>
-          <i className="fa fa-plus"></i>&nbsp;&nbsp;ADD
-        </button>
+        <Button onClick={handleOpen} color="error">
+          <AddCircleIcon />
+        </Button>
       </div>
       <div className="details-more">
         {Pet.mealTimes === [] ||
@@ -126,10 +129,21 @@ const MealTime = ({ Pet, setPet }) => {
                     )}
                   />
                 </LocalizationProvider>
-                <button className="save-btn">
-                  <i className="fa fa-save"></i>
-                  &nbsp;&nbsp;SAVE
-                </button>
+                <Button
+                  className="save-btn"
+                  color="success"
+                  fullWidth
+                  variant="contained"
+                  sx={{
+                    width: "100%",
+                    position: "absolute",
+                    bottom: 0,
+                    fontSize: 18,
+                  }}
+                >
+                  <CheckCircleIcon sx={{ mr: 1 }} />
+                  SAVE
+                </Button>
               </div>
             </form>
           </div>

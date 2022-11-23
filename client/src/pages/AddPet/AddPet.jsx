@@ -14,6 +14,7 @@ import { Link } from "react-router-dom";
 import dayjs from "dayjs";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { CheckCircle } from "@mui/icons-material";
 
 const AddPet = ({ user }) => {
   const Navigate = useNavigate();
@@ -51,41 +52,46 @@ const AddPet = ({ user }) => {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("userId", user._id);
-    formData.append("image", values.image);
-    formData.append("name", values.name);
-    formData.append("bio", values.bio);
-    formData.append("age", values.age);
-    formData.append("gender", values.gender);
-    formData.append("breed", values.breed);
-    formData.append("type", values.type);
-    formData.append("passport", values.passport);
-    formData.append("dob", date);
-    const config = {
-      headers: { "content-type": "multipart/form-data" },
-    };
-    axios
-      .post("http://localhost:8000/pet/addPet", formData, config)
-      .then((res) => {
-        alert(res.data.message);
-        setValues({
-          userId: "",
-          name: "",
-          bio: "",
-          gender: "",
-          breed: "",
-          type: "",
-          image: "",
-          passport: "",
-          dob: "",
+    if (!values.image) {
+      alert("Please Add an Image");
+      return false;
+    } else {
+      const formData = new FormData();
+      formData.append("userId", user._id);
+      formData.append("image", values.image);
+      formData.append("name", values.name);
+      formData.append("bio", values.bio);
+      formData.append("age", values.age);
+      formData.append("gender", values.gender);
+      formData.append("breed", values.breed);
+      formData.append("type", values.type);
+      formData.append("passport", values.passport);
+      formData.append("dob", date);
+      const config = {
+        headers: { "content-type": "multipart/form-data" },
+      };
+      axios
+        .post("http://localhost:8000/pet/addPet", formData, config)
+        .then((res) => {
+          alert(res.data.message);
+          setValues({
+            userId: "",
+            name: "",
+            bio: "",
+            gender: "",
+            breed: "",
+            type: "",
+            image: "",
+            passport: "",
+            dob: "",
+          });
+          Navigate("/my_pets");
+        })
+        .catch((err) => {
+          // alert(err.data.message);
+          alert(err);
         });
-        Navigate("/my_pets");
-      })
-      .catch((err) => {
-        // alert(err.data.message);
-        alert(err);
-      });
+    }
   };
 
   return (
@@ -154,10 +160,10 @@ const AddPet = ({ user }) => {
               />
               <FormControl sx={{ width: "40%", m: 1 }}>
                 <InputLabel id="gender" color="success">
-                  Gender
+                  Gender *
                 </InputLabel>
                 <Select
-                  label="Gender"
+                  label="Gender *"
                   name="gender"
                   id="gender"
                   // variant="outlined"
@@ -175,10 +181,10 @@ const AddPet = ({ user }) => {
             <div>
               <FormControl sx={{ width: "40%", m: 1 }}>
                 <InputLabel id="type" color="success">
-                  Pet Type
+                  Pet Type *
                 </InputLabel>
                 <Select
-                  label="Gender"
+                  label="Gender *"
                   id="type"
                   color="success"
                   name="type"
@@ -237,11 +243,18 @@ const AddPet = ({ user }) => {
             <Button
               variant="contained"
               color="success"
-              sx={{ width: "40%", m: 1 }}
+              sx={{ width: "40%", m: 1, fontSize: 18 }}
+              type="submit"
             >
-              <button className="__btn" type="submit">
-                Submit
-              </button>
+              <CheckCircle
+                sx={{
+                  mr: 1,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              />
+              Submit
             </Button>
           </div>
         </div>

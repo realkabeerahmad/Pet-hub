@@ -36,3 +36,6 @@
   cursor: pointer;
   font-size: 15px;
 }
+.del-btn:hover {
+  color: #e92e4a;
+}

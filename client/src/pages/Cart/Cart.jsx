@@ -5,15 +5,18 @@ import { Box, Button } from "@mui/material";
 
 // --------------------------------------------------------
 
-const Cart = ({ cart }) => {
+const Cart = ({ cart, setCart }) => {
   var subTotal = 0;
   var Total = 0;
   const shipping = 200;
 
   for (let index = 0; index < cart.products.length; index++) {
-    subTotal = subTotal + cart.products[index].price;
+    subTotal =
+      subTotal + cart.products[index].price * cart.products[index].quantity;
   }
-  Total = subTotal + shipping;
+  if (subTotal != 0) {
+    Total = subTotal + shipping;
+  }
   return (
     <Box sx={{ display: "flex", justifyContent: "space-evenly" }}>
       <Box>
@@ -34,7 +37,9 @@ const Cart = ({ cart }) => {
           <h2 style={{ color: "#e92e4a" }}>Cart</h2>
         </Box>
         {cart.products.map((product) => {
-          return <CartItem product={product} />;
+          return (
+            <CartItem product={product} cartId={cart._id} setCart={setCart} />
+          );
         })}
       </Box>
       <Box
@@ -89,7 +94,7 @@ const Cart = ({ cart }) => {
             <h3>Total:</h3>
             <p>PKR {Total}</p>
           </Box>
-          <p>* Standard Shipping PKR 200 will be charged</p>
+          <p>* Standard Shipping PKR 200 will be applied.</p>
         </Box>
         <Box sx={{ position: "reletive" }}>
           <Button

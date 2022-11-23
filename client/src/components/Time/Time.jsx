@@ -1,5 +1,10 @@
 import React from "react";
 import axios from "axios";
+import { Button } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { Box } from "@mui/system";
+
+// --------------------------------------------------
 
 const Time = ({ Pet, setPet, time, timeName }) => {
   console.log(timeName);
@@ -31,19 +36,24 @@ const Time = ({ Pet, setPet, time, timeName }) => {
       });
   };
   return (
-    <table>
-      <tbody>
-        <tr>
-          <th>{time.name.toUpperCase()}:</th>
-          <td>{String(time.time).slice(11, 16)}</td>
-          <td>
-            <button className="delete-btn-t" onClick={deleteTime}>
-              <i className="fa fa-trash"></i>&nbsp;&nbsp;Delete
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-around",
+        mb: 2,
+        p: 1,
+        borderBottom: "1px solid #c2c2c2",
+      }}
+    >
+      <Box sx={{ width: "33%", fontWeight: 500 }}>
+        {time.name.toUpperCase()}:
+      </Box>
+      <Box sx={{ width: "33%" }}>{String(time.time).slice(11, 16)}</Box>
+      <Button onClick={deleteTime} color="error">
+        <DeleteIcon />
+      </Button>
+    </Box>
   );
 };
 
