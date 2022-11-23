@@ -1,8 +1,18 @@
-import { Avatar, IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  IconButton,
+  Menu,
+  MenuItem,
+  Tooltip,
+} from "@mui/material";
 import React from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import Logo from "../../assets/logo.png";
 import "./Navigation.css";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+
+// ------------------------------------------------------
 
 const Navigation = ({
   login,
@@ -86,82 +96,106 @@ const Navigation = ({
             Community
           </NavLink>
         </div>
-        {login ? (
-          <div className="auth_links">
-            <Link to="/cart">
-              <i className="fa fa-shopping-cart"></i>
-            </Link>
-            <Tooltip title="User Account Area">
-              <IconButton
-                onClick={handleClick}
-                size="small"
-                sx={{ ml: 2 }}
-                aria-controls={open ? "account-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? "true" : undefined}
-              >
-                <Avatar sx={{ width: 30, height: 30 }}>
-                  <img
-                    src={"http://localhost:8000/" + user.Image}
-                    alt=""
-                    className="user_avatar"
-                  />
-                </Avatar>
-              </IconButton>
-            </Tooltip>
-            <div className="nav-menu">
-              <Menu
-                id="basic-menu"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                MenuListProps={{
-                  "aria-labelledby": "basic-button",
-                }}
-              >
-                <Link to="/user">
-                  <MenuItem onClick={handleClose}>
+        <Box
+          className="auth_links"
+          sx={{
+            display: "flex",
+            aliginItems: "center",
+            justifyContent: "center",
+            // p: 1,
+          }}
+        >
+          <NavLink
+            to="/cart"
+            className={({ isActive }) =>
+              isActive ? activeClassName : undefined
+            }
+          >
+            <Box
+              sx={{
+                display: "flex",
+                aliginItems: "center",
+                justifyContent: "center",
+                p: 1,
+              }}
+            >
+              <ShoppingCartIcon />
+            </Box>
+          </NavLink>
+          {login ? (
+            <>
+              <Tooltip title="User Account Area">
+                <IconButton
+                  onClick={handleClick}
+                  size="small"
+                  sx={{ ml: 2 }}
+                  aria-controls={open ? "account-menu" : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={open ? "true" : undefined}
+                >
+                  <Avatar sx={{ width: 30, height: 30 }}>
                     <img
                       src={"http://localhost:8000/" + user.Image}
                       alt=""
                       className="user_avatar"
-                    />{" "}
-                    {" " + user.firstName + " " + user.lastName}
+                    />
+                  </Avatar>
+                </IconButton>
+              </Tooltip>
+              <div className="nav-menu">
+                <Menu
+                  id="basic-menu"
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleClose}
+                  MenuListProps={{
+                    "aria-labelledby": "basic-button",
+                  }}
+                >
+                  <Link to="/user">
+                    <MenuItem onClick={handleClose}>
+                      <img
+                        src={"http://localhost:8000/" + user.Image}
+                        alt=""
+                        className="user_avatar"
+                      />{" "}
+                      {" " + user.firstName + " " + user.lastName}
+                    </MenuItem>
+                  </Link>
+                  <Link to="/Wishlist">
+                    <MenuItem onClick={handleClose}>My Wishlist</MenuItem>
+                  </Link>
+                  <Link to="/Orders">
+                    <MenuItem onClick={handleClose}>My Orders</MenuItem>
+                  </Link>
+                  <MenuItem onClick={handleLogout}>
+                    <i className="fa fa-power-off"></i> &nbsp;&nbsp; Logout
                   </MenuItem>
-                </Link>
-                <Link to="/Wishlist">
-                  <MenuItem onClick={handleClose}>My Wishlist</MenuItem>
-                </Link>
-                <Link to="/Orders">
-                  <MenuItem onClick={handleClose}>My Orders</MenuItem>
-                </Link>
-                <MenuItem onClick={handleLogout}>
-                  <i className="fa fa-power-off"></i> &nbsp;&nbsp; Logout
-                </MenuItem>
-              </Menu>
-            </div>
-          </div>
-        ) : (
-          <div className="auth_links">
-            <NavLink
-              to="/login"
-              className={({ isActive }) =>
-                isActive ? activeClassName : undefined
-              }
-            >
-              Login
-            </NavLink>{" "}
-            |{" "}
-            <NavLink
-              to="/register"
-              className={({ isActive }) =>
-                isActive ? activeClassName : undefined
-              }
-            >
-              Register
-            </NavLink>
-          </div>
-        )}
+                </Menu>
+              </div>
+            </>
+          ) : (
+            <>
+              <NavLink
+                to="/login"
+                className={({ isActive }) =>
+                  isActive ? activeClassName : undefined
+                }
+              >
+                Login
+              </NavLink>{" "}
+              |{" "}
+              <NavLink
+                to="/register"
+                className={({ isActive }) =>
+                  isActive ? activeClassName : undefined
+                }
+              >
+                Register
+              </NavLink>
+            </>
+          )}
+        </Box>
       </div>
     </nav>
   );

@@ -40,7 +40,7 @@ const Adopt = ({ setPet }) => {
         </div>
       </div>
       <div className="pet-Adoption">
-        {Pets.map((Pet) => {
+        {Pets?.map((Pet) => {
           return <AdoptCard Pet={Pet} setPet={setPet} />;
         })}
       </div>

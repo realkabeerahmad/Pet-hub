@@ -3,6 +3,11 @@ import { Link } from "react-router-dom";
 import MyPetCard from "../../components/MyPetCard/MyPetCard";
 import "./MyPets.css";
 import axios from "axios";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import { Box } from "@mui/material";
+
+// ---------------------------------------------------------
+
 const MyPets = ({ user, setPet }) => {
   const data = { userId: user._id };
   const [Pets, setPets] = useState([]);
@@ -27,7 +32,16 @@ const MyPets = ({ user, setPet }) => {
         );
       })}
       <Link to="/my_pets/add_pet" className="add-pet-btn">
-        <i className="fa fa-plus"></i> Add Pet
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: 20,
+          }}
+        >
+          <AddCircleIcon sx={{ mr: 1 }} />
+        </Box>
       </Link>
     </div>
   );

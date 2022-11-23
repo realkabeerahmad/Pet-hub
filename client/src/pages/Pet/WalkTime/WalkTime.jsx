@@ -24,9 +24,16 @@ const WalkTime = ({ Pet, setPet }) => {
     setOpen(false);
   };
 
+  const [time, setTime] = useState(dayjs("2019-01-20T21:11:54"));
+
+  const handleTime = (e) => {
+    setTime(e);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     values._id = Pet._id;
+    values.time = time;
     axios
       .post("http://localhost:8000/pet/addWalkTime", values)
       .then((res) => {
@@ -105,9 +112,8 @@ const WalkTime = ({ Pet, setPet }) => {
                     variant="outlined"
                     color="success"
                     name="time"
-                    value={values.time}
-                    // inputFormat="MM/DD/YYYY"
-                    onChange={handleChange("time")}
+                    value={time}
+                    onChange={handleTime}
                     renderInput={(params) => (
                       <TextField
                         {...params}

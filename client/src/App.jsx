@@ -13,7 +13,7 @@ import Pet from "./pages/Pet/Pet";
 import DetailsandGallery from "./pages/Pet/DetailsandGallery/DetailsandGallery";
 import ForgetPass from "./pages/ForgetPass/ForgetPass";
 import VaccinationAndMedical from "./pages/Pet/VaccinationAndMedical/VaccinationAndMedical";
-import { Alert, Collapse, IconButton } from "@mui/material";
+import { Alert, Collapse, IconButton, LinearProgress } from "@mui/material";
 import { useState } from "react";
 import Otp from "./pages/Otp/Otp";
 import MealTime from "./pages/Pet/MealTime/MealTime";
@@ -64,6 +64,7 @@ function App() {
           setOpenAlert={setOpenAlert}
           setSeverity={setSeverity}
         />
+        {/* <LinearProgress color="success" /> */}
         {/* Alert Area */}
         <Collapse in={openAlert}>
           <Alert
@@ -137,7 +138,14 @@ function App() {
             ></Route>
             <Route
               path={`/product/${Product._id}`}
-              element={<ShopDetails Product={Product} cart={cart} />}
+              element={
+                <ShopDetails
+                  Product={Product}
+                  cart={cart}
+                  setCart={setCart}
+                  user={user}
+                />
+              }
             ></Route>
             <Route path="/adopt" element={<Adopt setPet={setPet} />}></Route>
             <Route

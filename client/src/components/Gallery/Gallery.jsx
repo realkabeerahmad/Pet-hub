@@ -3,6 +3,11 @@ import React, { useState } from "react";
 import GalleryImage from "../GalleryImage/GalleryImage";
 import "./Gallery.css";
 import axios from "axios";
+import { Box, Button } from "@mui/material";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+
+// --------------------------------------------------------
 
 const Gallery = ({ Pet, setPet }) => {
   const [values, setValues] = useState({
@@ -64,9 +69,9 @@ const Gallery = ({ Pet, setPet }) => {
           <p className="details-header-heading">
             <b>GALLERY</b>
           </p>
-          <button className="btn" onClick={handleOpen}>
-            <i className="fa fa-plus"></i>&nbsp;&nbsp;ADD
-          </button>
+          <Button onClick={handleOpen} color="error">
+            <AddCircleIcon sx={{ color: "#e92e4a" }} />
+          </Button>
         </div>
         <div className="gallery-wrapper">
           <div className="gallery-main">
@@ -89,10 +94,10 @@ const Gallery = ({ Pet, setPet }) => {
                 encType="multipart/form-data"
                 autoComplete="off"
               >
-                <div className="add-image">
+                <Box className="add-image" sx={{ backgroundColor: "#929292" }}>
                   <img src={_image} alt="" />
                   <label className="custom-file-upload" htmlFor="image-upload">
-                    <i className="fa fa-plus"></i>
+                    <AddCircleIcon sx={{ fontSize: 80 }} />
                     <input
                       id="image-upload"
                       type="file"
@@ -101,11 +106,21 @@ const Gallery = ({ Pet, setPet }) => {
                       onChange={handleImage}
                     />
                   </label>
-                </div>
-                <button className="save-btn">
-                  <i className="fa fa-save"></i>
-                  &nbsp;&nbsp;SAVE
-                </button>
+                </Box>
+                <Button
+                  color="success"
+                  fullWidth
+                  variant="contained"
+                  sx={{
+                    width: "100%",
+                    position: "absolute",
+                    bottom: 0,
+                    fontSize: 18,
+                  }}
+                >
+                  <CheckCircleIcon sx={{ mr: 1 }} />
+                  SAVE
+                </Button>
               </form>
             </div>
           </div>

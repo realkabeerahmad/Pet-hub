@@ -1,6 +1,9 @@
 import { Box } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
+import DeleteIcon from "@mui/icons-material/Delete";
+
+// -------------------------------------------------
 
 const CartItem = ({ product }) => {
   return (
@@ -57,7 +60,7 @@ const CartItem = ({ product }) => {
               }}
             >
               <h2>{product.name}</h2>
-              <p>{product.price}</p>
+              <p>PKR {product.price}</p>
             </Box>
             <Box
               sx={{
@@ -68,10 +71,12 @@ const CartItem = ({ product }) => {
                 flexDirection: "row",
               }}
             >
-              <p>{product.quantity}</p>
+              <p>
+                <b>Quantity:</b> {product.quantity}
+              </p>
               <div>
-                <i className="fa fa-heart"></i>
-                <i className="fa fa-trash"></i>
+                {/* <i className="fa fa-heart"></i> */}
+                <DeleteIcon />
               </div>
             </Box>
           </Box>

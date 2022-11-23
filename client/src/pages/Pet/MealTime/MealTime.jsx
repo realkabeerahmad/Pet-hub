@@ -6,16 +6,23 @@ import { TextField } from "@mui/material";
 import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
+import EditIcon from "@mui/icons-material/Edit";
 
 const MealTime = ({ Pet, setPet }) => {
   const [values, setValues] = useState({
     _id: Pet._id,
     name: "",
-    time: dayjs("2019-01-20T21:11:54"),
+    time: dayjs("2000-01-01T21:11:54"),
   });
 
   const handleChange = (value) => (e) => {
     setValues({ ...values, [value]: e.target.value });
+  };
+
+  const [time, setTime] = useState(dayjs("2019-01-20T21:11:54"));
+
+  const handleTime = (e) => {
+    setTime(e);
   };
 
   const [open, setOpen] = useState(false);
@@ -27,13 +34,14 @@ const MealTime = ({ Pet, setPet }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     values._id = Pet._id;
+    values.time = time;
     axios
       .post("http://localhost:8000/pet/addMealTime", values)
       .then((res) => {
         alert(res.data.message);
         setValues({
           name: "",
-          time: "",
+          time: dayjs("2000-01-01T00:00:00"),
         });
         handleClose();
         const data = { _id: Pet._id };
@@ -105,9 +113,8 @@ const MealTime = ({ Pet, setPet }) => {
                     variant="outlined"
                     color="success"
                     name="time"
-                    value={values.time}
-                    // inputFormat="MM/DD/YYYY"
-                    onChange={handleChange("time")}
+                    value={time}
+                    onChange={handleTime}
                     renderInput={(params) => (
                       <TextField
                         {...params}

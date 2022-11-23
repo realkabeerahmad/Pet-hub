@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import "./MyPetCard.css";
 import axios from "axios";
 import Modal from "@mui/material/Modal";
+import DeleteIcon from "@mui/icons-material/Delete";
+
+// -------------------------------------------------
 
 const MyPetCard = ({ Pet, setPet, setPets, user }) => {
   const [open, setOpen] = useState(false);
@@ -51,7 +54,7 @@ const MyPetCard = ({ Pet, setPet, setPets, user }) => {
         </div>
       </Link>
       <button className="delete-btn" onClick={handleOpen}>
-        <i className="fa fa-trash"></i>
+        <DeleteIcon />
       </button>
       <Modal open={open} onClose={handleClose}>
         <div className="add">

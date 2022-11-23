@@ -2,16 +2,20 @@ import React, { useState } from "react";
 import Modal from "@mui/material/Modal";
 import "./Medical.css";
 import axios from "axios";
-import { TextField } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
+import EditIcon from "@mui/icons-material/Edit";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+
+// -------------------------------------------------------------------------
 
 const Medical = ({ Pet, setPet }) => {
   const [values, setValues] = useState({
     _id: Pet._id,
     AppointmentDate: dayjs("2000-01-01T00:00:00"),
-    address: Pet.vet.address ? Pet.vet.address : "",
+    address: "",
   });
 
   const handleChange = (value) => (e) => {
@@ -61,9 +65,9 @@ const Medical = ({ Pet, setPet }) => {
     <div className="details-about-pet">
       <div className="details-header">
         <h1 className="details-header-heading">Medical Details</h1>
-        <button className="btn" onClick={handleOpen}>
-          <i className="fa fa-edit"></i>&nbsp;&nbsp;EDIT
-        </button>
+        <Button onClick={handleOpen} color="error">
+          <EditIcon />
+        </Button>
       </div>
       <div className="details-more">
         {Pet.vet === undefined || Pet.vet === null || Pet.vet === {} ? (
@@ -130,10 +134,21 @@ const Medical = ({ Pet, setPet }) => {
                   value={values.address}
                 />
 
-                <button className="save-btn" type="submit">
-                  <i className="fa fa-save"></i>
-                  &nbsp;&nbsp;SAVE
-                </button>
+                <Button
+                  type="submit"
+                  color="success"
+                  fullWidth
+                  variant="contained"
+                  sx={{
+                    width: "100%",
+                    position: "absolute",
+                    bottom: 0,
+                    fontSize: 18,
+                  }}
+                >
+                  <CheckCircleIcon sx={{ mr: 1 }} />
+                  SAVE
+                </Button>
               </div>
             </form>
           </div>
