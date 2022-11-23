@@ -35,7 +35,6 @@ router.post("/addProduct", Upload.single("image"), (req, res) => {
     FastShipping: req.body.FastShipping,
     Image: req.file.filename,
   };
-  console.log(obj.Image);
   try {
     const Product = new product(obj);
     Product.save()
@@ -124,50 +123,103 @@ router.post("/cart", (req, res) => {
     res.send({ status: "failed", message: error.message });
   }
 });
+router.post("/getCart", (req, res) => {
+  const { _id } = req.body;
+  try {
+    cart.findById({ _id: _id }, async (err, data) => {
+      if (data) {
+        res.send({
+          status: "success",
+          message: "Cart Sent Successfully",
+          cart: data,
+        });
+      } else {
+        res.send({ status: "failed", message: "Cart Not Found" });
+      }
+    });
+  } catch (error) {
+    res.send({ status: "failed", message: error.message });
+  }
+});
 
 // Add Product to Cart
 router.post("/addToCart", (req, res) => {
   const { _id, name, price, image, cartId, quantity } = req.body;
   try {
-    cart.findById({ _id: cartId }, (err, data) => {
-      if (data) {
-        data.products.forEach((product) => {
-          if (product._id === _id) {
-            res.send({
-              status: "failed",
-              error: "Product already in Cart",
-            });
-          }
-        });
-        cart
-          .updateOne(
-            { _id: cartId },
-            {
-              $push: {
-                products: {
-                  _id: _id,
-                  name: name,
-                  Image: image,
-                  price: price,
-                  quantity: quantity,
-                },
-              },
-            }
-          )
-          .then(() => {
-            res.send({
-              status: "success",
-              message: "Product Added to Cart Successfully",
-            });
-          })
-          .catch((err) => {
-            res.send({
-              status: "failed",
-              error: "Faild to add due to following:\n" + err.message,
-            });
+    cart.findOne(
+      { _id: cartId, products: { $elemMatch: { _id: _id } } },
+      (err, data) => {
+        if (data) {
+          // data.products.map((product) => {
+          //   if (product._id === _id) {
+          return res.send({
+            status: "failed",
+            error: "Product already in Cart",
           });
+          console.log(data);
+          // } else if (err) {
+          //   // res.send({ status: "failed", error: err.message });
+          // } else {
+          //   cart
+          //     .updateOne(
+          //       { _id: cartId },
+          //       {
+          //         $push: {
+          //           products: {
+          //             _id: _id,
+          //             name: name,
+          //             Image: image,
+          //             price: price,
+          //             quantity: quantity,
+          //           },
+          //         },
+          //       }
+          //     )
+          //     .then(() => {
+          //       res.send({
+          //         status: "success",
+          //         message: "Product Added to Cart Successfully",
+          //       });
+          //     })
+          //     .catch((err) => {
+          //       res.send({
+          //         status: "failed",
+          //         error: "Faild to add due to following:\n" + err.message,
+          //       });
+          //     });
+          // }
+          // });
+        } else {
+          cart
+            .updateOne(
+              { _id: cartId },
+              {
+                $push: {
+                  products: {
+                    _id: _id,
+                    name: name,
+                    Image: image,
+                    price: price,
+                    quantity: quantity,
+                  },
+                },
+              }
+            )
+            .then(() => {
+              res.send({
+                status: "success",
+                message: "Product Added to Cart Successfully",
+              });
+            })
+            .catch((err) => {
+              res.send({
+                status: "failed",
+                error: "Faild to add due to following:\n" + err.message,
+              });
+            });
+        }
       }
-    });
+    );
   } catch (error) {
     res.send({ status: "success", message: error.message });
   }

@@ -125,7 +125,7 @@ router.post("/addPet", upload.single("image"), (req, res) => {
 // Show All Pets
 router.get("/showAllPets", (req, res) => {
   try {
-    pet.find({ rehome: true }, (err, data) => {
+    Pet.find({ rehome: true }, (err, data) => {
       if (data) {
         res.status(200).send({
           status: "success",

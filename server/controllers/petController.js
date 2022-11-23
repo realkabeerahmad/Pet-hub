@@ -105,7 +105,6 @@ router.post("/deletePet", (req, res) => {
 // Show All Pets of a User
 router.post("/showAllPets", (req, res) => {
   const { userId } = req.body;
-  console.log(userId);
   try {
     Pet.find({ userId: userId }, (err, data) => {
       if (data !== [] || data !== null) {
@@ -148,7 +147,6 @@ router.post("/rehome", (req, res) => {
 // Add a Pet Meal Time
 router.post("/addMealTime", (req, res) => {
   const { _id, name, time } = req.body;
-  console.log(req.body);
   try {
     Pet.findByIdAndUpdate(
       { _id: _id },
@@ -361,7 +359,6 @@ router.post("/updateVetDate", (req, res) => {
 router.post("/addImage", upload.single("image"), (req, res) => {
   const { _id } = req.body;
   const obj = { image: req.file.filename };
-  console.log(_id, obj);
   try {
     Pet.findByIdAndUpdate(
       { _id: _id },
