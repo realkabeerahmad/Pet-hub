@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  Box,
   Button,
   FormControl,
   InputLabel,
@@ -95,7 +96,17 @@ const AddPet = ({ user }) => {
   };
 
   return (
-    <div className="add-pet-form">
+    <Box
+      className="add-pet-form"
+      sx={{
+        backgroundColor: "white",
+        width: "100%",
+        height: "calc(100vh - 72px)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
       <Link to="/my_pets">
         <i className="fa fa-arrow-left"></i>
       </Link>
@@ -105,8 +116,23 @@ const AddPet = ({ user }) => {
         autoComplete="off"
       >
         <h1>Add Pet</h1>
-        <div className="add-pet">
-          <div className="add-pet-left">
+        <Box
+          sx={{
+            width: "80%",
+            display: "flex",
+            height: "100%",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Box
+            sx={{
+              width: "20%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
             <div className="add-image-1">
               <img src={_image} alt="" />
               <label className="custom-file-upload" htmlFor="image-upload">
@@ -120,9 +146,23 @@ const AddPet = ({ user }) => {
                 />
               </label>
             </div>
-          </div>
-          <div className="add-pet-right">
-            <div>
+          </Box>
+          <Box
+            sx={{
+              width: "80%",
+              // display: "flex",
+              // alignItems: "center",
+              // justifyContent: "center",
+              // flexDirection: "column",
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
               <TextField
                 label="User Id"
                 variant="outlined"
@@ -145,8 +185,14 @@ const AddPet = ({ user }) => {
                 onChange={handleChange("name")}
                 required
               />
-            </div>
-            <div>
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
               <TextField
                 label="Pet Bio"
                 variant="outlined"
@@ -177,8 +223,14 @@ const AddPet = ({ user }) => {
                   <MenuItem value="Female">Female</MenuItem>
                 </Select>
               </FormControl>
-            </div>
-            <div>
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
               <FormControl sx={{ width: "40%", m: 1 }}>
                 <InputLabel id="type" color="success">
                   Pet Type *
@@ -212,8 +264,14 @@ const AddPet = ({ user }) => {
                 onChange={handleChange("breed")}
                 required
               />
-            </div>
-            <div>
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
               <TextField
                 label="Pet Passport"
                 variant="outlined"
@@ -239,27 +297,35 @@ const AddPet = ({ user }) => {
                   )}
                 />
               </LocalizationProvider>
-            </div>
-            <Button
-              variant="contained"
-              color="success"
-              sx={{ width: "40%", m: 1, fontSize: 18 }}
-              type="submit"
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
             >
-              <CheckCircle
-                sx={{
-                  mr: 1,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              />
-              Submit
-            </Button>
-          </div>
-        </div>
+              <Button
+                variant="contained"
+                color="success"
+                sx={{ width: "40%", m: 1, fontSize: 18 }}
+                type="submit"
+              >
+                <CheckCircle
+                  sx={{
+                    mr: 1,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                />
+                Submit
+              </Button>
+            </Box>
+          </Box>
+        </Box>
       </form>
-    </div>
+    </Box>
   );
 };
 

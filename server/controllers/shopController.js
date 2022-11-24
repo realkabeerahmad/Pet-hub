@@ -150,45 +150,30 @@ router.post("/addToCart", (req, res) => {
       { _id: cartId, products: { $elemMatch: { _id: _id } } },
       (err, data) => {
         if (data) {
-          // data.products.map((product) => {
-          //   if (product._id === _id) {
-          return res.send({
-            status: "failed",
-            error: "Product already in Cart",
-          });
-          console.log(data);
-          // } else if (err) {
-          //   // res.send({ status: "failed", error: err.message });
-          // } else {
-          //   cart
-          //     .updateOne(
-          //       { _id: cartId },
-          //       {
-          //         $push: {
-          //           products: {
-          //             _id: _id,
-          //             name: name,
-          //             Image: image,
-          //             price: price,
-          //             quantity: quantity,
-          //           },
-          //         },
-          //       }
-          //     )
-          //     .then(() => {
-          //       res.send({
-          //         status: "success",
-          //         message: "Product Added to Cart Successfully",
-          //       });
-          //     })
-          //     .catch((err) => {
-          //       res.send({
-          //         status: "failed",
-          //         error: "Faild to add due to following:\n" + err.message,
-          //       });
-          //     });
-          // }
-          // });
+          cart
+            .updateOne(
+              {
+                _id: cartId,
+                products: { $elemMatch: { _id: _id } },
+              },
+              {
+                $set: {
+                  "products.$.quantity": quantity,
+                },
+              }
+            )
+            .then(() => {
+              res.send({
+                status: "success",
+                message: "Product quantity updated in Cart",
+              });
+            })
+            .catch(() => {
+              res.send({
+                status: "failed",
+                error: "Unable to Update",
+              });
+            });
         } else {
           cart
             .updateOne(
@@ -265,6 +250,11 @@ router.post("/showCart", (req, res) => {
   } catch (error) {
     res.send({ status: "failed", message: error.message });
   }
+});
+
+router.post("/createOrder", (req, res) => {
+  const order = req.body;
+  console.log(order);
 });
 
 module.exports = router;
