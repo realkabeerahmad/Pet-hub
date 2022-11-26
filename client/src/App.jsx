@@ -24,11 +24,26 @@ import AdoptDetails from "./pages/Adopt/AdoptDetails/AdoptDetails";
 import AdoptApplication from "./pages/Adopt/AdoptApplication/AdoptApplication";
 import User from "./pages/User/User";
 import Cart from "./pages/Cart/Cart";
+import CheckOut from "./pages/CheckOut/CheckOut";
+// ------------------------------------------------------------------------------------
 
+// import { Elements } from "@stripe/react-stripe-js";
+// import { loadStripe } from "@stripe/stripe-js";
+
+// Make sure to call `loadStripe` outside of a component’s render to avoid
+// recreating the `Stripe` object on every render.
+// const stripePromise = loadStripe("pk_test_TYooMQauvdEDq54NiTphI7jx");
+
+// ----------------------------------------------------------------------------
 // -------------------------------------------------------------------------
 // -------------------------------------------------------------------------
 
 function App() {
+  // const options = {
+  //   // passing the client secret obtained from the server
+  //   clientSecret: "{{CLIENT_SECRET}}",
+  // };
+  // ----------------------------------------------------------------
   const [alert, setAlert] = useState("true");
   const [severity, setSeverity] = useState("success");
   const [openAlert, setOpenAlert] = useState(false);
@@ -55,11 +70,18 @@ function App() {
       setCart={setCart}
     />
   );
-
+  // ---------------------------------------------------------
+  // ---------------------------------------------------------
+  // ---------------------------------------------------------
+  // ---------------------------------------------------------
   return (
     <>
       <BrowserRouter>
         {/* Navigation Bar */}
+        {/* ----------------------------------------- */}
+        {/* ----------------------------------------- */}
+        {/* ----------------------------------------- */}
+        {/* ----------------------------------------- */}
         <Navigation
           login={login}
           setLogin={setLogin}
@@ -70,6 +92,10 @@ function App() {
         />
         {/* <LinearProgress color="success" /> */}
         {/* Alert Area */}
+        {/* ----------------------------------------- */}
+        {/* ----------------------------------------- */}
+        {/* ----------------------------------------- */}
+        {/* ----------------------------------------- */}
         <Collapse in={openAlert}>
           <Alert
             severity={severity}
@@ -91,16 +117,34 @@ function App() {
           </Alert>
         </Collapse>
         {/* App Structure */}
+        {/* ----------------------------------------- */}
+        {/* ----------------------------------------- */}
+        {/* ----------------------------------------- */}
+        {/* ----------------------------------------- */}
         <div className="App">
           <Routes>
             {/* Home */}
+            {/* ----------------------------------------- */}
+            {/* ----------------------------------------- */}
+            {/* ----------------------------------------- */}
+            {/* ----------------------------------------- */}
             <Route exact path="/" element={<Home />}></Route>
-            {/* My User */}
+            {/* User */}
+            {/* ----------------------------------------- */}
+            {/* ----------------------------------------- */}
+            {/* ----------------------------------------- */}
+            {/* ----------------------------------------- */}
             <Route
               path="/user"
-              element={login ? <User user={user} /> : LoginComponent}
+              element={
+                login ? <User user={user} setUser={setUser} /> : LoginComponent
+              }
             ></Route>
             {/* My Pets */}
+            {/* ----------------------------------------- */}
+            {/* ----------------------------------------- */}
+            {/* ----------------------------------------- */}
+            {/* ----------------------------------------- */}
             <Route
               path="/my_pets"
               element={
@@ -132,14 +176,33 @@ function App() {
                 element={<WalkTime Pet={pet} setPet={setPet} />}
               ></Route>
             </Route>
+
+            {/* Shop Routes */}
+            {/* ----------------------------------------- */}
+            {/* ----------------------------------------- */}
+            {/* ----------------------------------------- */}
+            {/* ----------------------------------------- */}
             <Route
               path="/shop"
               element={<Shop setProduct={setProduct} />}
             ></Route>
             <Route
-              path="/cart"
+              path="/shop/cart"
               element={
                 login ? <Cart cart={cart} setCart={setCart} /> : LoginComponent
+              }
+            ></Route>
+
+            <Route
+              path="/shop/checkOut"
+              element={
+                cart.products ? (
+                  // <Elements stripe={stripePromise}>
+                  <CheckOut cart={cart} setCart={setCart} user={user} />
+                ) : (
+                  // </Elements>
+                  <Cart cart={cart} setCart={setCart} />
+                )
               }
             ></Route>
             <Route
@@ -153,11 +216,22 @@ function App() {
                 />
               }
             ></Route>
+
+            {/* Adopt */}
+            {/* ----------------------------------------- */}
+            {/* ----------------------------------------- */}
+            {/* ----------------------------------------- */}
+            {/* ----------------------------------------- */}
             <Route path="/adopt" element={<Adopt setPet={setPet} />}></Route>
             <Route
               path={"/adopt/" + pet._id}
               element={<AdoptDetails Pet={pet} />}
             ></Route>
+            {/* Auth */}
+            {/* ----------------------------------------- */}
+            {/* ----------------------------------------- */}
+            {/* ----------------------------------------- */}
+            {/* ----------------------------------------- */}
             <Route
               path={"/adopt/" + pet._id + "/application"}
               element={
@@ -175,7 +249,7 @@ function App() {
               path="/verify_otp"
               element={
                 <Otp
-                  userId={userId}
+                  user={user}
                   setAlert={setAlert}
                   setOpenAlert={setOpenAlert}
                   setSeverity={setSeverity}

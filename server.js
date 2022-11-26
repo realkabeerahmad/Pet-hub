@@ -1,8 +1,16 @@
 //Expoting All Required Modules
 const express = require("express");
+
+// Mongoose
 const mongoose = require("mongoose");
+
+// Dotenv
 const dotenv = require("dotenv");
+
+// Cors
 const cors = require("cors");
+
+// Path
 const path = require("path");
 
 // Importing Authentication Routes
@@ -45,6 +53,8 @@ app.use("/pet", petRoutes);
 app.use("/shop", shopRoutes);
 
 app.use("/adoption", petAdoptionRoutes);
+
+// app.use("/community", communityRoutes);
 
 const Port = 8000;
 // Starting Server

@@ -2,10 +2,13 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import CartItem from "../../components/CartItem/CartItem";
 import { Box, Button } from "@mui/material";
+import { useNavigate } from "react-router";
+import { ShoppingCart } from "@mui/icons-material";
 
 // --------------------------------------------------------
 
 const Cart = ({ cart, setCart }) => {
+  const Navigate = useNavigate();
   var subTotal = 0;
   var Total = 0;
   const shipping = 200;
@@ -34,7 +37,17 @@ const Cart = ({ cart, setCart }) => {
             justifyContent: "center",
           }}
         >
-          <h2 style={{ color: "#e92e4a" }}>Cart</h2>
+          <h2
+            style={{
+              color: "#e92e4a",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <ShoppingCart sx={{ mr: 2 }} />
+            Cart
+          </h2>
         </Box>
         {cart.products.map((product) => {
           return (
@@ -102,6 +115,8 @@ const Cart = ({ cart, setCart }) => {
             variant="contained"
             fullWidth
             sx={{ position: "absolute", bottom: 0, left: 0 }}
+            onClick={() => Navigate("/shop/checkOut")}
+            disabled={cart.products.length <= 0 ? true : false}
           >
             Proceed to Checkout
           </Button>

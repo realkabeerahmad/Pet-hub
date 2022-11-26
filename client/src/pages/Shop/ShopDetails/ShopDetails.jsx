@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./ShopDetails.css";
 import axios from "axios";
-import { Box, Button, TextField } from "@mui/material";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { Button, TextField } from "@mui/material";
 import { AddShoppingCartSharp } from "@mui/icons-material";
 const ShopDetails = ({ Product, cart, setCart }) => {
   const Server = "http://localhost:8000/";
@@ -12,22 +11,22 @@ const ShopDetails = ({ Product, cart, setCart }) => {
   });
   const [qtyErr, setQtyErr] = useState({
     error: false,
-    helperText: "Quantity must be more then 0 and Less the 100",
+    helperText: "Maximum 5 can be Ordered",
   });
   const handleChange = (value) => (e) => {
     setValues({ ...values, [value]: e.target.value });
-    if ((qtyErr.error && values.quantity > 0) || values.quantity < 101) {
+    if ((qtyErr.error && values.quantity > 0) || values.quantity < 6) {
       setQtyErr({
         error: false,
-        helperText: "Quantity must be more then 0 and Less the 100",
+        helperText: "Maximum 5 can be Ordered",
       });
     }
   };
   const onBlur = (e) => {
-    if ((!qtyErr.error && values.quantity <= 0) || values.quantity >= 101) {
+    if ((!qtyErr.error && values.quantity <= 0) || values.quantity >= 6) {
       setQtyErr({
         error: true,
-        helperText: "Quantity must be more then 0 and Less the 100",
+        helperText: "Maximum 5 can be Ordered",
       });
     }
   };
@@ -130,6 +129,7 @@ const ShopDetails = ({ Product, cart, setCart }) => {
               justifyContent: "center",
             }}
             onClick={addToCart}
+            disabled={Product.quantity <= 0 ? true : false}
           >
             <AddShoppingCartSharp />
             &nbsp;&nbsp;ADD TO CART

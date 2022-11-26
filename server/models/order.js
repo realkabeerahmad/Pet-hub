@@ -5,9 +5,12 @@ const OrderSchema = mongoose.Schema({
   Name: String,
   Address: String,
   Phone: String,
-  status: String,
-  TrackingId: String,
-  TrackingService: String,
+  ShippingFee: Number,
+  TotalAmount: Number,
+  Payment: String,
+  status: { type: String, default: "Pending" },
+  TrackingId: { type: String, default: "" },
+  TrackingService: { type: String, default: "TCS" },
   products: [
     {
       _id: String,

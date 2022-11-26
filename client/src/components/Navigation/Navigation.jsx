@@ -11,6 +11,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import Logo from "../../assets/logo.png";
 import "./Navigation.css";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { Logout, LogoutRounded } from "@mui/icons-material";
 
 // ------------------------------------------------------
 
@@ -38,6 +39,11 @@ const Navigation = ({
     setAlert("You have been Logged out");
     setSeverity("success");
     setOpenAlert(true);
+  };
+  const style = {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   };
   const activeClassName = "is-active";
   return (
@@ -106,7 +112,7 @@ const Navigation = ({
           }}
         >
           <NavLink
-            to="/cart"
+            to="/shop/cart"
             className={({ isActive }) =>
               isActive ? activeClassName : undefined
             }
@@ -133,11 +139,13 @@ const Navigation = ({
                   aria-haspopup="true"
                   aria-expanded={open ? "true" : undefined}
                 >
-                  <Avatar sx={{ width: 30, height: 30 }}>
+                  <Avatar
+                    sx={{ width: 30, height: 30, backgroundColor: "white" }}
+                  >
                     <img
                       src={"http://localhost:8000/" + user.Image}
                       alt=""
-                      className="user_avatar"
+                      style={{ height: 30 }}
                     />
                   </Avatar>
                 </IconButton>
@@ -152,24 +160,42 @@ const Navigation = ({
                     "aria-labelledby": "basic-button",
                   }}
                 >
-                  <Link to="/user">
-                    <MenuItem onClick={handleClose}>
-                      <img
-                        src={"http://localhost:8000/" + user.Image}
-                        alt=""
-                        className="user_avatar"
-                      />{" "}
-                      {" " + user.firstName + " " + user.lastName}
+                  <Link style={{ color: "black" }} to="/user">
+                    <MenuItem onClick={handleClose} sx={style}>
+                      <Box
+                        sx={{
+                          borderRadius: "50%",
+                          contain: "content",
+                          width: "25px",
+                          height: "25px",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <img
+                          src={"http://localhost:8000/" + user.Image}
+                          alt=""
+                          style={{ height: "25px" }}
+                        />
+                      </Box>
+                      &nbsp; &nbsp;
+                      {user.firstName + " " + user.lastName}
                     </MenuItem>
                   </Link>
-                  <Link to="/Wishlist">
-                    <MenuItem onClick={handleClose}>My Wishlist</MenuItem>
+                  <Link to="/Wishlist" style={{ color: "black" }}>
+                    <MenuItem onClick={handleClose} sx={style}>
+                      My Wishlist
+                    </MenuItem>
                   </Link>
-                  <Link to="/Orders">
-                    <MenuItem onClick={handleClose}>My Orders</MenuItem>
+                  <Link to="/Orders" style={{ color: "black" }}>
+                    <MenuItem onClick={handleClose} sx={style}>
+                      My Orders
+                    </MenuItem>
                   </Link>
-                  <MenuItem onClick={handleLogout}>
-                    <i className="fa fa-power-off"></i> &nbsp;&nbsp; Logout
+                  <MenuItem onClick={handleLogout} sx={style}>
+                    <LogoutRounded sx={{ mr: 1, color: "#e92e4a" }} />
+                    Logout
                   </MenuItem>
                 </Menu>
               </div>

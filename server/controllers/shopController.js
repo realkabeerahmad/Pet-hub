@@ -16,6 +16,11 @@ const Upload = require("../config/multer");
 // UUID V4 for generation Link
 const { v4: uuidv4 } = require("uuid");
 
+// Strip for Payment
+const Strip = require("stripe")(
+  "sk_test_51M7jqtILXO2OeSWiHaLiBJ0nusNK69m7ljN5aVOLbBZ7hlhtpQPotdChUth3WNk4hSlxrYRsrqt4Xz1F4QCqeWzO00p5PefrRg"
+);
+
 // Import Product Model
 const product = require("../models/product");
 const cart = require("../models/cart");
@@ -146,65 +151,73 @@ router.post("/getCart", (req, res) => {
 router.post("/addToCart", (req, res) => {
   const { _id, name, price, image, cartId, quantity } = req.body;
   try {
-    cart.findOne(
-      { _id: cartId, products: { $elemMatch: { _id: _id } } },
-      (err, data) => {
-        if (data) {
-          cart
-            .updateOne(
-              {
-                _id: cartId,
-                products: { $elemMatch: { _id: _id } },
-              },
-              {
-                $set: {
-                  "products.$.quantity": quantity,
-                },
+    product.findById({ _id: _id }, (err, data) => {
+      if (data) {
+        if (data.quantity >= quantity) {
+          var obj = { quantity: data.quantity - quantity };
+          console.log(obj);
+          cart.findOne(
+            { _id: cartId, products: { $elemMatch: { _id: _id } } },
+            (err, data) => {
+              if (data) {
+                cart
+                  .updateOne(
+                    {
+                      _id: cartId,
+                      products: { $elemMatch: { _id: _id } },
+                    },
+                    {
+                      $set: {
+                        "products.$.quantity": quantity,
+                      },
+                    }
+                  )
+                  .then(() => {
+                    res.send({
+                      status: "success",
+                      message: "Product quantity updated in Cart",
+                    });
+                  })
+                  .catch(() => {
+                    res.send({
+                      status: "failed",
+                      error: "Unable to Update",
+                    });
+                  });
+              } else {
+                cart
+                  .updateOne(
+                    { _id: cartId },
+                    {
+                      $push: {
+                        products: {
+                          _id: _id,
+                          name: name,
+                          Image: image,
+                          price: price,
+                          quantity: quantity,
+                        },
+                      },
+                    }
+                  )
+                  .then(() => {
+                    res.send({
+                      status: "success",
+                      message: "Product Added to Cart Successfully",
+                    });
+                  })
+                  .catch((err) => {
+                    res.send({
+                      status: "failed",
+                      error: "Faild to add due to following:\n" + err.message,
+                    });
+                  });
               }
-            )
-            .then(() => {
-              res.send({
-                status: "success",
-                message: "Product quantity updated in Cart",
-              });
-            })
-            .catch(() => {
-              res.send({
-                status: "failed",
-                error: "Unable to Update",
-              });
-            });
-        } else {
-          cart
-            .updateOne(
-              { _id: cartId },
-              {
-                $push: {
-                  products: {
-                    _id: _id,
-                    name: name,
-                    Image: image,
-                    price: price,
-                    quantity: quantity,
-                  },
-                },
-              }
-            )
-            .then(() => {
-              res.send({
-                status: "success",
-                message: "Product Added to Cart Successfully",
-              });
-            })
-            .catch((err) => {
-              res.send({
-                status: "failed",
-                error: "Faild to add due to following:\n" + err.message,
-              });
-            });
+            }
+          );
         }
       }
-    );
+    });
   } catch (error) {
     res.send({ status: "success", message: error.message });
   }
@@ -229,6 +242,56 @@ router.post("/deleteFromCart", (req, res) => {
     res.send({ status: "failed", message: error.message });
   }
 });
+router.post("/updateQuantity", (req, res) => {
+  const { cartId, _id, quantity } = req.body;
+  product.findById({ _id: _id }, (err, data) => {
+    if (data) {
+      if (data.quantity >= quantity) {
+        var obj = { quantity: data.quantity - quantity };
+        console.log(obj);
+        cart
+          .updateOne(
+            {
+              _id: cartId,
+              products: { $elemMatch: { _id: _id } },
+            },
+            {
+              $set: {
+                "products.$.quantity": quantity,
+              },
+            }
+          )
+          .then(() => {
+            product
+              .findByIdAndUpdate({ _id: _id }, { quantity: obj.quantity })
+              .then(() => {
+                res.send({
+                  status: "success",
+                  message: "Product quantity updated in Cart",
+                });
+              })
+              .catch((err) => {
+                res.send({
+                  status: "failed",
+                  error: "Unable to Update Stock",
+                });
+              });
+          })
+          .catch(() => {
+            res.send({
+              status: "failed",
+              error: "Unable to Update",
+            });
+          });
+      } else {
+        res.send({
+          status: "failed",
+          error: "Less Stock Available",
+        });
+      }
+    }
+  });
+});
 
 router.post("/showCart", (req, res) => {
   const { cartId } = req.body;
@@ -252,9 +315,45 @@ router.post("/showCart", (req, res) => {
   }
 });
 
-router.post("/createOrder", (req, res) => {
-  const order = req.body;
-  console.log(order);
+router.post("/checkOut", async (req, res) => {
+  const obj = req.body;
+  // console.log(order);
+  try {
+    const Order = new order(obj);
+    await Order.save()
+      .then(() => {
+        res.send({ status: "success", message: "Order placed successfully" });
+      })
+      .catch((err) => {
+        res.send({ status: failed, message: "Order not placed" });
+      });
+  } catch (error) {}
+});
+
+router.post("/payment", (req, res, next) => {
+  console.log(req.body.token);
+  const { token, amount } = req.body;
+  const idempotencyKey = uuidv4();
+
+  return Strip.customers
+    .create({ email: token.email, source: token })
+    .then((customer) => {
+      Strip.charges.create(
+        {
+          amount: amount * 100,
+          currency: "usd",
+          customer: customer.id,
+          recipt_email: token.email,
+        },
+        { idempotencyKey }
+      );
+    })
+    .then((result) => {
+      res.send({ status: "success", result: result });
+    })
+    .catch((err) => {
+      res.send({ status: "failed", error: err });
+    });
 });
 
 module.exports = router;

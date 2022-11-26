@@ -75,14 +75,21 @@ router.post("/register", (req, res) => {
 });
 
 // Show User route
-router.get("/showUser", (req, res) => {
-  const { userId } = req.body;
+router.post("/showUser", (req, res) => {
+  const { _id } = req.body;
   try {
-    User.findById({ userId }, (user, err) => {
+    User.findById({ _id }, (err, user) => {
       if (user) {
-        res.status(200).send(user);
+        res.status(200).send({
+          status: "success",
+          message: "User updated successfully",
+          user: user,
+        });
       } else {
-        throw Error(err.message);
+        res.status(200).send({
+          status: "failed",
+          message: "User not updated",
+        });
       }
     });
   } catch (error) {
@@ -108,10 +115,18 @@ router.post("/login", (req, res) => {
               user: user,
             });
           } else {
-            throw Error("Invalid Password");
+            res.status(200).json({
+              status: "failed",
+              message: "Invalid Password",
+              user: user,
+            });
           }
         } else {
-          throw Error("Please Verify Your Email");
+          res.status(200).json({
+            status: "pending",
+            message: "Please Verify Your Email",
+            user: user,
+          });
         }
       } else {
         res.status(200).json({ message: "User do not Exist" });
@@ -136,27 +151,35 @@ router.post("/verifyOTP", async (req, res) => {
         userID,
       });
       if (userVerificationRecords.length <= 0) {
-        throw new Error(
-          "Account record doesn't exist or has been verified already. Please Signup or Login."
-        );
+        res.send({
+          status: "failed",
+          message:
+            "Account record doesn't exist or has been verified already. Please Signup or Login.",
+        });
       } else {
         const { expiredAt } = userVerificationRecords[0];
         const hashedOTP = userVerificationRecords[0].otp;
         // Check if Expired
         if (expiredAt < Date.now()) {
           await userOtpVerification.deleteMany({ userID });
-          throw new Error("Code has Expired. Please request again.");
+          res.send({
+            status: "failed",
+            message: "Code has Expired. Please request again.",
+          });
         } else {
           // Check OTP
           const validotp = bcrypt.compareSync(otp, hashedOTP);
           if (!validotp) {
-            throw new Error("Invalid OTP please check your Email.");
+            res.send({
+              status: "failed",
+              message: "Invalid OTP please check your Email.",
+            });
           } else {
             // Update User Status
             await User.updateOne({ userID }, { verified: true });
             await userOtpVerification.deleteMany({ userID });
             res.json({
-              status: "verified",
+              status: "success",
               message: "User Email Verified successfully.",
             });
           }
@@ -173,9 +196,10 @@ router.post("/verifyOTP", async (req, res) => {
 
 // Add User Image
 router.post("/updateProfileImage", Upload.single("image"), (req, res) => {
-  const { userId, Image } = req.body;
+  const { userId } = req.body;
+  const obj = { Image: req.file.filename };
   try {
-    User.updateOne({ _id: userId }, { Image: Image })
+    User.findByIdAndUpdate({ _id: userId }, { Image: obj.Image })
       .then(() => {
         res.status(200).json({
           status: "success",

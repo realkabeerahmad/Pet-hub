@@ -117,6 +117,7 @@ const Gallery = ({ Pet, setPet }) => {
                     bottom: 0,
                     fontSize: 18,
                   }}
+                  onClick={handleSubmit}
                 >
                   <CheckCircleIcon sx={{ mr: 1 }} />
                   SAVE

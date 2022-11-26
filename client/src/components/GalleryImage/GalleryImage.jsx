@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Modal from "@mui/material/Modal";
 import "./GalleryImage.css";
 import axios from "axios";
+import { Close, Delete } from "@mui/icons-material";
+import { Box } from "@mui/material";
 
 const GalleryImage = ({ Image, Pet, setPet }) => {
   const [open, setOpen] = useState(false);
@@ -37,17 +39,23 @@ const GalleryImage = ({ Image, Pet, setPet }) => {
       <Modal open={open} onClose={handleClose}>
         <div className="gallery-image-zoom">
           <div className="gallery-image-zoom-wrapper">
-            <div className="gallery-image-zoom-header">
+            <Box
+              className="gallery-image-zoom-header"
+              sx={{ borderBottom: "1px solid #c2c2c2" }}
+            >
               <button className="delete-btn-l" onClick={deleteImage}>
-                <i className="fa fa-trash"></i>
+                <Delete />
               </button>
               <button onClick={handleClose}>
-                <i className="fa fa-times"></i>
+                <Close />
               </button>
-            </div>
-            <div className="gallery-image-zoom-img">
+            </Box>
+            <Box
+              className="gallery-image-zoom-img"
+              sx={{ backgroundColor: "white" }}
+            >
               <img src={"http://localhost:8000/" + Image.image} alt="" />
-            </div>
+            </Box>
           </div>
         </div>
       </Modal>

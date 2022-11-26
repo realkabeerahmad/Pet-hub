@@ -51,6 +51,11 @@ const Login = ({
               .catch((err) => {
                 console.log(err);
               });
+          } else if (res.data.status === "pending") {
+            setAlert(res.data.message);
+            setOpenAlert(true);
+            setSeverity("error");
+            Navigate("/verify_otp");
           } else if (res.data.status === "failed") {
             setAlert(res.data.message);
             setOpenAlert(true);

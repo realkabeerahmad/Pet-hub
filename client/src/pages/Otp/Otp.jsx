@@ -1,15 +1,18 @@
-import { Box, TextField, useRadioGroup } from "@mui/material";
+import { Box, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
-const Otp = ({ userId, setAlert, setOpenAlert, setSeverity }) => {
+const Otp = ({ user, setAlert, setOpenAlert, setSeverity }) => {
   const Navigate = useNavigate();
   const [values, setvalues] = useState({
     otp: "",
-    userId: userId,
+    userId: user._id,
   });
   const handleChange = (value) => (e) => {
     setvalues({ ...values, [value]: e.target.value });
+    if (values.otp.length == 4) {
+      return false;
+    }
   };
   const [disabled, setdisabled] = useState(true);
   const [seconds, setSeconds] = useState(30);
@@ -29,22 +32,23 @@ const Otp = ({ userId, setAlert, setOpenAlert, setSeverity }) => {
   const { otp } = values;
   const verify_otp = () => {
     const { otp } = values;
-    const data = { otp, userId };
-    if ((userId, otp)) {
+    const data = { otp: otp, userId: user._id };
+    if (data) {
       axios
-        .post("http://localhost:8000/auth/verify", data)
+        .post("http://localhost:8000/auth/verifyOTP", data)
         .then((res) => {
-          console.log("I am here");
-          console.log(res);
           if (res.data.status === "success") {
+            setOpenAlert(false);
             setAlert("Email Verified Successfully");
             setSeverity("success");
             Navigate("/login");
+            setOpenAlert(true);
           } else if (res.data.status === "failed") {
+            setOpenAlert(false);
             setAlert(res.data.message);
             setSeverity("error");
+            setOpenAlert(true);
           }
-          setOpenAlert(true);
         })
         .catch((err) => {
           console.log("I will here");
@@ -73,7 +77,9 @@ const Otp = ({ userId, setAlert, setOpenAlert, setSeverity }) => {
               value={otp}
             />
           </Box>
-          <div className="button onClick">VERIFY</div>
+          <div className="button onClick" onClick={verify_otp}>
+            VERIFY
+          </div>
           {/* <div className="toRegister otp_timmer">
             <button disabled={disabled} onClick={Re_Send}>
               Re-Send OTP

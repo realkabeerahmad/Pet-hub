@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import {
+  Autocomplete,
   Box,
   Button,
   FormControl,
   InputLabel,
   MenuItem,
   Select,
+  TextareaAutosize,
   TextField,
 } from "@mui/material";
 import "./AddPet.css";
@@ -16,8 +18,14 @@ import dayjs from "dayjs";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { CheckCircle } from "@mui/icons-material";
-
+import { catBreeds, dogBreeds, parrotBreed, rabbitBreed } from "./breeds";
+// --------------------------------------------------------------------
+// --------------------------------------------------------------------
+// --------------------------------------------------------------------
 const AddPet = ({ user }) => {
+  // --------------------------------------------------------------------
+  // --------------------------------------------------------------------
+  // --------------------------------------------------------------------
   const Navigate = useNavigate();
   const [values, setValues] = useState({
     userId: "",
@@ -31,10 +39,25 @@ const AddPet = ({ user }) => {
     passport: "",
   });
 
+  const [breedArr, SetBreedArr] = useState([
+    { label: "Other", value: "Other" },
+  ]);
   const handleChange = (value) => (e) => {
     setValues({ ...values, [value]: e.target.value });
   };
-
+  const onBlur = (e) => {
+    if (values.type === "Cat") {
+      SetBreedArr(catBreeds);
+    } else if (values.type === "Dog") {
+      SetBreedArr(dogBreeds);
+    } else if (values.type === "Parrot") {
+      SetBreedArr(parrotBreed);
+    } else if (values.type === "Horse") {
+    } else if (values.type === "Hen") {
+    } else if (values.type === "Rabbit") {
+      SetBreedArr(rabbitBreed);
+    }
+  };
   const [_image, setimage] = useState();
 
   const handleImage = (e) => {
@@ -95,6 +118,10 @@ const AddPet = ({ user }) => {
     }
   };
 
+  // --------------------------------------------------------------------
+  // --------------------------------------------------------------------
+  // --------------------------------------------------------------------
+  // --------------------------------------------------------------------
   return (
     <Box
       className="add-pet-form"
@@ -150,10 +177,6 @@ const AddPet = ({ user }) => {
           <Box
             sx={{
               width: "80%",
-              // display: "flex",
-              // alignItems: "center",
-              // justifyContent: "center",
-              // flexDirection: "column",
             }}
           >
             <Box
@@ -212,9 +235,7 @@ const AddPet = ({ user }) => {
                   label="Gender *"
                   name="gender"
                   id="gender"
-                  // variant="outlined"
                   color="success"
-                  // sx={{ width: "84%", m: 1 }}
                   value={values.gender}
                   onChange={handleChange("gender")}
                   required
@@ -243,26 +264,35 @@ const AddPet = ({ user }) => {
                   type="text"
                   value={values.type}
                   onChange={handleChange("type")}
+                  onBlur={onBlur}
                   required
                 >
                   <MenuItem value="Cat">Cat</MenuItem>
                   <MenuItem value="Dog">Dog</MenuItem>
-                  <MenuItem value="Horse">Horse</MenuItem>
+                  {/* <MenuItem value="Horse">Horse</MenuItem> */}
                   <MenuItem value="Parrot">Parrot</MenuItem>
-                  <MenuItem value="Hen">Hen</MenuItem>
+                  {/* <MenuItem value="Hen">Hen</MenuItem> */}
                   <MenuItem value="Rabbit">Rabbit</MenuItem>
                 </Select>
               </FormControl>
-              <TextField
-                label="Breed"
-                variant="outlined"
+              <Autocomplete
+                disablePortal
+                id="combo-box-demo"
+                options={breedArr}
                 color="success"
+                disableClearable
+                // value={values.breed}
+                // onChange={handleChange("breed")}
                 sx={{ width: "40%", m: 1 }}
-                name="breed"
-                type="text"
-                value={values.breed}
-                onChange={handleChange("breed")}
-                required
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    variant="outlined"
+                    label="Breed"
+                    color="success"
+                    required
+                  />
+                )}
               />
             </Box>
             <Box

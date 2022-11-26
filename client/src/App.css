@@ -39,3 +39,22 @@
 .del-btn:hover {
   color: #e92e4a;
 }
+/* Chrome, Safari, Edge, Opera */
+input.quantity::-webkit-outer-spin-button,
+input.quantity::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input.quantity[type="number"] {
+  -moz-appearance: textfield;
+  text-align: center;
+  border: 1px solid #e92e4a;
+  padding: 5px;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+}

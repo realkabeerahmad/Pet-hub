@@ -36,7 +36,7 @@ const Register = ({ setAlert, setOpenAlert, setSeverity, setUserId }) => {
     return re.test(values.lastName);
   };
   const isPasswordValid = () => {
-    var re = /\d/;
+    var re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,}$/;
     return re.test(values.password);
   };
 
