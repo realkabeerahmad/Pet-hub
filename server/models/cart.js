@@ -11,6 +11,7 @@ const CartSchema = mongoose.Schema({
       price: Number,
       quantity: Number,
       createdAt: { type: Date, default: Date.now },
+      default: [],
     },
   ],
   createdAt: { type: Date, default: Date.now },

@@ -208,7 +208,7 @@ function App() {
             <Route
               path="/shop/checkOut"
               element={
-                cart.products ? (
+                login && cart.products ? (
                   // <Elements stripe={stripePromise}>
                   <CheckOut cart={cart} setCart={setCart} user={user} />
                 ) : (

@@ -97,6 +97,28 @@ router.post("/showUser", (req, res) => {
   }
 });
 
+// Show All Users route
+router.get("/showAllUser", (req, res) => {
+  try {
+    User.find({}, (err, users) => {
+      if (users) {
+        res.status(200).send({
+          status: "success",
+          message: "All Users sent successfully",
+          users: users,
+        });
+      } else {
+        res.status(200).send({
+          status: "failed",
+          message: "User not updated",
+        });
+      }
+    });
+  } catch (error) {
+    res.json({ status: "failed", error: error.message });
+  }
+});
+
 // Login route to allow registered users to login
 router.post("/login", (req, res) => {
   // Getting all required data from request body
