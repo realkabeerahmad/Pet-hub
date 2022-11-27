@@ -1,5 +1,5 @@
 import { Box, Button } from "@mui/material";
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
@@ -8,67 +8,76 @@ import { Add, Remove } from "@mui/icons-material";
 // -------------------------------------------------
 
 const CartItem = ({ product, cartId, setCart }) => {
-  var [quantity, setQuantity] = useState(product.quantity);
-  const handleChange = (e) => {
-    setQuantity(e.target.value);
-  };
+  var quantity = product.quantity;
   const decr = () => {
-    if (quantity >= 0) {
-      setQuantity(quantity - 1);
-      console.log(quantity);
-      updateQuantity(quantity + 1);
-    } else {
+    if (quantity === 1) {
       return false;
+    } else {
+      quantity = quantity - 1;
+      updateQuantity();
     }
   };
   const incr = () => {
-    if (quantity <= 5) {
-      setQuantity(quantity + 1);
-      console.log(quantity);
-      updateQuantity(quantity + 1);
-    } else {
+    if (quantity === 5) {
       return false;
-      // updateQuantity();
+    } else {
+      quantity = quantity + 1;
+      updateQuantity();
     }
   };
   const deleteProduct = () => {
-    const data = { cartId: cartId, _id: product._id };
+    const data = {
+      cartId: cartId,
+      _id: product._id,
+      quantity: product.quantity,
+    };
     axios
       .post("http://localhost:8000/shop/deleteFromCart/", data)
       .then((res) => {
-        alert(res.data.message ? res.data.message : res.data.error);
-        const data = { _id: cartId };
-        axios
-          .post("http://localhost:8000/shop/getCart", data)
-          .then((r) => {
-            alert(r.data.message ? r.data.message : r.data.error);
-            setCart(r.data.cart);
-          })
-          .catch((e) => {
-            console.log(e);
-          });
+        if (res.data.status === "failed") {
+          alert(res.data.message);
+        } else {
+          const data = { _id: cartId };
+          axios
+            .post("http://localhost:8000/shop/getCart", data)
+            .then((r) => {
+              if (res.data.status === "failed") {
+                alert(res.data.message);
+              } else {
+                setCart(r.data.cart);
+              }
+            })
+            .catch((e) => {
+              console.log(e);
+            });
+        }
       })
       .catch((err) => {
         console.log(err);
       });
   };
-  const updateQuantity = ({ quantity }) => {
+  const updateQuantity = () => {
     const data = { cartId: cartId, _id: product._id, quantity: quantity };
-    // console.log(quantity);
     axios
       .post("http://localhost:8000/shop/updateQuantity/", data)
       .then((res) => {
-        alert(res.data.message ? res.data.message : res.data.error);
-        const data = { _id: cartId };
-        axios
-          .post("http://localhost:8000/shop/getCart", data)
-          .then((r) => {
-            alert(r.data.message ? r.data.message : r.data.error);
-            setCart(r.data.cart);
-          })
-          .catch((e) => {
-            console.log(e);
-          });
+        if (res.data.status === "failed") {
+          alert(res.data.message);
+        } else {
+          const data = { _id: cartId };
+          axios
+            .post("http://localhost:8000/shop/getCart", data)
+            .then((r) => {
+              if (res.data.status === "failed") {
+                alert(res.data.message);
+              } else {
+                setCart(r.data.cart);
+              }
+            })
+            .catch((e) => {
+              console.log(e);
+            });
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -147,7 +156,7 @@ const CartItem = ({ product, cartId, setCart }) => {
             >
               <p>
                 <b>Quantity:</b>&nbsp;&nbsp;
-                <Button onClick={incr}>
+                <Button onClick={incr} color="error">
                   <Add sx={{ p: 0, fontSize: 15 }} />
                 </Button>
                 <input
@@ -156,14 +165,14 @@ const CartItem = ({ product, cartId, setCart }) => {
                   min="1"
                   max="5"
                   value={quantity}
-                  onChange={handleChange}
+                  // onChange={handleChange}
                   // onBlur={onBlur}
                   disabled
                 />
-                <Button onClick={decr}>
+                <Button onClick={decr} color="error">
                   <Remove sx={{ p: 0, fontSize: 15 }} />
                 </Button>
-                {product.quantity}
+                {/* {product.quantity} */}
               </p>
             </Box>
           </Box>

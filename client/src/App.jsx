@@ -13,7 +13,7 @@ import Pet from "./pages/Pet/Pet";
 import DetailsandGallery from "./pages/Pet/DetailsandGallery/DetailsandGallery";
 import ForgetPass from "./pages/ForgetPass/ForgetPass";
 import VaccinationAndMedical from "./pages/Pet/VaccinationAndMedical/VaccinationAndMedical";
-import { Alert, Collapse, IconButton, LinearProgress } from "@mui/material";
+import { Alert, Collapse, IconButton } from "@mui/material";
 import { useState } from "react";
 import Otp from "./pages/Otp/Otp";
 import MealTime from "./pages/Pet/MealTime/MealTime";
@@ -25,6 +25,7 @@ import AdoptApplication from "./pages/Adopt/AdoptApplication/AdoptApplication";
 import User from "./pages/User/User";
 import Cart from "./pages/Cart/Cart";
 import CheckOut from "./pages/CheckOut/CheckOut";
+import MyOrder from "./pages/MyOrder/MyOrder";
 // ------------------------------------------------------------------------------------
 
 // import { Elements } from "@stripe/react-stripe-js";
@@ -89,6 +90,7 @@ function App() {
           setAlert={setAlert}
           setOpenAlert={setOpenAlert}
           setSeverity={setSeverity}
+          cart={cart}
         />
         {/* <LinearProgress color="success" /> */}
         {/* Alert Area */}
@@ -138,6 +140,16 @@ function App() {
               path="/user"
               element={
                 login ? <User user={user} setUser={setUser} /> : LoginComponent
+              }
+            ></Route>
+            <Route
+              path="/user/orders"
+              element={
+                login ? (
+                  <MyOrder user={user} setUser={setUser} />
+                ) : (
+                  LoginComponent
+                )
               }
             ></Route>
             {/* My Pets */}

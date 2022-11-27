@@ -12,6 +12,7 @@ const ProductSchema = mongoose.Schema({
   StandardShipping: String,
   FastShipping: String,
   Image: String,
+  NumberSold: { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now },
 });
 // Exporting Product Model

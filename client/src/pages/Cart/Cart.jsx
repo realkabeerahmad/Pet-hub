@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
 import CartItem from "../../components/CartItem/CartItem";
 import { Box, Button } from "@mui/material";
 import { useNavigate } from "react-router";
@@ -12,12 +11,13 @@ const Cart = ({ cart, setCart }) => {
   var subTotal = 0;
   var Total = 0;
   const shipping = 200;
-
-  for (let index = 0; index < cart.products.length; index++) {
-    subTotal =
-      subTotal + cart.products[index].price * cart.products[index].quantity;
+  if (cart.products) {
+    for (let index = 0; index < cart.products.length; index++) {
+      subTotal =
+        subTotal + cart.products[index].price * cart.products[index].quantity;
+    }
   }
-  if (subTotal != 0) {
+  if (subTotal !== 0) {
     Total = subTotal + shipping;
   }
   return (
@@ -107,7 +107,11 @@ const Cart = ({ cart, setCart }) => {
             <h3>Total:</h3>
             <p>PKR {Total}</p>
           </Box>
-          <p>* Standard Shipping PKR 200 will be applied.</p>
+          <Box sx={{ fontSize: 12, color: "#e92e4a", p: 1 }}>
+            <p>* Tax Included.</p>
+            <p>* Standard Shipping PKR 200 will be applied.</p>
+            <p>* Maximum 5 per items can be ordered.</p>
+          </Box>
         </Box>
         <Box sx={{ position: "reletive" }}>
           <Button

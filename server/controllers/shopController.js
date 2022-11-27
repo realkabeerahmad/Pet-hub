@@ -153,71 +153,63 @@ router.post("/addToCart", (req, res) => {
   try {
     product.findById({ _id: _id }, (err, data) => {
       if (data) {
-        if (data.quantity >= quantity) {
-          var obj = { quantity: data.quantity - quantity };
-          console.log(obj);
-          cart.findOne(
-            { _id: cartId, products: { $elemMatch: { _id: _id } } },
-            (err, data) => {
-              if (data) {
-                cart
-                  .updateOne(
-                    {
-                      _id: cartId,
-                      products: { $elemMatch: { _id: _id } },
-                    },
-                    {
-                      $set: {
-                        "products.$.quantity": quantity,
-                      },
-                    }
-                  )
-                  .then(() => {
-                    res.send({
-                      status: "success",
-                      message: "Product quantity updated in Cart",
-                    });
-                  })
-                  .catch(() => {
-                    res.send({
-                      status: "failed",
-                      error: "Unable to Update",
-                    });
-                  });
-              } else {
-                cart
-                  .updateOne(
-                    { _id: cartId },
-                    {
-                      $push: {
-                        products: {
-                          _id: _id,
-                          name: name,
-                          Image: image,
-                          price: price,
-                          quantity: quantity,
-                        },
-                      },
-                    }
-                  )
-                  .then(() => {
-                    res.send({
-                      status: "success",
-                      message: "Product Added to Cart Successfully",
-                    });
-                  })
-                  .catch((err) => {
-                    res.send({
-                      status: "failed",
-                      error: "Faild to add due to following:\n" + err.message,
-                    });
-                  });
-              }
-            }
-          );
+        if (quantity > data.quantity) {
+          res.send({ status: "failed", message: "Product went Out of stock." });
         }
       }
     });
+    cart.findOne(
+      { _id: cartId, products: { $elemMatch: { _id: _id } } },
+      (err, data) => {
+        if (data) {
+          cart
+            .updateOne(
+              { _id: cartId, products: { $elemMatch: { _id: _id } } },
+              { $set: { "products.$.quantity": quantity } }
+            )
+            .then(() => {
+              res.send({
+                status: "success",
+                message: "Product quantity updated in Cart",
+              });
+            })
+            .catch(() => {
+              res.send({
+                status: "failed",
+                error: "Unable to Update",
+              });
+            });
+        } else {
+          cart
+            .updateOne(
+              { _id: cartId },
+              {
+                $push: {
+                  products: {
+                    _id: _id,
+                    name: name,
+                    Image: image,
+                    price: price,
+                    quantity: quantity,
+                  },
+                },
+              }
+            )
+            .then(() => {
+              res.send({
+                status: "success",
+                message: "Product Added to Cart Successfully",
+              });
+            })
+            .catch((err) => {
+              res.send({
+                status: "failed",
+                error: "Faild to add due to following:\n" + err.message,
+              });
+            });
+        }
+      }
+    );
   } catch (error) {
     res.send({ status: "success", message: error.message });
   }
@@ -230,7 +222,10 @@ router.post("/deleteFromCart", (req, res) => {
     cart
       .findByIdAndUpdate({ _id: cartId }, { $pull: { products: { _id: _id } } })
       .then(() => {
-        res.send({ status: "success", message: "Deleted Successfully" });
+        res.send({
+          status: "success",
+          message: "Deleted Successfully",
+        });
       })
       .catch((err) => {
         res.send({
@@ -244,53 +239,30 @@ router.post("/deleteFromCart", (req, res) => {
 });
 router.post("/updateQuantity", (req, res) => {
   const { cartId, _id, quantity } = req.body;
-  product.findById({ _id: _id }, (err, data) => {
-    if (data) {
-      if (data.quantity >= quantity) {
-        var obj = { quantity: data.quantity - quantity };
-        console.log(obj);
-        cart
-          .updateOne(
-            {
-              _id: cartId,
-              products: { $elemMatch: { _id: _id } },
-            },
-            {
-              $set: {
-                "products.$.quantity": quantity,
-              },
-            }
-          )
-          .then(() => {
-            product
-              .findByIdAndUpdate({ _id: _id }, { quantity: obj.quantity })
-              .then(() => {
-                res.send({
-                  status: "success",
-                  message: "Product quantity updated in Cart",
-                });
-              })
-              .catch((err) => {
-                res.send({
-                  status: "failed",
-                  error: "Unable to Update Stock",
-                });
-              });
-          })
-          .catch(() => {
-            res.send({
-              status: "failed",
-              error: "Unable to Update",
-            });
-          });
-      } else {
-        res.send({
-          status: "failed",
-          error: "Less Stock Available",
-        });
+  cart
+    .updateOne(
+      {
+        _id: cartId,
+        products: { $elemMatch: { _id: _id } },
+      },
+      {
+        $set: {
+          "products.$.quantity": quantity,
+        },
       }
-    }
-  });
+    )
+    .then(() => {
+      res.send({
+        status: "success",
+        message: "Product quantity updated in Cart",
+      });
+    })
+    .catch(() => {
+      res.send({
+        status: "failed",
+        message: "Unable to Update",
+      });
+    });
 });
 
 router.post("/showCart", (req, res) => {
@@ -317,12 +289,48 @@ router.post("/showCart", (req, res) => {
 
 router.post("/checkOut", async (req, res) => {
   const obj = req.body;
-  // console.log(order);
   try {
+    for (let i = 0; i < obj.products.length; i++) {
+      const _id = obj.products[i]._id;
+      const quantity = obj.products[i].quantity;
+      product
+        .findById({ _id: _id }, (err, data) => {
+          if (data) {
+            var newQuan = { quantity: data.quantity - quantity };
+            var NumberSold = { NumberSold: data.NumberSold + quantity };
+            console.log(newQuan);
+            product
+              .findByIdAndUpdate(
+                { _id: _id },
+                {
+                  quantity: newQuan.quantity,
+                  NumberSold: NumberSold.NumberSold,
+                }
+              )
+              .then(() => {
+                console.log("done");
+              })
+              .catch((err) => {
+                console.log(err, "Not Done");
+              });
+          }
+        })
+        .clone();
+    }
     const Order = new order(obj);
     await Order.save()
       .then(() => {
-        res.send({ status: "success", message: "Order placed successfully" });
+        cart
+          .findByIdAndUpdate({ _id: obj.cartId }, { products: [] })
+          .then(() => {
+            res.send({
+              status: "success",
+              message: "Order placed successfully",
+            });
+          })
+          .catch((err) => {
+            res.send({ status: failed, message: "Order not placed" });
+          });
       })
       .catch((err) => {
         res.send({ status: failed, message: "Order not placed" });

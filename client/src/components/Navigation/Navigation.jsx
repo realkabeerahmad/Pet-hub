@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Badge,
   Box,
   IconButton,
   Menu,
@@ -11,7 +12,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import Logo from "../../assets/logo.png";
 import "./Navigation.css";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { Logout, LogoutRounded } from "@mui/icons-material";
+import { LogoutRounded } from "@mui/icons-material";
 
 // ------------------------------------------------------
 
@@ -19,6 +20,7 @@ const Navigation = ({
   login,
   setLogin,
   user,
+  cart,
   setAlert,
   setOpenAlert,
   setSeverity,
@@ -46,6 +48,9 @@ const Navigation = ({
     justifyContent: "center",
   };
   const activeClassName = "is-active";
+
+  var cartCount = cart.products ? cart.products.length : 0;
+  console.log(cart.products ? cart.products.length : 0);
   return (
     <nav className="nav-bar">
       <div className="nav-logo">
@@ -125,7 +130,9 @@ const Navigation = ({
                 p: 1,
               }}
             >
-              <ShoppingCartIcon />
+              <Badge badgeContent={cartCount} color="error">
+                <ShoppingCartIcon />
+              </Badge>
             </Box>
           </NavLink>
           {login ? (
@@ -188,7 +195,7 @@ const Navigation = ({
                       My Wishlist
                     </MenuItem>
                   </Link>
-                  <Link to="/Orders" style={{ color: "black" }}>
+                  <Link to="/user/orders" style={{ color: "black" }}>
                     <MenuItem onClick={handleClose} sx={style}>
                       My Orders
                     </MenuItem>

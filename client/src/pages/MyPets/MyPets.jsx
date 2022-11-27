@@ -28,7 +28,13 @@ const MyPets = ({ user, setPet }) => {
     <div className="mypets">
       {Pets.map((Pet) => {
         return (
-          <MyPetCard Pet={Pet} setPet={setPet} setPets={setPets} user={user} />
+          <MyPetCard
+            Pet={Pet}
+            setPet={setPet}
+            setPets={setPets}
+            user={user}
+            key={Pet._id}
+          />
         );
       })}
       <Link to="/my_pets/add_pet" className="add-pet-btn">

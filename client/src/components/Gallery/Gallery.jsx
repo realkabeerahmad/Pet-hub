@@ -94,7 +94,7 @@ const Gallery = ({ Pet, setPet }) => {
                 encType="multipart/form-data"
                 autoComplete="off"
               >
-                <Box className="add-image" sx={{ backgroundColor: "#929292" }}>
+                <Box className="add-image" sx={{}}>
                   <img src={_image} alt="" />
                   <label className="custom-file-upload" htmlFor="image-upload">
                     <AddCircleIcon sx={{ fontSize: 80 }} />

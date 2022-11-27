@@ -32,12 +32,13 @@ const CheckOut = ({ cart, setCart, user }) => {
     }
     const data = {
       userId: user._id,
-      Name: values.fullName,
+      Name: user.firstName + " " + user.lastName,
       Address: values.address,
       Phone: values.phoneNumber,
       ShippingFee: shipping,
-      TotalAmount: Total,
+      TotalAmount: subTotal,
       products: cart.products,
+      cartId: cart._id,
     };
     axios
       .post("http://localhost:8000/shop/checkOut", data)

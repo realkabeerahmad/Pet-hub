@@ -52,7 +52,10 @@ const Register = ({ setAlert, setOpenAlert, setSeverity, setUserId }) => {
       setMail({ error: false, helperText: "" });
     }
     if (pass.error && value === "password" && values[value].length >= 8) {
-      setPass({ error: false, helperText: "" });
+      setPass({
+        error: false,
+        helperText: "Password must contain 8-digit and Should be Alpha-Numeric",
+      });
     }
     if (
       rePass.error &&
@@ -62,39 +65,7 @@ const Register = ({ setAlert, setOpenAlert, setSeverity, setUserId }) => {
       setRePass({ error: false, helperText: "" });
     }
   };
-  const onBlur = (value) => (e) => {
-    if (
-      (!fName.error && values[value].length <= 2 && value === "firstName") ||
-      isFirstNameValid() === false
-    ) {
-      setFname({
-        error: true,
-        helperText: "Invalid First Name",
-      });
-    }
-    if (
-      (!lName.error && values[value].length <= 2 && value === "lastName") ||
-      isLastNameValid() === false
-    ) {
-      setLname({ error: true, helperText: "Invalid Last Name" });
-    }
-    if (!mail.error && value === "email" && isEmailValid() === false) {
-      setMail({ error: true, helperText: "Please Enter a valid Email." });
-    }
-    if (
-      (!pass.error && value === "password" && values[value].length < 8) ||
-      isPasswordValid() === false
-    ) {
-      setPass({ error: true, helperText: "Invalid Password" });
-    }
-    if (
-      !rePass.error &&
-      value === "repassword" &&
-      values[value] !== values.password
-    ) {
-      setRePass({ error: true, helperText: "Password donot match." });
-    }
-  };
+  const onBlur = (value) => (e) => {};
 
   const isEmailValid = () => {
     if (values.email.match(/^[\w-]+@([\w-]+\.)+[\w-]+$/g)) {
@@ -116,32 +87,70 @@ const Register = ({ setAlert, setOpenAlert, setSeverity, setUserId }) => {
     return false;
   };
   const register = () => {
-    const { firstName, lastName, email, password, repassword } = values;
-    if (firstName && lastName && email && password && password === repassword) {
-      axios
-        .post("http://localhost:8000/auth/register", values)
-        .then((res) => {
-          console.log("I am here");
-          console.log(res);
-          if (res.data.status === "pending") {
-            setUserId(res.data.data.userId);
-            setAlert("Registered Successfully Please Verify Email");
-            setSeverity("success");
-            Navigate("/verify_otp");
-          } else if (res.data.status === "failed") {
-            setAlert(res.data.message);
-            setSeverity("error");
-          }
-          setOpenAlert(true);
-        })
-        .catch((err) => {
-          console.log("I will here");
-          console.log(err);
-        });
+    if (
+      (!fName.error && values.firstName.length <= 2) ||
+      isFirstNameValid() === false
+    ) {
+      setFname({
+        error: true,
+        helperText: "Invalid First Name",
+      });
+      return false;
+    } else if (
+      (!lName.error && values.lastName.length <= 2) ||
+      isLastNameValid() === false
+    ) {
+      setLname({ error: true, helperText: "Invalid Last Name" });
+      return false;
+    } else if (!mail.error && isEmailValid() === false) {
+      setMail({ error: true, helperText: "Please Enter a valid Email." });
+      return false;
+    } else if (
+      (!pass.error && values.password.length < 8) ||
+      isPasswordValid() === false
+    ) {
+      setPass({
+        error: true,
+        helperText: "Password must contain 8-digit and Should be Alpha-Numeric",
+      });
+      return false;
+    } else if (!rePass.error && values.repassword !== values.password) {
+      setRePass({ error: true, helperText: "Password donot match." });
+      return false;
     } else {
-      setAlert("Please Enter Required details");
-      setSeverity("error");
-      setOpenAlert(true);
+      const { firstName, lastName, email, password, repassword } = values;
+      if (
+        firstName &&
+        lastName &&
+        email &&
+        password &&
+        password === repassword
+      ) {
+        axios
+          .post("http://localhost:8000/auth/register", values)
+          .then((res) => {
+            console.log("I am here");
+            console.log(res);
+            if (res.data.status === "pending") {
+              setUserId(res.data.data.userId);
+              setAlert("Registered Successfully Please Verify Email");
+              setSeverity("success");
+              Navigate("/verify_otp");
+            } else if (res.data.status === "failed") {
+              setAlert(res.data.message);
+              setSeverity("error");
+            }
+            setOpenAlert(true);
+          })
+          .catch((err) => {
+            console.log("I will here");
+            console.log(err);
+          });
+      } else {
+        setAlert("Please Enter Required details");
+        setSeverity("error");
+        setOpenAlert(true);
+      }
     }
   };
   return (
@@ -230,7 +239,7 @@ const Register = ({ setAlert, setOpenAlert, setSeverity, setUserId }) => {
         <button
           className="button"
           onClick={register}
-          disabled={!validateRegister() || !password || !repassword}
+          // disabled={!validateRegister() || !password || !repassword}
         >
           SIGN UP
         </button>

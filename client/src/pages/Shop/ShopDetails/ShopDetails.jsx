@@ -2,57 +2,52 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./ShopDetails.css";
 import axios from "axios";
-import { Button, TextField } from "@mui/material";
-import { AddShoppingCartSharp } from "@mui/icons-material";
+import { Box, Button, TextField } from "@mui/material";
+import { Add, AddShoppingCartSharp, Remove } from "@mui/icons-material";
 const ShopDetails = ({ Product, cart, setCart }) => {
   const Server = "http://localhost:8000/";
-  const [values, setValues] = useState({
-    quantity: 1,
-  });
-  const [qtyErr, setQtyErr] = useState({
-    error: false,
-    helperText: "Maximum 5 can be Ordered",
-  });
-  const handleChange = (value) => (e) => {
-    setValues({ ...values, [value]: e.target.value });
-    if ((qtyErr.error && values.quantity > 0) || values.quantity < 6) {
-      setQtyErr({
-        error: false,
-        helperText: "Maximum 5 can be Ordered",
-      });
+  var [quantity, setQuantity] = useState(1);
+  const decr = () => {
+    if (quantity === 1) {
+      return false;
+    } else {
+      setQuantity(quantity - 1);
+      console.log(quantity);
     }
   };
-  const onBlur = (e) => {
-    if ((!qtyErr.error && values.quantity <= 0) || values.quantity >= 6) {
-      setQtyErr({
-        error: true,
-        helperText: "Maximum 5 can be Ordered",
-      });
+  const incr = () => {
+    if (quantity === 5) {
+      return false;
+    } else {
+      setQuantity(quantity + 1);
+      console.log(quantity);
     }
   };
   const addToCart = () => {
-    if (qtyErr.error) {
-      alert("Please Enter Valid Quantity");
-      return false;
-    }
     const data = {
       cartId: cart._id,
       _id: Product._id,
       name: Product.name,
       image: Product.Image,
-      quantity: values.quantity,
+      quantity: quantity,
       price: Product.price,
     };
 
     axios
       .post("http://localhost:8000/shop/addToCart", data)
       .then((res) => {
-        alert(res.data.message ? res.data.message : res.data.error);
-        const data = { _id: cart._id };
-        axios.post("http://localhost:8000/shop/getCart", data).then((res) => {
-          alert(res.data.message);
-          setCart(res.data.cart);
-        });
+        if (res.data.status === "failed") {
+          alert(res.data.message ? res.data.message : res.data.error);
+        } else {
+          const data = { _id: cart._id };
+          axios.post("http://localhost:8000/shop/getCart", data).then((res) => {
+            if (res.data.status === "failed") {
+              alert(res.data.message);
+            } else {
+              setCart(res.data.cart);
+            }
+          });
+        }
       })
       .catch((err) => {
         alert(err);
@@ -96,22 +91,30 @@ const ShopDetails = ({ Product, cart, setCart }) => {
               </tr>
             </tbody>
           </table>
-          <TextField
-            label="Quantity"
-            id="quantity"
-            name="quantity"
-            color="success"
-            value={values.quantity}
-            onChange={handleChange("quantity")}
-            type="number"
-            min="0"
-            max="100"
-            onBlur={onBlur}
-            error={qtyErr.error}
-            helperText={qtyErr.helperText}
-            sx={{ width: "30%", mt: 3 }}
-            disabled={Product.quantity <= 0 ? true : false}
-          />
+          <Box>
+            <Box sx={{ color: "#2f2f2f", display: "flex", p: 1, mt: 1 }}>
+              <h4>Quantity:</h4>
+              <Button onClick={incr} color="error">
+                <Add sx={{ p: 0, fontSize: 15 }} />
+              </Button>
+              <input
+                className="quantity"
+                type="number"
+                min="1"
+                max="5"
+                value={quantity}
+                onChange={quantity}
+                // onBlur={onBlur}
+                disabled
+              />
+              <Button onClick={decr} color="error">
+                <Remove sx={{ p: 0, fontSize: 15 }} />
+              </Button>
+            </Box>
+            <Box sx={{ p: 1, color: "#e92e4a", fontSize: 12 }}>
+              * Maximum 5 per items can be ordered once.
+            </Box>
+          </Box>
         </div>
         <div className="details-button">
           {/* <div className="details-fav">
