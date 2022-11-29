@@ -39,7 +39,7 @@ const CartItem = ({ product, cartId, setCart }) => {
         } else {
           const data = { _id: cartId };
           axios
-            .post("http://localhost:8000/shop/getCart", data)
+            .post("http://localhost:8000/shop/getCartById", data)
             .then((r) => {
               if (res.data.status === "failed") {
                 alert(res.data.message);
@@ -66,7 +66,7 @@ const CartItem = ({ product, cartId, setCart }) => {
         } else {
           const data = { _id: cartId };
           axios
-            .post("http://localhost:8000/shop/getCart", data)
+            .post("http://localhost:8000/shop/getCartById", data)
             .then((r) => {
               if (res.data.status === "failed") {
                 alert(res.data.message);

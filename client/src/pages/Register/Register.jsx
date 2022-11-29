@@ -1,4 +1,4 @@
-import { Box, TextField } from "@mui/material";
+import { Box, Button, CircularProgress, TextField } from "@mui/material";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import "./Register.css";
 
 const Register = ({ setAlert, setOpenAlert, setSeverity, setUserId }) => {
+  const [loading, setLoading] = useState(false);
   const Navigate = useNavigate();
   const [values, setvalues] = useState({
     firstName: "",
@@ -74,18 +75,6 @@ const Register = ({ setAlert, setOpenAlert, setSeverity, setUserId }) => {
     return false;
   };
 
-  const validateRegister = () => {
-    if (
-      !fName.error &&
-      !lName.error &&
-      !mail.error &&
-      !pass.error &&
-      !rePass.error
-    ) {
-      return true;
-    }
-    return false;
-  };
   const register = () => {
     if (
       (!fName.error && values.firstName.length <= 2) ||
@@ -126,30 +115,32 @@ const Register = ({ setAlert, setOpenAlert, setSeverity, setUserId }) => {
         password &&
         password === repassword
       ) {
+        setLoading(true);
         axios
           .post("http://localhost:8000/auth/register", values)
           .then((res) => {
-            console.log("I am here");
-            console.log(res);
             if (res.data.status === "pending") {
               setUserId(res.data.data.userId);
               setAlert("Registered Successfully Please Verify Email");
               setSeverity("success");
               Navigate("/verify_otp");
+              setLoading(false);
             } else if (res.data.status === "failed") {
               setAlert(res.data.message);
               setSeverity("error");
+              setLoading(false);
             }
             setOpenAlert(true);
           })
           .catch((err) => {
-            console.log("I will here");
             console.log(err);
+            setLoading(false);
           });
       } else {
         setAlert("Please Enter Required details");
         setSeverity("error");
         setOpenAlert(true);
+        setLoading(false);
       }
     }
   };
@@ -236,13 +227,17 @@ const Register = ({ setAlert, setOpenAlert, setSeverity, setUserId }) => {
             sx={{ width: "84%", m: 1 }}
           />
         </Box>
-        <button
-          className="button"
+        <Button
+          // className="button"
+          color="success"
+          // fullWidth
+          variant="contained"
+          sx={{ width: "84%", m: 1 }}
           onClick={register}
-          // disabled={!validateRegister() || !password || !repassword}
+          disabled={loading}
         >
-          SIGN UP
-        </button>
+          {loading ? <CircularProgress color="success" /> : "SIGN UP"}
+        </Button>
         <div>or</div>
         <div className="toLogin">
           Already Have an Account? <Link to="/login">Login Here</Link>

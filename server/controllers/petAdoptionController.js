@@ -18,6 +18,7 @@ const shelter = require("../models/shelter");
 
 // Adoption Form Model
 const adoptionForm = require("../models/adoptionForm");
+const user = require("../models/user");
 
 // Using Router from Express JS to create exportable routes
 const router = express.Router();
@@ -142,32 +143,49 @@ router.get("/showAllPets", (req, res) => {
 });
 
 router.post("/adoptPet", (req, res) => {
-  const { petId, userId, age, address, phone, house_type, isYardFenced } =
+  const { petId, userId, dob, cnic, gender, house_type, isYardFenced } =
     req.body;
-  const obj = { petId, userId, age, address, phone, house_type, isYardFenced };
-  try {
-    adoptionForm.find({ petId: petId, userId: userId }, (err, data) => {
-      if (data) {
-        throw Error("Application Already Sent");
-      } else if (err) {
-        throw Error("Error Occured\n", err.message);
-      } else {
-        Adoption = new adoptionForm(obj);
-        Adoption.save()
-          .then(() => {
-            res.send({
-              status: "success",
-              message: "Your Application is Forwarded to the Shelter",
-            });
-          })
-          .then((err) => {
-            throw Error("Error Occured\n", err.message);
+  const userObj = {
+    dob: dob,
+    cnic: cnic,
+    gender: gender,
+  };
+  const appObj = {
+    userId: userId,
+    petId: petId,
+    dob: dob,
+    cnic: cnic,
+    house_type: house_type,
+    isYardFenced: isYardFenced,
+  };
+  user
+    .findByIdAndUpdate({ _id: userId }, userObj)
+    .then((user) => {
+      adoptionForm.findOne({ userId: userId }, (err, form) => {
+        if (form) {
+          res.send({
+            status: "failed",
+            message: "Application already submitted",
           });
-      }
+        } else {
+          const AdoptForm = new adoptionForm(appObj);
+          AdoptForm.save()
+            .then(() => {
+              res.send({
+                status: "success",
+                message: "Application submitted Successfully",
+              });
+            })
+            .catch(() => {
+              console.log("application not saved");
+              res.send({ status: "failed", message: "Error Occured" });
+            });
+        }
+      });
+    })
+    .catch(() => {
+      res.send({ status: "failed", message: "Error Occured" });
     });
-  } catch (error) {
-    res.send({ status: "failed", message: error.message });
-  }
 });
 
 module.exports = router;

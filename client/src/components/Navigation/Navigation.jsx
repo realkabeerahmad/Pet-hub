@@ -21,6 +21,7 @@ const Navigation = ({
   setLogin,
   user,
   cart,
+  setCart,
   setAlert,
   setOpenAlert,
   setSeverity,
@@ -36,6 +37,7 @@ const Navigation = ({
   };
   const handleLogout = () => {
     setLogin(false);
+    setCart([]);
     handleClose();
     Navigate("/login");
     setAlert("You have been Logged out");
@@ -49,8 +51,8 @@ const Navigation = ({
   };
   const activeClassName = "is-active";
 
-  var cartCount = cart.products ? cart.products.length : 0;
-  console.log(cart.products ? cart.products.length : 0);
+  var cartCount = cart && cart.products ? cart.products.length : 0;
+  // console.log(cart.products ? cart.products.length : 0);
   return (
     <nav className="nav-bar">
       <div className="nav-logo">

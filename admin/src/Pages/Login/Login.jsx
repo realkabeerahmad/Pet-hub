@@ -2,7 +2,7 @@ import { Box, TextField } from "@mui/material";
 import { useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import "./Login.css";
 
 const Login = ({
@@ -11,10 +11,9 @@ const Login = ({
   setLogin,
   setSeverity,
   setUser,
-  user,
-  setCart,
+  setIsAdmin,
 }) => {
-  const Navigate = useNavigate();
+  // const Navigate = useNavigate();
   const [values, setValues] = useState({
     email: "",
     password: "",
@@ -31,41 +30,24 @@ const Login = ({
         .then((res) => {
           console.log(res.data);
           setUser(res.data.user);
-          if (res.data.status === "success") {
+          setIsAdmin(res.data.user.isAdmin);
+          if (res.data.status === "success" && res.data.user.isAdmin) {
             setAlert("Welcome!!!");
             setOpenAlert(true);
             setSeverity("success");
-            Navigate("/my_pets");
+            // Navigate("/my_pets");
             setLogin(true);
-
-            const userId = { userId: res.data.user._id };
-            axios
-              .post("http://localhost:8000/shop/cart", userId)
-              .then((res) => {
-                if (res.data.status === "success") {
-                  axios
-                    .post("http://localhost:8000/shop/getCart", userId)
-                    .then((res) => {
-                      if (res.data.status === "success" && res.data.cart) {
-                        console.log(res.data.cart[0]);
-                        setCart(res.data.cart[0]);
-                      }
-                    });
-                } else if (res.data.status === "failed" && res.data.cart) {
-                  console.log(res.data.cart);
-                  setCart(res.data.cart);
-                }
-              })
-              .catch((err) => {
-                console.log(err);
-              });
           } else if (res.data.status === "pending") {
             setAlert(res.data.message);
             setOpenAlert(true);
             setSeverity("error");
-            Navigate("/verify_otp");
+            // Navigate("/verify_otp");
           } else if (res.data.status === "failed") {
             setAlert(res.data.message);
+            setOpenAlert(true);
+            setSeverity("error");
+          } else {
+            setAlert("Not Admin user");
             setOpenAlert(true);
             setSeverity("error");
           }
@@ -81,7 +63,7 @@ const Login = ({
     <div className="login-page">
       <div className="login-form">
         <div className="login">
-          <h1>LOGIN</h1>
+          <h1>ADMIN LOGIN</h1>
           <Box component="form" noValidate autoComplete="off">
             <TextField
               required
@@ -105,20 +87,20 @@ const Login = ({
               sx={{ width: 415, m: 1 }}
             />
           </Box>
-          <p>
+          {/* <p>
             Forgot Password???&nbsp;
             <Link to="/forget_password" className="_button">
               Click Here
             </Link>
             .
-          </p>
+          </p> */}
           <div className="button" onClick={login}>
             LOGIN
           </div>
-          <div> or </div>
+          {/* <div> or </div>
           <div className="toRegister">
             Don't have an Account??? <Link to="/register">Create One</Link>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

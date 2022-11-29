@@ -163,7 +163,8 @@ router.post("/login", (req, res) => {
 router.post("/verifyOTP", async (req, res) => {
   try {
     // Get data from Request body
-    let { userID, otp } = req.body;
+    const { userID, otp } = req.body;
+    console.log(userID);
     // Check OTP Details
     if (!userID || !otp) {
       throw Error("Empty otp Details are not allowed");
@@ -198,11 +199,16 @@ router.post("/verifyOTP", async (req, res) => {
             });
           } else {
             // Update User Status
-            await User.updateOne({ userID }, { verified: true });
-            await userOtpVerification.deleteMany({ userID });
-            res.json({
-              status: "success",
-              message: "User Email Verified successfully.",
+            await User.findByIdAndUpdate(
+              { _id: userID },
+              { verified: true }
+            ).then(() => {
+              userOtpVerification.deleteMany({ userID }).then(() => {
+                res.json({
+                  status: "success",
+                  message: "User Email Verified successfully.",
+                });
+              });
             });
           }
         }

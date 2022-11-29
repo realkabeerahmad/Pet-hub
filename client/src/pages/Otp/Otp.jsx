@@ -1,12 +1,12 @@
-import { Box, TextField } from "@mui/material";
+import { Box, Button, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-const Otp = ({ user, setAlert, setOpenAlert, setSeverity }) => {
+const Otp = ({ userId, setAlert, setOpenAlert, setSeverity, setUserId }) => {
   const Navigate = useNavigate();
   const [values, setvalues] = useState({
     otp: "",
-    userId: user._id,
+    userId: userId,
   });
   const handleChange = (value) => (e) => {
     setvalues({ ...values, [value]: e.target.value });
@@ -32,7 +32,7 @@ const Otp = ({ user, setAlert, setOpenAlert, setSeverity }) => {
   const { otp } = values;
   const verify_otp = () => {
     const { otp } = values;
-    const data = { otp: otp, userId: user._id };
+    const data = { otp: otp, userID: userId };
     if (data) {
       axios
         .post("http://localhost:8000/auth/verifyOTP", data)
@@ -43,6 +43,7 @@ const Otp = ({ user, setAlert, setOpenAlert, setSeverity }) => {
             setSeverity("success");
             Navigate("/login");
             setOpenAlert(true);
+            setUserId("");
           } else if (res.data.status === "failed") {
             setOpenAlert(false);
             setAlert(res.data.message);
@@ -77,9 +78,14 @@ const Otp = ({ user, setAlert, setOpenAlert, setSeverity }) => {
               value={otp}
             />
           </Box>
-          <div className="button onClick" onClick={verify_otp}>
+          <Button
+            sx={{ width: 415, m: 1 }}
+            variant="contained"
+            color="success"
+            onClick={verify_otp}
+          >
             VERIFY
-          </div>
+          </Button>
           {/* <div className="toRegister otp_timmer">
             <button disabled={disabled} onClick={Re_Send}>
               Re-Send OTP

@@ -11,7 +11,7 @@ import {
   Pets,
 } from "@mui/icons-material";
 
-const Navigation = () => {
+const Navigation = ({ setLogin }) => {
   const NavlinkSx = {
     color: "#2f2f2f",
     display: "flex",
@@ -26,6 +26,7 @@ const Navigation = () => {
         p: 1,
         borderRight: "1px solid #c2c2c2",
         height: "calc(100vh - 90px)",
+        backgroundColor: "white",
       }}
     >
       <Box sx={{ fontSize: 20 }}>
@@ -66,7 +67,9 @@ const Navigation = () => {
           textDecoration: "none",
           backgroundColor: "none",
           padding: "10px 30px",
+          cursor: "pointer",
         }}
+        onClick={() => setLogin(false)}
       >
         {/* <NavLink to="/Pets" activeClassName="is-active"> */}
         <Logout sx={{ mr: 2, color: "#e92e4a" }} /> Logout

@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./ShopDetails.css";
 import axios from "axios";
 import { Box, Button, TextField } from "@mui/material";
 import { Add, AddShoppingCartSharp, Remove } from "@mui/icons-material";
-const ShopDetails = ({ Product, cart, setCart }) => {
+const ShopDetails = ({ Product, cart, setCart, login }) => {
+  const Navigate = useNavigate();
   const Server = "http://localhost:8000/";
   var [quantity, setQuantity] = useState(1);
   const decr = () => {
@@ -24,51 +25,65 @@ const ShopDetails = ({ Product, cart, setCart }) => {
     }
   };
   const addToCart = () => {
-    const data = {
-      cartId: cart._id,
-      _id: Product._id,
-      name: Product.name,
-      image: Product.Image,
-      quantity: quantity,
-      price: Product.price,
-    };
+    if (login) {
+      const data = {
+        cartId: cart._id,
+        _id: Product._id,
+        name: Product.name,
+        image: Product.Image,
+        quantity: quantity,
+        price: Product.price,
+      };
 
-    axios
-      .post("http://localhost:8000/shop/addToCart", data)
-      .then((res) => {
-        if (res.data.status === "failed") {
-          alert(res.data.message ? res.data.message : res.data.error);
-        } else {
-          const data = { _id: cart._id };
-          axios.post("http://localhost:8000/shop/getCart", data).then((res) => {
-            if (res.data.status === "failed") {
-              alert(res.data.message);
-            } else {
-              setCart(res.data.cart);
-            }
-          });
-        }
-      })
-      .catch((err) => {
-        alert(err);
-        console.log("Not Done");
-      });
+      axios
+        .post("http://localhost:8000/shop/addToCart", data)
+        .then((res) => {
+          if (res.data.status === "failed") {
+            alert(res.data.message ? res.data.message : res.data.error);
+          } else {
+            const data = { _id: cart._id };
+            console.log(cart);
+            axios
+              .post("http://localhost:8000/shop/getCartById", data)
+              .then((res) => {
+                if (res.data.status === "failed") {
+                  alert(res.data.message);
+                } else {
+                  setCart(res.data.cart);
+                }
+              });
+          }
+        })
+        .catch((err) => {
+          alert(err);
+          console.log("Not Done");
+        });
+    } else {
+      Navigate("/login");
+    }
   };
   return (
-    <div className="Details">
+    <Box className="Details" sx={{ overflow: "hidden" }}>
       <div className="Details-Left">
         <Link to="/shop">
           <i className="fa fa-arrow-left"></i>
         </Link>
         <img src={Server + Product.Image} alt={Product._id} />
       </div>
-      <div className="Details-Right">
+      <Box
+        className="Details-Right"
+        sx={{ overflow: "hidden", overflowX: "hidden" }}
+      >
         <div className="Details-intro">
           <h1 style={{ maxWidth: "80%" }}>{Product.name.toUpperCase()}</h1>
           <h2>PKR {Product.price}</h2>
         </div>
         <div className="Details-details">
-          <p className="details-description">{Product.description}</p>
+          <p className="details-description">
+            {Product.description
+              ? Product.description.slice(0, 250)
+              : "Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum placeat atque delectus fugiat temporibus minima consequatur animi, veniam ipsam. Distinctio, excepturi voluptatem sapiente maxime expedita vel. Deleniti doloribus laborum magni dicta co"}
+          </p>
           <table>
             <tbody>
               <tr>
@@ -138,8 +153,8 @@ const ShopDetails = ({ Product, cart, setCart }) => {
             &nbsp;&nbsp;ADD TO CART
           </Button>
         </div>
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 export default ShopDetails;

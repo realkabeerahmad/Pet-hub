@@ -5,6 +5,12 @@ import {
   Select,
   TextField,
   Button,
+  FormLabel,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+  Box,
+  Input,
 } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -13,298 +19,329 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import ReactInputMask from "react-input-mask";
+import { IMaskInput } from "react-imask";
+import PropTypes from "prop-types";
+// ======================================================
+const TextMaskCustom = React.forwardRef(function TextMaskCustom(props, ref) {
+  const { onChange, ...other } = props;
+  return (
+    <IMaskInput
+      {...other}
+      mask="#0000-0000000-0"
+      definitions={{
+        "#": /[1-9]/,
+      }}
+      inputRef={ref}
+      onAccept={(value) => onChange({ target: { name: props.name, value } })}
+      overwrite
+    />
+  );
+});
 
+TextMaskCustom.propTypes = {
+  name: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+};
+// =====================================================
 const AdoptApplication = ({ user, Pet }) => {
   const Navigate = useNavigate();
+  // const [Age, setAge] = useState({
+  //   error: false,
+  //   helpr: "",
+  // });
   const [values, setValues] = useState({
-    userId: "",
-    name: "",
-    bio: "",
-    age: "",
-    gender: "",
-    breed: "",
-    type: "",
-    image: "",
-    passport: "",
+    petId: Pet._id,
+    userId: user._id,
+    dob: dayjs("2019-01-20T21:11:54"),
+    cnic: user.cnic ? user.cnic : "",
+    gender: user.gender ? user.gender : "",
+    // gender: "",
+    house_type: "",
+    isYardFenced: "",
   });
 
+  // =================================================================
   const handleChange = (value) => (e) => {
     setValues({ ...values, [value]: e.target.value });
   };
 
-  const [_image, setimage] = useState();
-
-  const handleImage = (e) => {
-    setValues({ ...values, image: e.target.files[0] });
-    const reader = new FileReader();
-    reader.addEventListener("load", () => {
-      setimage(reader.result);
-    });
-    reader.readAsDataURL(e.target.files[0]);
-  };
-
+  // =================================================================
   const [date, setDate] = useState(dayjs("2019-01-20T21:11:54"));
 
   const handleDate = (e) => {
     setDate(e);
   };
+  // =================================================================
   const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append("userId", user._id);
-    formData.append("image", values.image);
-    formData.append("name", values.name);
-    formData.append("bio", values.bio);
-    formData.append("age", values.age);
-    formData.append("gender", values.gender);
-    formData.append("breed", values.breed);
-    formData.append("type", values.type);
-    formData.append("passport", values.passport);
-    formData.append("dob", date);
-    const config = {
-      headers: { "content-type": "multipart/form-data" },
-    };
-    axios
-      .post("http://localhost:8000/pet/addPet", formData, config)
-      .then((res) => {
-        alert(res.data.message);
-        setValues({
-          userId: "",
-          name: "",
-          bio: "",
-          gender: "",
-          breed: "",
-          type: "",
-          image: "",
-          passport: "",
-          dob: "",
+    if (user.dob) {
+      setDate(user.dob);
+    }
+    if (
+      date > dayjs("2004-01-01T00:00:00") ||
+      values.isYardFenced === "" ||
+      values.gender === "" ||
+      values.cnic === "" ||
+      values.house_type === ""
+    ) {
+      if (date > dayjs("2004-01-01T00:00:00")) {
+        alert("Must be 18+ for adoption");
+        return false;
+      }
+      alert("Please fill all Required Fields");
+      return false;
+    } else {
+      const data = {
+        petId: Pet._id,
+        userId: user._id,
+        dob: date,
+        cnic: values.cnic,
+        gender: values.gender,
+        house_type: values.house_type,
+        isYardFenced: values.isYardFenced,
+      };
+      axios
+        .post("http://localhost:8000/adoption/adoptPet", data)
+        .then((res) => {
+          if (res.data.status === "failed") {
+            alert(res.data.message);
+            Navigate("/adopt");
+          } else {
+            setValues({
+              petId: Pet._id,
+              userId: user._id,
+              dob: dayjs("2019-01-20T21:11:54"),
+              cnic: "",
+              gender: "",
+              house_type: "",
+              isYardFenced: "",
+            });
+            alert(res.data.message);
+            Navigate("/adopt");
+          }
+        })
+        .catch((err) => {
+          alert(err);
         });
-        Navigate("/my_pets");
-      })
-      .catch((err) => {
-        // alert(err.data.message);
-        alert(err);
-      });
+    }
   };
   return (
-    <div className="add-pet-form">
-      <Link to="/my_pets">
+    <Box
+      sx={{
+        position: "relative",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "calc(100vh - 70px)",
+      }}
+    >
+      <Link
+        to="/adopt"
+        style={{
+          color: "#e92e4a",
+          fontSize: 25,
+          position: "absolute",
+          top: 10,
+          left: 10,
+        }}
+      >
         <i className="fa fa-arrow-left"></i>
       </Link>
-      <form
-        onSubmit={handleSubmit}
-        encType="multipart/form-data"
-        autoComplete="off"
-      >
-        <h1>Pet Adoption Application</h1>
-        <div className="adoption-application">
-          <div>
-            <TextField
-              label="User Id"
-              variant="outlined"
-              color="success"
-              name="userId"
-              type="password"
-              value={user._id}
-              disabled
-              required
-              sx={{ width: "30%", m: 1 }}
-            />
-            <TextField
-              label="Pet Id"
-              variant="outlined"
-              color="success"
-              name="userId"
-              type="password"
-              value={Pet._id}
-              disabled
-              required
-              sx={{ width: "30%", m: 1 }}
-            />
-            <TextField
-              label="Pet Name"
-              variant="outlined"
-              color="success"
-              sx={{ width: "30%", m: 1 }}
-              name="name"
-              type="text"
-              value={Pet.name}
-              disabled
-              required
-            />
-          </div>
-          <div>
-            <TextField
-              label="Pet Type"
-              variant="outlined"
-              color="success"
-              sx={{ width: "30%", m: 1 }}
-              name="name"
-              type="text"
-              value={Pet.type}
-              disabled
-              required
-            />
-            <TextField
-              label="Pet Breed"
-              variant="outlined"
-              color="success"
-              sx={{ width: "30%", m: 1 }}
-              name="name"
-              type="text"
-              value={Pet.breed}
-              disabled
-              required
-            />
-            <TextField
-              label="Pet DOB"
-              variant="outlined"
-              color="success"
-              sx={{ width: "30%", m: 1 }}
-              name="name"
-              type="text"
-              value={Pet.dob.slice(0, 10)}
-              disabled
-              required
-            />
-          </div>
-          <div>
-            <TextField
-              label="Shelter Name"
-              variant="outlined"
-              color="success"
-              sx={{ width: "30%", m: 1 }}
-              name="name"
-              type="text"
-              value={Pet.shelterName}
-              disabled
-              required
-            />
-            <TextField
-              label="User Name"
-              variant="outlined"
-              color="success"
-              sx={{ width: "30%", m: 1 }}
-              name="name"
-              type="text"
-              value={user.firstName + " " + user.lastName}
-              disabled
-              required
-            />
-            <TextField
-              label="User Email"
-              variant="outlined"
-              color="success"
-              sx={{ width: "30%", m: 1 }}
-              name="name"
-              type="text"
-              value={user.email}
-              disabled
-              required
-            />
-          </div>
-          <div>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-                label="Date of Birth"
-                variant="outlined"
+      <Box sx={{ width: "80%" }}>
+        <form
+          onSubmit={handleSubmit}
+          encType="multipart/form-data"
+          autoComplete="off"
+        >
+          <h1 style={{ color: "#e92e4a", textAlign: "center" }}>
+            Pet Adoption Application
+          </h1>
+          <div className="adoption-application">
+            <div>
+              <TextField
+                label="Pet Name"
+                variant="standard"
                 color="success"
-                name="dob"
-                value={date}
-                inputFormat="MM/DD/YYYY"
-                onChange={handleDate}
-                renderInput={(params) => (
-                  <TextField {...params} sx={{ width: "30%", m: 1 }} />
-                )}
+                sx={{ width: "45%", m: 1 }}
+                name="name"
+                type="text"
+                value={Pet.name}
+                disabled
+                required
               />
-            </LocalizationProvider>
-            <TextField
-              label="Age"
-              variant="outlined"
-              color="success"
-              sx={{ width: "30%", m: 1 }}
-              name="name"
-              type="text"
-              // value={user.email}
-              // disabled
-              required
-            />
-            <TextField
-              label="CNIC"
-              variant="outlined"
-              color="success"
-              sx={{ width: "30%", m: 1 }}
-              name="name"
-              type="text"
-              // value={user.email}
-              // disabled
-              required
-            />
-          </div>
-          <div>
-            <FormControl sx={{ width: "30%", m: 1 }}>
-              <InputLabel id="house-type" color="success">
-                House Type
-              </InputLabel>
-              <Select
-                label="House Type"
-                name="house-type"
-                id="house-type"
-                // variant="outlined"
+              <TextField
+                label="User Name"
+                variant="standard"
                 color="success"
-                // sx={{ width: "84%", m: 1 }}
-                // value={values.gender}
-                // onChange={handleChange("gender")}
+                sx={{ width: "45%", m: 1 }}
+                name="name"
+                type="text"
+                value={user.firstName + " " + user.lastName}
+                disabled
                 required
-              >
-                <MenuItem value="Own">Own</MenuItem>
-                <MenuItem value="Rent">Rent</MenuItem>
-                <MenuItem value="Shared">Shared</MenuItem>
-              </Select>
-            </FormControl>
-            <FormControl sx={{ width: "30%", m: 1 }}>
-              <InputLabel id="gender" color="success">
-                Gender
-              </InputLabel>
-              <Select
-                label="Gender"
-                name="gender"
-                id="gender"
-                // variant="outlined"
+              />
+            </div>
+            <div>
+              <TextField
+                label="User Email"
+                variant="standard"
                 color="success"
-                // sx={{ width: "84%", m: 1 }}
-                value={values.gender}
-                onChange={handleChange("gender")}
+                sx={{ width: "45%", m: 1 }}
+                name="name"
+                type="text"
+                value={user.email}
+                disabled
                 required
-              >
-                <MenuItem value="Male">Male</MenuItem>
-                <MenuItem value="Female">Female</MenuItem>
-              </Select>
-            </FormControl>
-            <TextField
-              label="CNIC"
-              variant="outlined"
-              color="success"
-              sx={{ width: "30%", m: 1 }}
-              name="name"
-              type="text"
-              // value={user.email}
-              // disabled
-              required
-            />
-          </div>
-          {/* <Button
-              variant="contained"
-              color="success"
-              sx={{ width: "40%", m: 1 }}
+              />
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  label="User Date of Birth"
+                  variant="standard"
+                  color="success"
+                  name="dob"
+                  value={user.dob ? user.dob : date}
+                  inputFormat="MM/DD/YYYY"
+                  onChange={handleDate}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      sx={{ width: "45%", m: 1 }}
+                      variant="standard"
+                      color="success"
+                    />
+                  )}
+                />
+              </LocalizationProvider>
+            </div>
+            <div>
+              <FormControl sx={{ width: "45%", m: 1 }}>
+                <InputLabel id="gender" color="success">
+                  User Gender
+                </InputLabel>
+                <Select
+                  label="User Gender"
+                  name="gender"
+                  id="gender"
+                  variant="standard"
+                  color="success"
+                  // sx={{ width: "84%", m: 1 }}
+                  value={user.gender ? user.gender : values.gender}
+                  onChange={handleChange("gender")}
+                  required
+                >
+                  <MenuItem value="Male">Male</MenuItem>
+                  <MenuItem value="Female">Female</MenuItem>
+                </Select>
+              </FormControl>
+              {/* <TextField
+                label="User Age"
+                variant="standard"
+                color="success"
+                sx={{ width: "45%", m: 1 }}
+                name="name"
+                type="text"
+                value={user.age ? user.age : values.age}
+                // disabled
+                required
+              /> */}
+
+              <FormControl color="success" sx={{ width: "45%", m: 1 }}>
+                <InputLabel htmlFor="formatted-text-mask-input">
+                  User CNIC Number
+                </InputLabel>
+                <Input
+                  variant="standard"
+                  value={user.cnic ? user.cnic : values.cnic}
+                  onChange={handleChange("cnic")}
+                  name="textmask"
+                  id="formatted-text-mask-input"
+                  inputComponent={TextMaskCustom}
+                  // disabled={user.cnic ? true : false}
+                />
+              </FormControl>
+              {/* <TextField
+                label="User CNIC"
+                variant="standard"
+                color="success"
+                sx={{ width: "45%", m: 1 }}
+                name="name"
+                type="text"
+                value={user.cnic ? user.cnic : values.cnin}
+                onChange={handleChange("cnic")}
+                // disabled
+                required
+              ></TextField> */}
+              {/* <ReactInputMask
+                mask="99999-9999999-9"
+                maskChar=" "
+                value={user.cnic ? user.cnic : values.cnin}
+                onChange={handleChange("cnic")}
+              />
+              <ReactInputMask mask="0399-9999999" maskChar=" " /> */}
+            </div>
+            <div>
+              <FormControl sx={{ width: "45%", m: 1 }}>
+                <InputLabel id="house-type" color="success">
+                  User House Type
+                </InputLabel>
+                <Select
+                  label="User House Type"
+                  name="house-type"
+                  id="house-type"
+                  variant="standard"
+                  color="success"
+                  // sx={{ width: "84%", m: 1 }}
+                  value={values.house_type}
+                  onChange={handleChange("house_type")}
+                  required
+                >
+                  <MenuItem value="Own">Own</MenuItem>
+                  <MenuItem value="Rent">Rent</MenuItem>
+                  <MenuItem value="Shared">Shared</MenuItem>
+                </Select>
+              </FormControl>
+              <FormControl component="fieldset" sx={{ width: "45%", m: 1 }}>
+                <FormLabel color="success">Is Yard Fenced</FormLabel>
+                <RadioGroup
+                  name="spacing"
+                  aria-label="spacing"
+                  color="success"
+                  value={values.isYardFenced}
+                  onChange={handleChange("isYardFenced")}
+                  row
+                >
+                  {["Yes", "No"].map((value) => (
+                    <FormControlLabel
+                      key={value}
+                      color="success"
+                      value={value.toString()}
+                      control={<Radio color="success" />}
+                      label={value.toString()}
+                    />
+                  ))}
+                </RadioGroup>
+              </FormControl>
+            </div>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
             >
-              <button className="__btn" type="submit">
+              <Button
+                variant="contained"
+                color="success"
+                sx={{ width: "45%", m: 1 }}
+                onClick={handleSubmit}
+              >
                 Submit
-              </button>
-            </Button> */}
-        </div>
-      </form>
-    </div>
+              </Button>
+            </Box>
+          </div>
+        </form>
+      </Box>
+    </Box>
   );
 };
 

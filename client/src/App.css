@@ -58,3 +58,6 @@ input.quantity[type="number"] {
   -ms-border-radius: 5px;
   -o-border-radius: 5px;
 }
+.PaymentForm input {
+  border: 1px solid #c2c2c2;
+}

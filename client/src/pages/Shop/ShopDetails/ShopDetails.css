@@ -1,7 +1,8 @@
 .Details {
   display: flex;
   justify-content: center;
-  height: calc(100vh - 69.437px);
+  height: calc(100vh - 72px);
+  overflow: hidden !important;
 }
 .Details-Left,
 .Details-Right {

@@ -29,17 +29,23 @@ const AddItems = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append("Image", Product.image);
+    formData.append("image", Product.image);
     formData.append("name", Product.name);
     formData.append("quantity", Product.quantity);
+    formData.append("category", Product.tags);
     formData.append("price", Product.price);
-    formData.append("tags", Product.tags);
+    // formData.append("tags", Product.tags);
     formData.append("details", Product.details);
+    formData.append("details", Product.details);
+    formData.append("Warranty", "Not Available");
+    formData.append("Return", "Not Available");
+    formData.append("StandardShipping", "Available");
+    formData.append("FastShipping", "Not Available");
     const config = {
       headers: { "content-type": "multipart/form-data" },
     };
     axios
-      .post("http://localhost:9002/AddProduct", formData, config)
+      .post("http://localhost:8000/shop/addProduct", formData, config)
       .then((res) => {
         alert(res.data.message);
         setProduct({

@@ -9,7 +9,6 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import axios from "axios";
 import { Box } from "@mui/system";
-import { Link } from "react-router-dom";
 const columns = [
   { id: "Name", label: "Name", minWidth: 150, align: "center" },
   { id: "Address", label: "Address", minWidth: 150, align: "center" },
@@ -40,7 +39,7 @@ const columns = [
   },
 ];
 
-export default function MyOrder({ user }) {
+export default function Orders() {
   const [users, setUsers] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -60,31 +59,18 @@ export default function MyOrder({ user }) {
   }, []);
 
   const fetchUsers = () => {
-    const data = { userId: user._id };
-    axios
-      .post("http://localhost:8000/shop/showUserOrders", data)
-      .then((res) => {
-        console.log(res.data.orders);
-        setUsers(res.data.orders);
-      });
+    // const data = { userId: user._id };
+    axios.get("http://localhost:8000/shop/showOrders").then((res) => {
+      console.log(res.data.orders);
+      setUsers(res.data.orders);
+    });
   };
 
   return (
     <>
-      <Box
-        sx={{
-          width: "100%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          color: "#e92e4a",
-          p: 1,
-          backgroundColor: "white",
-          borderBottom: "1px solid #c2c2c2",
-        }}
-      >
-        <h2>My Orders</h2>
-      </Box>
+      {/* <Box
+        sx={{ width: "100%", height: "50px", backgroundColor: "white" }}
+      ></Box> */}
       <Paper sx={{ width: "100%", overflow: "hidden" }}>
         <TableContainer sx={{ maxHeight: 440 }}>
           <Table stickyHeader aria-label="sticky table">
@@ -111,15 +97,10 @@ export default function MyOrder({ user }) {
                         const value = row[column.id];
                         return (
                           <TableCell key={column.id} align={column.align}>
-                            <Link
-                              to={"/user/orders/" + row._id}
-                              style={{ width: "100%", color: "#2f2f2f" }}
-                            >
-                              {(column.format && typeof value === "boolean") ||
-                              typeof value === "number"
-                                ? column.format(value)
-                                : value}
-                            </Link>
+                            {(column.format && typeof value === "boolean") ||
+                            typeof value === "number"
+                              ? column.format(value)
+                              : value}
                           </TableCell>
                         );
                       })}

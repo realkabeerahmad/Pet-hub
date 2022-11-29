@@ -31,8 +31,8 @@ const WalkTime = ({ Pet, setPet }) => {
     setTime(e);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = () => {
+    // e.preventDefault();
     values._id = Pet._id;
     values.time = time;
     axios
@@ -137,6 +137,7 @@ const WalkTime = ({ Pet, setPet }) => {
                     bottom: 0,
                     fontSize: 18,
                   }}
+                  onClick={handleSubmit}
                 >
                   <CheckCircle sx={{ mr: 1 }} />
                   SAVE

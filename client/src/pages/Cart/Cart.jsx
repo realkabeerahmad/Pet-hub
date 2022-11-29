@@ -49,17 +49,21 @@ const Cart = ({ cart, setCart }) => {
             Cart
           </h2>
         </Box>
-        {cart.products.map((product) => {
-          return (
-            <CartItem product={product} cartId={cart._id} setCart={setCart} />
-          );
-        })}
+        {cart ? (
+          cart.products.map((product) => {
+            return (
+              <CartItem product={product} cartId={cart._id} setCart={setCart} />
+            );
+          })
+        ) : (
+          <></>
+        )}
       </Box>
       <Box
         sx={{
           width: 480,
           background: "white",
-          height: 300,
+          height: 350,
           borderRadius: 2,
           p: 2,
           m: 2,
@@ -67,6 +71,7 @@ const Cart = ({ cart, setCart }) => {
           flexDirection: "column",
           justifyContent: "space-between",
           position: "relative",
+          boxShadow: "0 2px 4px #0000001a, 0 8px 16px #0000001a",
         }}
       >
         <h2> Order Summary</h2>
@@ -120,7 +125,7 @@ const Cart = ({ cart, setCart }) => {
             fullWidth
             sx={{ position: "absolute", bottom: 0, left: 0 }}
             onClick={() => Navigate("/shop/checkOut")}
-            disabled={cart.products.length <= 0 ? true : false}
+            disabled={cart ? (cart.products.length <= 0 ? true : false) : true}
           >
             Proceed to Checkout
           </Button>

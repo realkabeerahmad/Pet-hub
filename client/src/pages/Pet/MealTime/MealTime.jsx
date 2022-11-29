@@ -134,6 +134,7 @@ const MealTime = ({ Pet, setPet }) => {
                   color="success"
                   fullWidth
                   variant="contained"
+                  onClick={handleSubmit}
                   sx={{
                     width: "100%",
                     position: "absolute",

@@ -183,6 +183,33 @@ const User = ({ user, setUser }) => {
                 <td>{user.email}</td>
                 <td></td>
               </tr>
+              {user.cnic ? (
+                <tr>
+                  <th>CNIC:</th>
+                  <td>{user.cnic}</td>
+                  <td></td>
+                </tr>
+              ) : (
+                <></>
+              )}
+              {user.dob ? (
+                <tr>
+                  <th>DOB:</th>
+                  <td>{user.dob.slice(0, 10)}</td>
+                  <td></td>
+                </tr>
+              ) : (
+                <></>
+              )}
+              {user.gender ? (
+                <tr>
+                  <th>Gender:</th>
+                  <td>{user.gender}</td>
+                  <td></td>
+                </tr>
+              ) : (
+                <></>
+              )}
               <tr>
                 <th>Password:</th>
                 <td>*********</td>

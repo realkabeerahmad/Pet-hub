@@ -25,6 +25,7 @@ const Strip = require("stripe")(
 const product = require("../models/product");
 const cart = require("../models/cart");
 const order = require("../models/order");
+const { default: Stripe } = require("stripe");
 
 // Add a Product
 router.post("/addProduct", Upload.single("image"), (req, res) => {
@@ -111,8 +112,9 @@ router.post("/deleteProduct", (req, res) => {
 router.post("/cart", (req, res) => {
   const { userId } = req.body;
   try {
-    cart.findOne({ userId }, async (err, data) => {
+    cart.findOne({ userId: userId }, async (err, data) => {
       if (data) {
+        console.log(data);
         res.send({
           status: "failed",
           message: "Cart Already Exist",
@@ -129,7 +131,26 @@ router.post("/cart", (req, res) => {
   }
 });
 router.post("/getCart", (req, res) => {
+  const { userId } = req.body;
+  try {
+    cart.find({ userId: userId }, async (err, data) => {
+      if (data) {
+        res.send({
+          status: "success",
+          message: "Cart Sent Successfully",
+          cart: data,
+        });
+      } else {
+        res.send({ status: "failed", message: "Cart Not Found" });
+      }
+    });
+  } catch (error) {
+    res.send({ status: "failed", message: error.message });
+  }
+});
+router.post("/getCartById", (req, res) => {
   const { _id } = req.body;
+  console.log(_id);
   try {
     cart.findById({ _id: _id }, async (err, data) => {
       if (data) {
@@ -338,29 +359,66 @@ router.post("/checkOut", async (req, res) => {
   } catch (error) {}
 });
 
-router.post("/payment", (req, res, next) => {
-  console.log(req.body.token);
-  const { token, amount } = req.body;
-  const idempotencyKey = uuidv4();
-
-  return Strip.customers
-    .create({ email: token.email, source: token })
-    .then((customer) => {
-      Strip.charges.create(
-        {
-          amount: amount * 100,
-          currency: "usd",
-          customer: customer.id,
-          recipt_email: token.email,
-        },
-        { idempotencyKey }
-      );
-    })
-    .then((result) => {
-      res.send({ status: "success", result: result });
+router.post("/showUserOrders", (req, res) => {
+  const { userId } = req.body;
+  order
+    .find({ userId: userId })
+    .then((data) => {
+      res.send({
+        status: "success",
+        message: "Orders data fetched",
+        orders: data,
+      });
     })
     .catch((err) => {
-      res.send({ status: "failed", error: err });
+      res.send({
+        status: "failed",
+        message: "No Orders data fetched",
+        // orders: data,
+      });
+    });
+});
+router.get("/showOrders", (req, res) => {
+  order
+    .find({})
+    .then((data) => {
+      res.send({
+        status: "success",
+        message: "Orders data fetched",
+        orders: data,
+      });
+    })
+    .catch((err) => {
+      res.send({
+        status: "failed",
+        message: "No Orders data fetched",
+        // orders: data,
+      });
+    });
+});
+
+router.post("/payment", (req, res) => {
+  console.log(req.body);
+  Strip.customers
+    .create({
+      email: req.body.email,
+      source: req.body.stripeToken,
+      name: req.body.name,
+      address: req.body.address,
+    })
+    .then((customer) => {
+      return Strip.charges.create({
+        amount: req.body.amount * 100, // Charging Rs 25
+        description: "Shop Order",
+        currency: "PKR",
+        customer: customer.id,
+      });
+    })
+    .then((charge) => {
+      res.send("Success"); // If no error occurs
+    })
+    .catch((err) => {
+      res.send(err); // If some error occurs
     });
 });
 

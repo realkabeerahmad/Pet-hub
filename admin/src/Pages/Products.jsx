@@ -9,38 +9,53 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import axios from "axios";
 import { Box } from "@mui/system";
-import { Link } from "react-router-dom";
+import { Button } from "@mui/material";
+import { Edit } from "@mui/icons-material";
 const columns = [
-  { id: "Name", label: "Name", minWidth: 150, align: "center" },
-  { id: "Address", label: "Address", minWidth: 150, align: "center" },
-  { id: "Phone", label: "Phone", minWidth: 100, align: "center" },
+  { id: "name", label: "Name", minWidth: 200, align: "center" },
+  { id: "category", label: "Category", minWidth: 30, align: "center" },
   {
-    id: "ShippingFee",
-    label: "Shipping Fee",
+    id: "price",
+    label: "Price (PKR)",
     minWidth: 30,
     align: "center",
-    format: (value) => "PKR " + value.toLocaleString("en-US"),
+    // format: (value) => "PKR " + value.toLocaleString("en-US"),
   },
-  { id: "Payment", label: "Payment", minWidth: 30, align: "center" },
-  { id: "createdAt", label: "Order Date", minWidth: 30, align: "center" },
   {
-    id: "TotalAmount",
-    label: "Total Amount",
+    id: "quantity",
+    label: "Quantity Available",
     minWidth: 30,
     align: "center",
-    format: (value) => "PKR " + value.toLocaleString("en-US"),
   },
-  { id: "status", label: "Status", minWidth: 30, align: "center" },
-  { id: "TrackingId", label: "Tracking ID", minWidth: 50, align: "center" },
+  { id: "NumberSold", label: "Quantity Sold", minWidth: 30, align: "center" },
   {
-    id: "TrackingService",
-    label: "Tracking Service",
-    minWidth: 50,
+    id: "Warranty",
+    label: "Warranty",
+    minWidth: 30,
     align: "center",
   },
+  {
+    id: "Return",
+    label: "Return",
+    minWidth: 30,
+    align: "center",
+  },
+  {
+    id: "StandardShipping",
+    label: "Standard Shipping",
+    minWidth: 30,
+    align: "center",
+  },
+  {
+    id: "FastShipping",
+    label: "Fast Shipping",
+    minWidth: 30,
+    align: "center",
+  },
+  { id: "createdAt", label: "Date Added", minWidth: 30, align: "center" },
 ];
 
-export default function MyOrder({ user }) {
+export default function Products() {
   const [users, setUsers] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -60,13 +75,11 @@ export default function MyOrder({ user }) {
   }, []);
 
   const fetchUsers = () => {
-    const data = { userId: user._id };
-    axios
-      .post("http://localhost:8000/shop/showUserOrders", data)
-      .then((res) => {
-        console.log(res.data.orders);
-        setUsers(res.data.orders);
-      });
+    // const data = { userId: user._id };
+    axios.get("http://localhost:8000/shop/showAllProducts").then((res) => {
+      console.log(res.data.products);
+      setUsers(res.data.products);
+    });
   };
 
   return (
@@ -74,17 +87,11 @@ export default function MyOrder({ user }) {
       <Box
         sx={{
           width: "100%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          color: "#e92e4a",
-          p: 1,
+          height: "50px",
           backgroundColor: "white",
           borderBottom: "1px solid #c2c2c2",
         }}
-      >
-        <h2>My Orders</h2>
-      </Box>
+      ></Box>
       <Paper sx={{ width: "100%", overflow: "hidden" }}>
         <TableContainer sx={{ maxHeight: 440 }}>
           <Table stickyHeader aria-label="sticky table">
@@ -111,15 +118,13 @@ export default function MyOrder({ user }) {
                         const value = row[column.id];
                         return (
                           <TableCell key={column.id} align={column.align}>
-                            <Link
-                              to={"/user/orders/" + row._id}
-                              style={{ width: "100%", color: "#2f2f2f" }}
-                            >
-                              {(column.format && typeof value === "boolean") ||
-                              typeof value === "number"
-                                ? column.format(value)
-                                : value}
-                            </Link>
+                            {
+                              // (column.format && typeof value === "boolean") ||
+                              // typeof value === "number"
+                              //   ? column.format(value)
+                              //   :
+                              value
+                            }
                           </TableCell>
                         );
                       })}

@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   FormControl,
+  Input,
   InputLabel,
   MenuItem,
   Select,
@@ -19,8 +20,33 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { CheckCircle } from "@mui/icons-material";
 import { catBreeds, dogBreeds, parrotBreed, rabbitBreed } from "./breeds";
+import { IMaskInput } from "react-imask";
+import PropTypes from "prop-types";
+
 // --------------------------------------------------------------------
 // --------------------------------------------------------------------
+// ======================================================
+const TextMaskCustom = React.forwardRef(function TextMaskCustom(props, ref) {
+  const { onChange, ...other } = props;
+  return (
+    <IMaskInput
+      {...other}
+      mask="#0000-0000-00000"
+      definitions={{
+        "#": /[1-9]/,
+      }}
+      inputRef={ref}
+      onAccept={(value) => onChange({ target: { name: props.name, value } })}
+      overwrite
+    />
+  );
+});
+
+TextMaskCustom.propTypes = {
+  name: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+};
+// =====================================================
 // --------------------------------------------------------------------
 const AddPet = ({ user }) => {
   // --------------------------------------------------------------------
@@ -188,7 +214,7 @@ const AddPet = ({ user }) => {
             >
               <TextField
                 label="User Id"
-                variant="outlined"
+                variant="standard"
                 color="success"
                 name="userId"
                 type="password"
@@ -199,7 +225,7 @@ const AddPet = ({ user }) => {
               />
               <TextField
                 label="Pet Name"
-                variant="outlined"
+                variant="standard"
                 color="success"
                 sx={{ width: "40%", m: 1 }}
                 name="name"
@@ -216,18 +242,27 @@ const AddPet = ({ user }) => {
                 justifyContent: "center",
               }}
             >
-              <TextField
-                label="Pet Bio"
-                variant="outlined"
+              <FormControl
+                variant="standard"
                 color="success"
                 sx={{ width: "40%", m: 1 }}
-                name="bio"
-                type="text"
-                value={values.bio}
-                onChange={handleChange("bio")}
-                required
-              />
-              <FormControl sx={{ width: "40%", m: 1 }}>
+              >
+                <InputLabel htmlFor="formatted-text-mask-input">
+                  Pet Passport Number
+                </InputLabel>
+                <Input
+                  variant="standard"
+                  value={values.passport}
+                  onChange={handleChange("passport")}
+                  name="textmask"
+                  id="formatted-text-mask-input"
+                  inputComponent={TextMaskCustom}
+                />
+                <Box sx={{ fontSize: 12, color: "GrayText" }}>
+                  Formate (00000-0000-00000)
+                </Box>
+              </FormControl>
+              <FormControl variant="standard" sx={{ width: "40%", m: 1 }}>
                 <InputLabel id="gender" color="success">
                   Gender *
                 </InputLabel>
@@ -236,6 +271,7 @@ const AddPet = ({ user }) => {
                   name="gender"
                   id="gender"
                   color="success"
+                  variant="standard"
                   value={values.gender}
                   onChange={handleChange("gender")}
                   required
@@ -252,7 +288,7 @@ const AddPet = ({ user }) => {
                 justifyContent: "center",
               }}
             >
-              <FormControl sx={{ width: "40%", m: 1 }}>
+              <FormControl variant="standard" sx={{ width: "40%", m: 1 }}>
                 <InputLabel id="type" color="success">
                   Pet Type *
                 </InputLabel>
@@ -260,6 +296,7 @@ const AddPet = ({ user }) => {
                   label="Gender *"
                   id="type"
                   color="success"
+                  variant="standard"
                   name="type"
                   type="text"
                   value={values.type}
@@ -281,13 +318,13 @@ const AddPet = ({ user }) => {
                 options={breedArr}
                 color="success"
                 disableClearable
-                // value={values.breed}
-                // onChange={handleChange("breed")}
+                value={values.breed}
+                onChange={handleChange("breed")}
                 sx={{ width: "40%", m: 1 }}
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    variant="outlined"
+                    variant="standard"
                     label="Breed"
                     color="success"
                     required
@@ -302,9 +339,9 @@ const AddPet = ({ user }) => {
                 justifyContent: "center",
               }}
             >
-              <TextField
+              {/* <TextField
                 label="Pet Passport"
-                variant="outlined"
+                variant="standard"
                 color="success"
                 sx={{ width: "40%", m: 1 }}
                 name="passport"
@@ -312,21 +349,39 @@ const AddPet = ({ user }) => {
                 value={values.passport}
                 onChange={handleChange("passport")}
                 required
-              />
+              /> */}
+
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   label="Date of Birth"
-                  variant="outlined"
+                  variant="standard"
                   color="success"
                   name="dob"
                   value={date}
                   inputFormat="MM/DD/YYYY"
                   onChange={handleDate}
                   renderInput={(params) => (
-                    <TextField {...params} sx={{ width: "40%", m: 1 }} />
+                    <TextField
+                      {...params}
+                      sx={{ width: "40%", m: 1 }}
+                      variant="standard"
+                      color="success"
+                    />
                   )}
                 />
               </LocalizationProvider>
+              <TextField
+                label="Pet Bio"
+                variant="standard"
+                color="success"
+                sx={{ width: "40%", m: 1 }}
+                name="bio"
+                type="text"
+                value={values.bio}
+                onChange={handleChange("bio")}
+                required
+                helperText="Maximum 50 word"
+              />
             </Box>
             <Box
               sx={{
