@@ -42,7 +42,7 @@ const ShopDetails = ({ Product, cart, setCart, login }) => {
             alert(res.data.message ? res.data.message : res.data.error);
           } else {
             const data = { _id: cart._id };
-            console.log(cart);
+            // console.log(cart);
             axios
               .post("http://localhost:8000/shop/getCartById", data)
               .then((res) => {

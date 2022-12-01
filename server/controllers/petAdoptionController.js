@@ -136,7 +136,7 @@ router.get("/showAllPets", (req, res) => {
       } else {
         throw Error("Error Occured \n", err.message);
       }
-    });
+    }).sort({ createdAt: -1 });
   } catch (error) {
     res.send({ status: "failed", message: error.message });
   }

@@ -5,7 +5,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./Register.css";
 
-const Register = ({ setAlert, setOpenAlert, setSeverity, setUserId }) => {
+const Register = ({ setAlert, setOpenAlert, setSeverity, setUserDetails }) => {
   const [loading, setLoading] = useState(false);
   const Navigate = useNavigate();
   const [values, setvalues] = useState({
@@ -120,7 +120,10 @@ const Register = ({ setAlert, setOpenAlert, setSeverity, setUserId }) => {
           .post("http://localhost:8000/auth/register", values)
           .then((res) => {
             if (res.data.status === "pending") {
-              setUserId(res.data.data.userId);
+              setUserDetails({
+                userId: res.data.data.userId,
+                email: res.data.data.email,
+              });
               setAlert("Registered Successfully Please Verify Email");
               setSeverity("success");
               Navigate("/verify_otp");

@@ -31,7 +31,7 @@ const TextMaskCustom = React.forwardRef(function TextMaskCustom(props, ref) {
   return (
     <IMaskInput
       {...other}
-      mask="#0000-0000-00000"
+      mask="PK#0000-0"
       definitions={{
         "#": /[1-9]/,
       }}
@@ -259,7 +259,7 @@ const AddPet = ({ user }) => {
                   inputComponent={TextMaskCustom}
                 />
                 <Box sx={{ fontSize: 12, color: "GrayText" }}>
-                  Formate (00000-0000-00000)
+                  Formate (PK00000-0)
                 </Box>
               </FormControl>
               <FormControl variant="standard" sx={{ width: "40%", m: 1 }}>
@@ -316,6 +316,9 @@ const AddPet = ({ user }) => {
                 disablePortal
                 id="combo-box-demo"
                 options={breedArr}
+                getOptionSelected={(option, value) =>
+                  console.log(option, value)
+                }
                 color="success"
                 disableClearable
                 value={values.breed}
@@ -324,8 +327,8 @@ const AddPet = ({ user }) => {
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    variant="standard"
                     label="Breed"
+                    variant="standard"
                     color="success"
                     required
                   />

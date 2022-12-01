@@ -44,7 +44,7 @@ TextMaskCustom.propTypes = {
   onChange: PropTypes.func.isRequired,
 };
 // =====================================================
-const AdoptApplication = ({ user, Pet }) => {
+const AdoptApplication = ({ user, Pet, setUser }) => {
   const Navigate = useNavigate();
   // const [Age, setAge] = useState({
   //   error: false,
@@ -107,6 +107,16 @@ const AdoptApplication = ({ user, Pet }) => {
             alert(res.data.message);
             Navigate("/adopt");
           } else {
+            const data = { _id: user._id };
+            axios
+              .post("http://localhost:8000/auth/showUser", data)
+              .then((res) => {
+                if (res.data.status === "success") {
+                  setUser(res.data.user);
+                } else {
+                  alert("User not Updated");
+                }
+              });
             setValues({
               petId: Pet._id,
               userId: user._id,

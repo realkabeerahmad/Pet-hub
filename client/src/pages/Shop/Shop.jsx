@@ -12,7 +12,12 @@ import {
   SwipeableDrawer,
   TextField,
 } from "@mui/material";
-import { FilterList, Search } from "@mui/icons-material";
+import {
+  CompareArrows,
+  CompareArrowsOutlined,
+  FilterList,
+  Search,
+} from "@mui/icons-material";
 
 // ----------------------------------------------------------
 
@@ -89,10 +94,11 @@ const Shop = ({ setProduct }) => {
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
+              p: 2,
             }}
           >
-            <h1>Filters</h1>
-            <FormControl sx={{ width: "80%", m: 2 }}>
+            <h1 style={{ color: "#e92e4a" }}>Filters</h1>
+            <FormControl sx={{ width: "80%", m: 2 }} color="success">
               <InputLabel id="type" color="success">
                 Category
               </InputLabel>
@@ -104,18 +110,35 @@ const Shop = ({ setProduct }) => {
                 <MenuItem>Cloths</MenuItem>
               </Select>
             </FormControl>
-            <TextField
+            <Box
               sx={{
-                width: "80%",
-                m: 2,
+                width: "100%",
+                p: 2,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
               }}
-            ></TextField>
-            <TextField
-              sx={{
-                width: "80%",
-                m: 1,
-              }}
-            ></TextField>
+              color="success"
+            >
+              <TextField
+                label="Price From"
+                sx={{ width: "33%", m: 2 }}
+                color="success"
+              ></TextField>
+              <CompareArrowsOutlined />
+              <TextField
+                label="Price To"
+                sx={{ width: "33%", m: 2 }}
+                color="success"
+              ></TextField>
+            </Box>
+            <Button
+              sx={{ width: "80%", m: 1 }}
+              color="success"
+              variant="contained"
+            >
+              Filter
+            </Button>
           </Box>
         </SwipeableDrawer>
         <Box sx={{ width: "80%", display: "flex" }}>

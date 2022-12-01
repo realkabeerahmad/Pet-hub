@@ -24,19 +24,27 @@ const MyPets = ({ user, setPet }) => {
         console.log(err);
       });
   };
+  console.log(Pets.length);
+
   return (
     <div className="mypets">
-      {Pets.map((Pet) => {
-        return (
-          <MyPetCard
-            Pet={Pet}
-            setPet={setPet}
-            setPets={setPets}
-            user={user}
-            key={Pet._id}
-          />
-        );
-      })}
+      {Pets.length > 0 ? (
+        Pets.map((Pet) => {
+          return (
+            <MyPetCard
+              Pet={Pet}
+              setPet={setPet}
+              setPets={setPets}
+              user={user}
+              key={Pet._id}
+            />
+          );
+        })
+      ) : (
+        <Box sx={{ color: "GrayText", p: 3 }}>
+          <h1>Add Your Pets to Manage</h1>
+        </Box>
+      )}
       <Link to="/my_pets/add_pet" className="add-pet-btn">
         <Box
           sx={{

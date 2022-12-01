@@ -1,4 +1,4 @@
-import { Box, TextField } from "@mui/material";
+import { Box, TextField, Button } from "@mui/material";
 import { useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
@@ -12,6 +12,7 @@ const Login = ({
   setSeverity,
   setUser,
   user,
+  setUserDetails,
   setCart,
 }) => {
   const Navigate = useNavigate();
@@ -60,6 +61,10 @@ const Login = ({
                 console.log(err);
               });
           } else if (res.data.status === "pending") {
+            setUserDetails({
+              userId: res.data.user._id,
+              email: res.data.user.email,
+            });
             setAlert(res.data.message);
             setOpenAlert(true);
             setSeverity("error");
@@ -112,9 +117,14 @@ const Login = ({
             </Link>
             .
           </p>
-          <div className="button" onClick={login}>
+          <Button
+            onClick={login}
+            sx={{ width: 415, m: 1 }}
+            color="success"
+            variant="contained"
+          >
             LOGIN
-          </div>
+          </Button>
           <div> or </div>
           <div className="toRegister">
             Don't have an Account??? <Link to="/register">Create One</Link>

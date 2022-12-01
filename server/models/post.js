@@ -2,8 +2,19 @@
 const mongoose = require("mongoose");
 // Post Schema
 const PostSchema = mongoose.Schema({
-  userId: String,
+  user: {
+    _id: String,
+    name: String,
+    Image: String,
+  },
   content: String,
+  //   likes: [
+  //     {
+  //       userId: String,
+  //       createdAt: { type: Date, default: Date.now },
+  //       default: [],
+  //     },
+  //   ],
   comments: [
     {
       userId: String,

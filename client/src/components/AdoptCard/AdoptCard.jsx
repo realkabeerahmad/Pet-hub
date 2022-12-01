@@ -26,7 +26,7 @@ const AdoptCard = ({ Pet, setPet }) => {
               <h2 className="petName">{Pet.name.toUpperCase()}</h2>
               <h4 className="ShelterName">{Pet.shelterName.toUpperCase()}</h4>
             </div>
-            <p className="description">{Pet.bio}</p>
+            <p className="description">{Pet.bio.slice(0, 50)}...</p>
           </div>
         </div>
       </Link>

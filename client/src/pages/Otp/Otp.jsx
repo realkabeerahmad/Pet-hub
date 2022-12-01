@@ -1,12 +1,55 @@
-import { Box, Button, TextField } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControl,
+  Input,
+  InputLabel,
+  TextField,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-const Otp = ({ userId, setAlert, setOpenAlert, setSeverity, setUserId }) => {
+import { IMaskInput } from "react-imask";
+import PropTypes from "prop-types";
+
+// --------------------------------------------------------------------
+// --------------------------------------------------------------------
+// ======================================================
+const TextMaskCustom = React.forwardRef(function TextMaskCustom(props, ref) {
+  const { onChange, ...other } = props;
+  return (
+    <IMaskInput
+      {...other}
+      mask="#000"
+      definitions={{
+        "#": /[0-9]/,
+      }}
+      inputRef={ref}
+      onAccept={(value) => onChange({ target: { name: props.name, value } })}
+      overwrite
+    />
+  );
+});
+
+TextMaskCustom.propTypes = {
+  name: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+};
+// =====================================================
+
+const Otp = ({
+  userDetails,
+  setAlert,
+  setOpenAlert,
+  setSeverity,
+  setUserDetails,
+}) => {
+  // const [disabled,setDisabled] = useState(false);
   const Navigate = useNavigate();
   const [values, setvalues] = useState({
     otp: "",
-    userId: userId,
+    userID: userDetails.userId,
+    email: userDetails.email,
   });
   const handleChange = (value) => (e) => {
     setvalues({ ...values, [value]: e.target.value });
@@ -15,24 +58,33 @@ const Otp = ({ userId, setAlert, setOpenAlert, setSeverity, setUserId }) => {
     }
   };
   const [disabled, setdisabled] = useState(true);
-  const [seconds, setSeconds] = useState(30);
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setSeconds((seconds) => seconds - 1);
-      if (seconds < 1) {
-        setdisabled("false");
-      }
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
-  function Re_Send() {
+  // var [seconds, setSeconds] = useState(30);
+
+  const Re_Send = () => {
     setdisabled("true");
-    setSeconds(30);
-  }
+    axios
+      .post("http://localhost:8000/auth/reSendOtpVerificatioCode", values)
+      .then((res) => {
+        alert(res.data.message);
+        setUserDetails({ userId: res.data.userId, email: res.data.email });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    // setSeconds(30);
+    // for (let i = 0; i < 30; i++) {
+    //   setTimeout(() => {
+    //     setSeconds(seconds - 1);
+    //   }, 1000);
+    // }
+  };
+  setTimeout(() => {
+    setdisabled(false);
+  }, 30000);
   const { otp } = values;
   const verify_otp = () => {
     const { otp } = values;
-    const data = { otp: otp, userID: userId };
+    const data = { otp: otp, userID: userDetails.userId };
     if (data) {
       axios
         .post("http://localhost:8000/auth/verifyOTP", data)
@@ -43,7 +95,7 @@ const Otp = ({ userId, setAlert, setOpenAlert, setSeverity, setUserId }) => {
             setSeverity("success");
             Navigate("/login");
             setOpenAlert(true);
-            setUserId("");
+            setUserDetails({});
           } else if (res.data.status === "failed") {
             setOpenAlert(false);
             setAlert(res.data.message);
@@ -67,17 +119,27 @@ const Otp = ({ userId, setAlert, setOpenAlert, setSeverity, setUserId }) => {
         <div className="login">
           <h1>VERIFY EMAIL</h1>
           <Box component="form" noValidate autoComplete="off">
-            <TextField
-              name="otp"
-              label="Enter OTP"
-              variant="outlined"
-              type="text"
+            <FormControl
+              variant="standard"
               color="success"
-              sx={{ width: 415, m: 1 }}
-              onChange={handleChange("otp")}
-              value={otp}
-            />
+              sx={{ width: 415, m: 1, textAlign: "center" }}
+            >
+              <InputLabel htmlFor="formatted-text-mask-input">OTP</InputLabel>
+              <Input
+                sx={{ textAlign: "center" }}
+                variant="standard"
+                value={values.otp}
+                onChange={handleChange("otp")}
+                name="textmask"
+                id="formatted-text-mask-input"
+                inputComponent={TextMaskCustom}
+              />
+            </FormControl>
           </Box>
+          <Button sx={{ m: 1 }} onClick={Re_Send} disabled={disabled}>
+            Re-Send OTP
+          </Button>
+          {/* {seconds} */}
           <Button
             sx={{ width: 415, m: 1 }}
             variant="contained"

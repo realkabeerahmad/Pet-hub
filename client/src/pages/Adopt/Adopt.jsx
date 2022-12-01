@@ -89,22 +89,30 @@ const Adopt = ({ setPet }) => {
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
+              p: 2,
             }}
           >
-            <h1>Filters</h1>
-            <FormControl sx={{ width: "80%", m: 2 }}>
+            <h1 style={{ color: "#e92e4a" }}>Filters</h1>
+            <FormControl sx={{ width: "80%", m: 2 }} color="success">
               <InputLabel id="type" color="success">
                 Category
               </InputLabel>
               <Select label="Category">
-                <MenuItem>Food</MenuItem>
-                <MenuItem>Accessory</MenuItem>
-                <MenuItem>Toys</MenuItem>
-                <MenuItem>Cloths</MenuItem>
-                <MenuItem>Cloths</MenuItem>
+                <MenuItem>Dog</MenuItem>
+                <MenuItem>Cat</MenuItem>
+                <MenuItem>Parrot</MenuItem>
+                <MenuItem>Rabbit</MenuItem>
+                <MenuItem>Others</MenuItem>
               </Select>
             </FormControl>
-            <TextField
+            <Button
+              sx={{ width: "80%", m: 1 }}
+              color="success"
+              variant="contained"
+            >
+              Filter
+            </Button>
+            {/* <TextField
               sx={{
                 width: "80%",
                 m: 2,
@@ -115,7 +123,7 @@ const Adopt = ({ setPet }) => {
                 width: "80%",
                 m: 1,
               }}
-            ></TextField>
+            ></TextField> */}
           </Box>
         </SwipeableDrawer>
         <Box sx={{ width: "80%", display: "flex" }}>

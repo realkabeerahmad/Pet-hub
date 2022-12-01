@@ -22,15 +22,44 @@ const petRoutes = require("./server/controllers/petController");
 // Impoting Pet Routes
 const shopRoutes = require("./server/controllers/shopController");
 
-// Impoting Pet Routes
+// Impoting Adoption Pet Routes
 const petAdoptionRoutes = require("./server/controllers/petAdoptionController");
+
+// Impoting Community Routes
+const communityRoutes = require("./server/controllers/communityController");
+// const { uploadFile } = require("./server/config/firebase");
 
 //Setting Up Envionment Variables
 dotenv.config();
 
 //Creating Express App to Use Routes in Server
 const app = express();
+// ========================================================
+// ========================================================
+// const firebaseAdmin = require("firebase-admin");
+// const { v4: uuidv4 } = require("uuid");
+// const serviceAccount = require("./server/config/pethub-ea211-firebase-adminsdk-a1nzj-5e7e3fd58f.json");
 
+// const admin = firebaseAdmin.initializeApp({
+//   credential: firebaseAdmin.credential.cert(serviceAccount),
+// });
+
+// const storageRef = admin.storage().bucket(`gs://pethub-ea211.appspot.com`);
+
+// async function uploadFile(path, filename) {
+//   // Upload the File
+//   const storage = await storageRef.upload(path, {
+//     public: true,
+//     destination: `/uploads/hashnode/${filename}`,
+//     metadata: {
+//       firebaseStorageDownloadTokens: uuidv4(),
+//     },
+//   });
+
+//   return storage[0].metadata.mediaLink;
+// }
+// ========================================================
+// ========================================================
 //MongoDB connection Using Mongoose
 mongoose
   .connect(process.env.DB, {
@@ -41,6 +70,7 @@ mongoose
   .catch((err) => console.log(err));
 
 app.use(express.json());
+// app.use(express.bodyParser());
 app.use(express.urlencoded());
 app.use(cors());
 
@@ -54,7 +84,7 @@ app.use("/shop", shopRoutes);
 
 app.use("/adoption", petAdoptionRoutes);
 
-// app.use("/community", communityRoutes);
+app.use("/community", communityRoutes);
 
 const Port = 8000;
 // Starting Server

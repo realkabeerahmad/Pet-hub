@@ -80,9 +80,6 @@ const App = () => {
           {alert}
         </Alert>
       </Collapse>
-      <Route path="/AddProducts">
-        <AddItems />
-      </Route>
       {login && isAdmin ? (
         <Box sx={{ display: "flex", flexDirection: "row" }}>
           <Box sx={{ width: "250px" }}>
@@ -90,6 +87,12 @@ const App = () => {
           </Box>
           <Box sx={{ width: "calc(100% - 250px)" }}>
             <Switch>
+              <Route path="/AddProducts">
+                <AddItems />
+              </Route>
+              <Route path="/AddPets">
+                <Addpet />
+              </Route>
               <Route path="/Users">
                 <Users />
               </Route>

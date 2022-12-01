@@ -24,11 +24,14 @@ const post = require("../models/post");
 // Using Router from Express JS to create exportable routes
 const router = express.Router();
 
-// Add a Shelter
+// Add a Post
 router.post("/addPost", (req, res) => {
-  const { content, userId } = req.body;
+  const { content, userId, name, Image } = req.body;
   try {
-    const Post = new post({ content: content, userId: userId });
+    const Post = new post({
+      content: content,
+      user: { userId: userId, name: name, Image: Image },
+    });
     Post.save()
       .then(() => {
         res.send({ status: "success", message: "Post Successfull" });
@@ -40,16 +43,42 @@ router.post("/addPost", (req, res) => {
     res.send({ status: "failed", message: error.message });
   }
 });
-router.post("/addPost", (req, res) => {
-  const { content, userId } = req.body;
+//
+router.post("/addComment", (req, res) => {
+  const { content, userId, _id } = req.body;
   try {
-    const Post = new post({ content: content, userId: userId });
-    Post.save()
-      .then(() => {
-        res.send({ status: "success", message: "Post Successfull" });
-      })
-      .catch((err) => {
-        res.send({ status: "failed", message: "Error Occured" });
+    post.findByIdAndUpdate(
+      { _id: _id },
+      { $push: { comments: { userId: userId, content: content } } }
+    );
+  } catch (error) {
+    res.send({ status: "failed", message: error.message });
+  }
+});
+//
+router.post("/showUserPosts", (req, res) => {
+  const { userId } = req.body;
+  try {
+    post.find({ userId: userId }).then((posts) => {
+      res.send({ status: "success", message: "User Posts Sent", data: posts });
+    });
+  } catch (error) {
+    res.send({ status: "failed", message: error.message });
+  }
+});
+//
+router.get("/showAllPosts", (req, res) => {
+  //   const { userId } = req.body;
+  try {
+    post
+      .find({})
+      .sort({ createdAt: -1 })
+      .then((posts) => {
+        res.send({
+          status: "success",
+          message: "User Posts Sent",
+          data: posts,
+        });
       });
   } catch (error) {
     res.send({ status: "failed", message: error.message });

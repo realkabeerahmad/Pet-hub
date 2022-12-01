@@ -50,7 +50,7 @@ function App() {
   // ----------------------------------------------------------------
   const [user, setUser] = useState({});
   // ----------------------------------------------------------------
-  const [userId, setUserId] = useState("");
+  const [userDetails, setUserDetails] = useState({});
   // ----------------------------------------------------------------
   const [cart, setCart] = useState({});
   // ----------------------------------------------------------------
@@ -68,6 +68,7 @@ function App() {
       setUser={setUser}
       user={user}
       setCart={setCart}
+      setUserDetails={setUserDetails}
     />
   );
   // ---------------------------------------------------------
@@ -265,7 +266,7 @@ function App() {
                 path={"/adopt/" + pet._id + "/application"}
                 element={
                   login ? (
-                    <AdoptApplication Pet={pet} user={user} />
+                    <AdoptApplication Pet={pet} user={user} setUser={setUser} />
                   ) : (
                     LoginComponent
                   )
@@ -280,13 +281,13 @@ function App() {
               <Route
                 path="/verify_otp"
                 element={
-                  userId ? (
+                  userDetails ? (
                     <Otp
-                      userId={userId}
+                      userDetails={userDetails}
                       setAlert={setAlert}
                       setOpenAlert={setOpenAlert}
                       setSeverity={setSeverity}
-                      setUserId={setUserId}
+                      setUserDetails={setUserDetails}
                     />
                   ) : (
                     <ErrorPage />
@@ -300,7 +301,7 @@ function App() {
                     setAlert={setAlert}
                     setOpenAlert={setOpenAlert}
                     setSeverity={setSeverity}
-                    setUserId={setUserId}
+                    setUserDetails={setUserDetails}
                   />
                 }
               ></Route>

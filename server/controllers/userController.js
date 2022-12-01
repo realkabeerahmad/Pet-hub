@@ -28,6 +28,8 @@ const Upload = require("../config/multer");
 //Cart Model
 const cart = require("../models/cart");
 
+const uploadFile = require("../config/firebase");
+
 // Register route for Creating a new user
 router.post("/register", (req, res) => {
   // Getting all required data from request body
@@ -221,29 +223,43 @@ router.post("/verifyOTP", async (req, res) => {
     });
   }
 });
-
 // Add User Image
 router.post("/updateProfileImage", Upload.single("image"), (req, res) => {
   const { userId } = req.body;
-  const obj = { Image: req.file.filename };
-  try {
-    User.findByIdAndUpdate({ _id: userId }, { Image: obj.Image })
-      .then(() => {
-        res.status(200).json({
-          status: "success",
-          message: "Image Added successfully",
-          data: userId,
-        });
-      })
-      .catch((err) => {
-        throw Error("Unable to update Image" + err.message);
-      });
-  } catch (error) {
-    res.json({
-      status: "failed",
-      error: error.message,
-    });
-  }
+  const obj = { Image: req.file };
+  const path = req.body.path;
+  // Grab the file
+  const file = req.file;
+  // Format the filename
+  const timestamp = Date.now();
+  const name = file.originalname.split(".")[0];
+  const type = file.originalname.split(".")[1];
+  const fileName = `${name}_${timestamp}.${type}`;
+  (async () => {
+    // const url = await uploadFile('./mypic.png', "my-image.png");
+    const url = await uploadFile(path + file.originalname, fileName);
+    console.log(url);
+  })();
+  // console.log(file);
+  res.send("done");
+  // try {
+  //   User.findByIdAndUpdate({ _id: userId }, { Image: obj.Image })
+  //     .then(() => {
+  //       res.status(200).json({
+  //         status: "success",
+  //         message: "Image Added successfully",
+  //         data: userId,
+  //       });
+  //     })
+  //     .catch((err) => {
+  //       throw Error("Unable to update Image" + err.message);
+  //     });
+  // } catch (error) {
+  //   res.json({
+  //     status: "failed",
+  //     error: error.message,
+  //   });
+  // }
 });
 
 // Re-send OTP route
@@ -251,6 +267,7 @@ router.post("/reSendOtpVerificatioCode", async (req, res) => {
   try {
     // Get Data from Request Body
     let { userID, email } = req.body;
+    console.log(userID);
     //Check if Data is Correct
     if (!userID || !email) {
       throw Error("Empty user Details are not allowed");
@@ -258,7 +275,8 @@ router.post("/reSendOtpVerificatioCode", async (req, res) => {
       // Delete old OTP Generated
       await userOtpVerification.deleteMany({ userID });
       // Call Send OTP Function
-      SendOtpVerificationEmail({ userID, email }, res);
+      console.log(userID);
+      SendOtpVerificationEmail({ _id: userID, email }, res);
     }
   } catch (error) {
     res.send({
@@ -270,6 +288,7 @@ router.post("/reSendOtpVerificatioCode", async (req, res) => {
 
 // Send OTP Function
 const SendOtpVerificationEmail = async ({ _id, email }, res) => {
+  console.log(_id);
   try {
     // Generated OTP
     const otp = Math.floor(1000 + Math.random() * 9000);

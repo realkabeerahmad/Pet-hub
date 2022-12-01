@@ -19,7 +19,8 @@ const User = ({ user, setUser }) => {
   // --------------------------------------------
   // --------------------------------------------
   const [open, setOpen] = useState(false);
-
+  const [images, setFile] = useState();
+  const [fileData, setFileData] = useState();
   const [values, setValues] = useState({
     userId: "",
     image: "",
@@ -38,6 +39,10 @@ const User = ({ user, setUser }) => {
 
   const handleImage = (e) => {
     setValues({ ...values, image: e.target.files[0] });
+    setFileData(e.target.files[0]);
+    // setFile(URL.createObjectURL(e.target.files));
+    // console.log(e.target.files[0].size);
+    // console.log(URL.createObjectURL(e.target.files[0]));
     const reader = new FileReader();
     reader.addEventListener("load", () => {
       setimage(reader.result);
@@ -51,9 +56,13 @@ const User = ({ user, setUser }) => {
       alert("Please Add an Image");
       return false;
     } else {
+      const img = Object.assign(values.image, { path: images });
+      console.log(img);
+
       const formData = new FormData();
       formData.append("userId", user._id);
-      formData.append("image", values.image);
+      formData.append("image", fileData);
+      formData.append("path", images);
       const config = {
         headers: { "content-type": "multipart/form-data" },
       };
@@ -238,6 +247,7 @@ const User = ({ user, setUser }) => {
                 id="image-upload"
                 type="file"
                 name="image-upload"
+                // value={images}
                 accept=".png, .jpg, .jpeg"
                 onChange={handleImage}
               />

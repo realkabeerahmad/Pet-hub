@@ -125,7 +125,7 @@ export const rabbitBreed = [
   { label: "Vienna White" },
 ];
 export const catBreeds = [
-  { label: "Abyssinian" },
+  { label: "Abyssinian", value: "Abyssinian" },
   { label: "American Bobtail" },
   { label: "American Curl" },
   { label: "American Shorthair" },
